@@ -11,7 +11,8 @@ import {
   Menu, 
   X, 
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Cpu
 } from 'lucide-react';
 import Button from '../common/Button';
 import Disclaimer from '../common/Disclaimer';
@@ -23,6 +24,7 @@ export default function Navbar() {
   const navLinks = [
     { to: '/', label: 'Home' },
     { to: '/upload', label: 'Upload Report', icon: Upload },
+    { to: '/ml-diagnostic', label: 'ML Diagnostic Lab', icon: Cpu },
     { to: '/analysis/MR-001', label: 'Dashboard', icon: BarChart2 },
     { to: '/video/MR-001', label: 'Video Demo', icon: Video },
     { to: '/history', label: 'History', icon: History },
@@ -79,7 +81,12 @@ export default function Navbar() {
                   }`
                 }
               >
-                {link.label}
+                <span>{link.label}</span>
+                {link.isAi && (
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 text-white leading-none">
+                    AI
+                  </span>
+                )}
               </NavLink>
             ))}
           </nav>
@@ -90,10 +97,10 @@ export default function Navbar() {
               <Button 
                 variant="primary" 
                 size="sm" 
-                icon={Sparkles}
+                icon={Upload}
                 className="shadow-sm shadow-blue-500/10"
               >
-                Analyze My Report
+                Upload Report
               </Button>
             </Link>
           </div>

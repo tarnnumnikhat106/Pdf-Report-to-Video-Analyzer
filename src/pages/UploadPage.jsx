@@ -61,14 +61,14 @@ export default function UploadPage() {
       {/* Page Header */}
       <div className="text-center space-y-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold">
-          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-          <span>Multi-Format Document Ingestion</span>
+          <FileCheck2 className="w-3.5 h-3.5 text-blue-600" />
+          <span>Laboratory Report Upload & Review</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
           Upload Your Medical Report
         </h1>
         <p className="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
-          Provide your laboratory blood work or diagnostic panel in PDF or image format to start the AI analysis pipeline.
+          Provide your laboratory blood work or diagnostic panel in PDF or image format to review your findings, doctor questions, and dietary guidance.
         </p>
       </div>
 

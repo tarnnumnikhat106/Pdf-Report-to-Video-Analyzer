@@ -36,7 +36,7 @@ export default function LandingPage() {
     },
     {
       number: "02",
-      title: "AI Extracts Information",
+      title: "Extract Lab Parameters",
       description: "OCR and biomedical entity extraction detect tests, numerical values, units, and reference ranges.",
       icon: Cpu,
     },
@@ -71,7 +71,7 @@ export default function LandingPage() {
       icon: BookOpen,
     },
     {
-      title: "AI-Powered Explanations",
+      title: "Clinical & Dietary Guidance",
       desc: "Structured breakdowns explaining biological context, dietary factors, and lifestyle relevance.",
       icon: Sparkles,
     },
@@ -106,16 +106,16 @@ export default function LandingPage() {
             {/* Left Column: Headlines & CTA */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold">
-                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                <span>Next-Generation Patient Literacy & Decision Support</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+                <span>Clinical Laboratory Insights & Patient Education</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
-                Understand Your Medical Report <span className="text-blue-600">with AI</span>
+                Understand Your Medical Report <span className="text-blue-600">Clearly</span>
               </h1>
 
               <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                MedVision AI transforms complex medical reports into clear, easy-to-understand explanations and visual learning experiences.
+                MedVision translates complex laboratory parameters into clear clinical summaries, dietary recommendations, and doctor visit talking points.
               </p>
 
               {/* Action Buttons */}
@@ -174,7 +174,7 @@ export default function LandingPage() {
                       </div>
                       <div>
                         <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
-                          AI Medical Analysis
+                          Clinical Laboratory Analysis
                         </span>
                         <h4 className="text-sm font-bold text-slate-900">
                           Complete Blood Count (CBC)

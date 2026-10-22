@@ -1,0 +1,348 @@
+{
+  "MR-001": {
+    "reportId": "MR-001",
+    "reportName": "CBC_Comprehensive_Blood_Panel.pdf",
+    "patientInitials": "J.D.",
+    "patientAge": 42,
+    "patientGender": "Female",
+    "date": "2026-03-24",
+    "laboratory": "Metropolitan Clinical Laboratories",
+    "doctor": "Dr. Elena Rostova, MD",
+    "reportType": "Hematology & Iron Panel",
+    "summary": "The AI analysis identified 7 biomarker(s) outside standard laboratory bounds. The Machine Learning diagnostic model indicates a high-probability pattern for Microcytic Iron Deficiency Anemia (100.0% confidence). Primary findings highlight values that warrant review with your physician. Vital lines such as white blood cells and platelets remain reassuringly stable.",
+    "attentionCount": 7,
+    "normalCount": 3,
+    "findings": [
+      {
+        "id": "f-01",
+        "name": "Hemoglobin (Hb)",
+        "category": "Complete Blood Count",
+        "value": 9.4,
+        "unit": "g/dL",
+        "referenceRange": "12.0 - 15.5 g/dL",
+        "minRef": 12.0,
+        "maxRef": 15.5,
+        "status": "attention",
+        "severityLevel": "ATTENTION",
+        "technicalSummary": "Sub-threshold Hemoglobin (Hb) concentration (9.4 g/dL).",
+        "simpleExplanation": "Hemoglobin (Hb) is below the standard healthy reference range (12.0 - 15.5 g/dL).",
+        "detailedDescription": "Essential iron-rich protein in red blood cells that transports oxygen from your lungs to your muscles, brain, and tissues.",
+        "whyItMatters": "Low levels may affect cellular oxygenation or physiological reserves, warranting clinical evaluation.",
+        "doctorDiscussionPoints": [
+          "Could dietary factors or poor absorption explain my Hemoglobin (Hb) value of 9.4 g/dL?",
+          "Are additional follow-up panels or dietary supplements recommended?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-02",
+        "name": "Red Blood Cell Count (RBC)",
+        "category": "Complete Blood Count",
+        "value": 3.9,
+        "unit": "x10^6/\u00b5L",
+        "referenceRange": "4.0 - 5.2 x10^6/\u00b5L",
+        "minRef": 4.0,
+        "maxRef": 5.2,
+        "status": "attention",
+        "severityLevel": "ATTENTION",
+        "technicalSummary": "Sub-threshold Red Blood Cell Count (RBC) concentration (3.9 x10^6/\u00b5L).",
+        "simpleExplanation": "Red Blood Cell Count (RBC) is below the standard healthy reference range (4.0 - 5.2 x10^6/\u00b5L).",
+        "detailedDescription": "The absolute count of circulating oxygen-carrying cells produced in your bone marrow.",
+        "whyItMatters": "Low levels may affect cellular oxygenation or physiological reserves, warranting clinical evaluation.",
+        "doctorDiscussionPoints": [
+          "Could dietary factors or poor absorption explain my Red Blood Cell Count (RBC) value of 3.9 x10^6/\u00b5L?",
+          "Are additional follow-up panels or dietary supplements recommended?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-03",
+        "name": "Hematocrit (Hct)",
+        "category": "Complete Blood Count",
+        "value": 29.5,
+        "unit": "%",
+        "referenceRange": "36.0 - 46.0 %",
+        "minRef": 36.0,
+        "maxRef": 46.0,
+        "status": "attention",
+        "severityLevel": "ATTENTION",
+        "technicalSummary": "Sub-threshold Hematocrit (Hct) concentration (29.5 %).",
+        "simpleExplanation": "Hematocrit (Hct) is below the standard healthy reference range (36.0 - 46.0 %).",
+        "detailedDescription": "The percentage of your total blood volume occupied by red blood cells.",
+        "whyItMatters": "Low levels may affect cellular oxygenation or physiological reserves, warranting clinical evaluation.",
+        "doctorDiscussionPoints": [
+          "Could dietary factors or poor absorption explain my Hematocrit (Hct) value of 29.5 %?",
+          "Are additional follow-up panels or dietary supplements recommended?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-04",
+        "name": "Mean Corpuscular Volume (MCV)",
+        "category": "Red Blood Cell Indices",
+        "value": 74.0,
+        "unit": "fL",
+        "referenceRange": "80.0 - 100.0 fL",
+        "minRef": 80.0,
+        "maxRef": 100.0,
+        "status": "attention",
+        "severityLevel": "ATTENTION",
+        "technicalSummary": "Sub-threshold Mean Corpuscular Volume (MCV) concentration (74.0 fL).",
+        "simpleExplanation": "Mean Corpuscular Volume (MCV) is below the standard healthy reference range (80.0 - 100.0 fL).",
+        "detailedDescription": "The average physical volume and size of individual red blood cells.",
+        "whyItMatters": "Low levels may affect cellular oxygenation or physiological reserves, warranting clinical evaluation.",
+        "doctorDiscussionPoints": [
+          "Could dietary factors or poor absorption explain my Mean Corpuscular Volume (MCV) value of 74.0 fL?",
+          "Are additional follow-up panels or dietary supplements recommended?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-05",
+        "name": "Mean Corpuscular Hemoglobin (MCH)",
+        "category": "Red Blood Cell Indices",
+        "value": 23.5,
+        "unit": "pg",
+        "referenceRange": "27.0 - 33.0 pg",
+        "minRef": 27.0,
+        "maxRef": 33.0,
+        "status": "attention",
+        "severityLevel": "ATTENTION",
+        "technicalSummary": "Sub-threshold Mean Corpuscular Hemoglobin (MCH) concentration (23.5 pg).",
+        "simpleExplanation": "Mean Corpuscular Hemoglobin (MCH) is below the standard healthy reference range (27.0 - 33.0 pg).",
+        "detailedDescription": "The average weight of hemoglobin contained inside each individual red blood cell.",
+        "whyItMatters": "Low levels may affect cellular oxygenation or physiological reserves, warranting clinical evaluation.",
+        "doctorDiscussionPoints": [
+          "Could dietary factors or poor absorption explain my Mean Corpuscular Hemoglobin (MCH) value of 23.5 pg?",
+          "Are additional follow-up panels or dietary supplements recommended?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-06",
+        "name": "Red Cell Distribution Width (RDW)",
+        "category": "Red Blood Cell Indices",
+        "value": 16.2,
+        "unit": "%",
+        "referenceRange": "11.5 - 14.5 %",
+        "minRef": 11.5,
+        "maxRef": 14.5,
+        "status": "attention",
+        "severityLevel": "ATTENTION",
+        "technicalSummary": "Supra-threshold Red Cell Distribution Width (RDW) concentration (16.2 %).",
+        "simpleExplanation": "Red Cell Distribution Width (RDW) is elevated above the standard reference range (11.5 - 14.5 %).",
+        "detailedDescription": "Variation in size and shape among your red blood cells (anisocytosis index).",
+        "whyItMatters": "Elevated levels can indicate physiological compensation, dehydration, or an active inflammatory response.",
+        "doctorDiscussionPoints": [
+          "What potential causes might lead to an elevated Red Cell Distribution Width (RDW) at 16.2 %?",
+          "Should we repeat this test in a few weeks to monitor any trend?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-07",
+        "name": "White Blood Cell Count (WBC)",
+        "category": "Complete Blood Count",
+        "value": 6.8,
+        "unit": "x10^3/\u00b5L",
+        "referenceRange": "4.5 - 11.0 x10^3/\u00b5L",
+        "minRef": 4.5,
+        "maxRef": 11.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (6.8 x10^3/\u00b5L).",
+        "simpleExplanation": "White Blood Cell Count (WBC) is well-balanced within the normal healthy range (4.5 - 11.0 x10^3/\u00b5L).",
+        "detailedDescription": "Primary defensive immune cells circulating in the blood to fight off bacteria and viruses.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My White Blood Cell Count (WBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-08",
+        "name": "Platelet Count",
+        "category": "Complete Blood Count",
+        "value": 270.0,
+        "unit": "x10^3/\u00b5L",
+        "referenceRange": "150.0 - 450.0 x10^3/\u00b5L",
+        "minRef": 150.0,
+        "maxRef": 450.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (270.0 x10^3/\u00b5L).",
+        "simpleExplanation": "Platelet Count is well-balanced within the normal healthy range (150.0 - 450.0 x10^3/\u00b5L).",
+        "detailedDescription": "Specialized cellular fragments responsible for primary clotting and healing injured blood vessels.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Platelet Count appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-09",
+        "name": "Serum Ferritin",
+        "category": "Iron Studies",
+        "value": 15.0,
+        "unit": "ng/mL",
+        "referenceRange": "20.0 - 200.0 ng/mL",
+        "minRef": 20.0,
+        "maxRef": 200.0,
+        "status": "attention",
+        "severityLevel": "ATTENTION",
+        "technicalSummary": "Sub-threshold Serum Ferritin concentration (15.0 ng/mL).",
+        "simpleExplanation": "Serum Ferritin is below the standard healthy reference range (20.0 - 200.0 ng/mL).",
+        "detailedDescription": "The body's primary storage protein reflecting backup iron reserves stored in the liver and bone marrow.",
+        "whyItMatters": "Low levels may affect cellular oxygenation or physiological reserves, warranting clinical evaluation.",
+        "doctorDiscussionPoints": [
+          "Could dietary factors or poor absorption explain my Serum Ferritin value of 15.0 ng/mL?",
+          "Are additional follow-up panels or dietary supplements recommended?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-10",
+        "name": "Fasting Blood Glucose",
+        "category": "Metabolic Panel",
+        "value": 88.0,
+        "unit": "mg/dL",
+        "referenceRange": "70.0 - 99.0 mg/dL",
+        "minRef": 70.0,
+        "maxRef": 99.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (88.0 mg/dL).",
+        "simpleExplanation": "Fasting Blood Glucose is well-balanced within the normal healthy range (70.0 - 99.0 mg/dL).",
+        "detailedDescription": "Primary circulating sugar supplying cellular energy; regulated primarily by insulin.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Fasting Blood Glucose appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      }
+    ],
+    "videoData": {
+      "title": "Educational Analysis - CBC_Comprehensive_Blood_Panel.pdf",
+      "duration": "0m 24s",
+      "durationSeconds": 24,
+      "language": "English",
+      "resolution": "1080p Full HD",
+      "videoUrl": "/media/videos/MR-001_explanation.mp4",
+      "chapters": [
+        {
+          "time": "0:00",
+          "title": "Introduction & Overview",
+          "timestamp": 0
+        },
+        {
+          "time": "0:10",
+          "title": "Key Biomarker Walkthrough",
+          "timestamp": 10
+        },
+        {
+          "time": "0:25",
+          "title": "Physician Discussion Points",
+          "timestamp": 25
+        }
+      ],
+      "transcript": "Welcome to your MedVision AI educational report overview. We have analyzed your complete blood count results. Our machine learning model identified notable indicators, especially in Hemoglobin (Hb) at 9.4 g/dL. Your immune and clotting markers remain stable. Please schedule a consultation with your physician to discuss these findings."
+    },
+    "mlAnalysis": {
+      "predicted_condition": "Microcytic Iron Deficiency Anemia",
+      "confidence_score": 100.0,
+      "prediction_index": 1,
+      "probabilities": {
+        "Normal Homeostasis": 0.0,
+        "Microcytic Iron Deficiency Anemia": 100.0,
+        "Macrocytic Anemia Pattern": 0.0,
+        "Immune / Leukocyte Surge": 0.0,
+        "Metabolic / Glycemic Elevation": 0.0
+      }
+    }
+  },
+  "MR-1FE956": {
+    "reportId": "MR-1FE956",
+    "reportName": "report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 38,
+    "patientGender": "Adult",
+    "date": "2026-10-16",
+    "laboratory": "Diagnostic Health Labs",
+    "doctor": "Dr. A. Verma, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\Pdf-Report-to-Video-Analyzer\\backend\\uploads\\MR-1FE956_report.pdf",
+    "summary": "Report uploaded. Ready for AI & ML analysis.",
+    "attentionCount": 0,
+    "normalCount": 0,
+    "findings": [],
+    "videoData": null
+  },
+  "MR-C91E76": {
+    "reportId": "MR-C91E76",
+    "reportName": "report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 38,
+    "patientGender": "Adult",
+    "date": "2026-10-16",
+    "laboratory": "Diagnostic Health Labs",
+    "doctor": "Dr. A. Verma, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\Pdf-Report-to-Video-Analyzer\\backend\\uploads\\MR-C91E76_report.pdf",
+    "summary": "Report uploaded. Ready for AI & ML analysis.",
+    "attentionCount": 0,
+    "normalCount": 0,
+    "findings": [],
+    "videoData": null
+  },
+  "MR-AC1E34": {
+    "reportId": "MR-AC1E34",
+    "reportName": "report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 38,
+    "patientGender": "Adult",
+    "date": "2026-10-16",
+    "laboratory": "Diagnostic Health Labs",
+    "doctor": "Dr. A. Verma, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\Pdf-Report-to-Video-Analyzer\\backend\\uploads\\MR-AC1E34_report.pdf",
+    "summary": "Report uploaded. Ready for AI & ML analysis.",
+    "attentionCount": 0,
+    "normalCount": 0,
+    "findings": [],
+    "videoData": null
+  },
+  "MR-CFA301": {
+    "reportId": "MR-CFA301",
+    "reportName": "report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 38,
+    "patientGender": "Adult",
+    "date": "2026-10-16",
+    "laboratory": "Diagnostic Health Labs",
+    "doctor": "Dr. A. Verma, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\Pdf-Report-to-Video-Analyzer\\backend\\uploads\\MR-CFA301_report.pdf",
+    "summary": "Report uploaded. Ready for AI & ML analysis.",
+    "attentionCount": 0,
+    "normalCount": 0,
+    "findings": [],
+    "videoData": null
+  },
+  "MR-0ED5C8": {
+    "reportId": "MR-0ED5C8",
+    "reportName": "report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 38,
+    "patientGender": "Adult",
+    "date": "2026-10-16",
+    "laboratory": "Diagnostic Health Labs",
+    "doctor": "Dr. A. Verma, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\Pdf-Report-to-Video-Analyzer\\backend\\uploads\\MR-0ED5C8_report.pdf",
+    "summary": "Report uploaded. Ready for AI & ML analysis.",
+    "attentionCount": 0,
+    "normalCount": 0,
+    "findings": [],
+    "videoData": null
+  }
+}

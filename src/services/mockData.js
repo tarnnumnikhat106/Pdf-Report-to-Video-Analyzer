@@ -212,6 +212,71 @@ Hemoglobin was reported at 9.2 grams per deciliter, which is below the standard 
 Your Ferritin level was recorded at 14 nanograms per milliliter. Ferritin acts like an iron savings account. When ferritin reserves run low, the body struggles to synthesize new hemoglobin, and the newly formed cells become smaller in size, which is reflected in your MCV of 74.
 
 Important note: This educational video is designed to empower your consultation, not provide a diagnosis. Please schedule a follow-up with your physician to discuss potential dietary adjustments, iron supplementation, or further diagnostic evaluations.`
+    },
+    mlAnalysis: {
+      predicted_condition: "Microcytic Iron Deficiency Anemia",
+      confidence_score: 92.5,
+      prediction_index: 1,
+      probabilities: {
+        "Microcytic Iron Deficiency Anemia": 92.5,
+        "Normal Homeostasis": 7.5
+      },
+      ml_payload: {
+        test_type: "CBC",
+        prediction: 1,
+        status: "High Risk",
+        risk_percentage: "92.5%",
+        input_features: {
+          Age: 42,
+          Gender: 1,
+          Hemoglobin: 9.2,
+          Platelet_Count: 210000.0,
+          White_Blood_Cells: 6800.0,
+          Red_Blood_Cells: 4.1,
+          MCV: 74.0,
+          MCH: 25.0,
+          MCHC: 31.0
+        }
+      }
+    },
+    llamaAnalysis: {
+      overview: "The laboratory evaluation indicates microcytic anemia, highlighted by low Hemoglobin (9.2 g/dL), low MCV (74.0 fL), and depleted Ferritin reserves. Platelet and white blood cell lines remain within expected homeostatic limits. These findings suggest depleted iron availability and warrant an informed clinical discussion regarding dietary intake, absorption, and potential sources of blood loss.",
+      risk_level: "High Risk",
+      connect_to_doctor: true,
+      doctor_urgency: "Immediate",
+      doctor_message: "⚠️ High Risk Detected: Please connect with a Hematologist or your primary care physician promptly. Your hemoglobin (9.2 g/dL) is significantly below the normal range, indicating moderate anemia that requires therapeutic intervention.",
+      recommended_doctor_specialty: "Hematologist / Internal Medicine",
+      questions_for_doctor: [
+        "What specific type of anemia do my red blood cell indices indicate?",
+        "Are serum iron, TIBC, and transferrin saturation panels indicated?",
+        "Should I begin therapeutic iron supplementation or receive dietary intervention?",
+        "Is there evidence of chronic occult blood loss that requires further investigation?"
+      ],
+      diet_guidance: {
+        recommended_foods: [
+          "Heme Iron Sources: Lean red meat, poultry, liver, and egg yolks (highly absorbable)",
+          "Plant-Based Iron: Cooked spinach, lentils, chickpeas, black beans, and fortified oats",
+          "Vitamin C Boosters: Citrus fruits, bell peppers, tomatoes, and strawberries (enhances iron uptake by up to 3x)",
+          "Folate & B12: Dark leafy greens, asparagus, nutritional yeast, and fortified cereals"
+        ],
+        foods_to_avoid: [
+          "Black tea, green tea, and coffee within 2 hours of meals (polyphenols & tannins severely inhibit iron uptake)",
+          "High-dose calcium or dairy products consumed at the exact same time as iron-rich meals",
+          "Refined empty-calorie snacks and excessive alcohol"
+        ],
+        hydration_and_habits: [
+          "Drink 2.5 to 3 liters of water daily to maintain plasma volume and circulation",
+          "Pair every plant-based iron dish with citrus juice or sliced bell peppers",
+          "Avoid strenuous exhausting workouts until hemoglobin levels are clinically reviewed"
+        ],
+        key_nutrients: [
+          "Bioavailable Iron (Elemental Iron)",
+          "Vitamin C (Ascorbic Acid)",
+          "Vitamin B12 (Cobalamin)",
+          "Folate (Vitamin B9)"
+        ]
+      },
+      model_used: "Meta Llama 3.2 (via Ollama)"
     }
   },
   {

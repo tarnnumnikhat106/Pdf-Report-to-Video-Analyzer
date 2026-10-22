@@ -14,6 +14,7 @@ import VideoExplanationPage from './pages/VideoExplanationPage';
 import HistoryPage from './pages/HistoryPage';
 import AboutPage from './pages/AboutPage';
 import PrivacySafetyPage from './pages/PrivacySafetyPage';
+import MLDiagnosticPage from './pages/MLDiagnosticPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function ScrollToTop() {
@@ -34,6 +35,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/upload" element={<UploadPage />} />
+              <Route path="/ml-diagnostic" element={<MLDiagnosticPage />} />
               <Route path="/analysis-loading/:reportId" element={<AnalysisLoadingPage />} />
               <Route path="/analysis/:reportId" element={<AnalysisDashboardPage />} />
               <Route path="/finding/:reportId/:findingId" element={<FindingDetailsPage />} />

@@ -278,7 +278,7 @@ export default function FileUploader({
                 iconPosition="right"
                 className="w-full sm:w-auto"
               >
-                Analyze Report with AI
+                Analyze Report
               </Button>
             </div>
           )}

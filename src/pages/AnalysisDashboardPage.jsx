@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import StatCard from '../components/common/StatCard';
 import SummaryCard from '../components/report/SummaryCard';
+import LlamaAdvisorCard from '../components/report/LlamaAdvisorCard';
+import DietChatSection from '../components/report/DietChatSection';
 import FindingCard from '../components/report/FindingCard';
 import FindingDetailModal from '../components/report/FindingDetailModal';
 import VideoGeneratorModal from '../components/video/VideoGeneratorModal';
@@ -66,6 +68,21 @@ export default function AnalysisDashboardPage() {
       isMounted = false;
     };
   }, [reportId]);
+
+  // Smooth scroll to ML Overview section if redirected with #ml-overview
+  useEffect(() => {
+    if (!isLoading && report) {
+      if (window.location.hash === '#ml-overview') {
+        const scrollTimer = setTimeout(() => {
+          const el = document.getElementById('ml-overview');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 200);
+        return () => clearTimeout(scrollTimer);
+      }
+    }
+  }, [isLoading, report]);
 
   if (isLoading) {
     return (
@@ -239,10 +256,10 @@ export default function AnalysisDashboardPage() {
             colorScheme="emerald"
           />
           <StatCard
-            title="Decision Support Status"
-            value="Active"
-            subtitle="Educational guidance prepared"
-            icon={Sparkles}
+            title="Review Status"
+            value="Complete"
+            subtitle="Laboratory findings summarized"
+            icon={ShieldCheck}
             colorScheme="slate"
           />
         </div>
@@ -256,6 +273,28 @@ export default function AnalysisDashboardPage() {
         normalCount={normalFindingsCount}
         onGenerateVideo={() => navigate(`/video/${report.reportId}`)}
       />
+
+      {/* ML Clinical Overview & Guidance Section (Anchor: #ml-overview) */}
+      <div id="ml-overview" className="scroll-mt-8 space-y-8">
+        {/* Llama 3.2 Clinical & Dietary Advisor + Connect to Doctor Alert */}
+        <LlamaAdvisorCard
+          llamaAnalysis={report.llamaAnalysis}
+          mlAnalysis={report.mlAnalysis}
+        />
+
+        {/* Clinical Dietary & Nutrition Consultation Chat */}
+        <DietChatSection
+          reportContext={{
+            condition: report.reportType || report.reportName || "Laboratory Diagnostics",
+            risk_level: report.llamaAnalysis?.risk_level || (report.mlAnalysis?.ml_payload?.status || (attentionFindingsCount > 0 ? "Requires Attention" : "Normal")),
+            biomarkers: (report.findings || []).reduce((acc, f) => {
+              acc[f.name] = `${f.value} ${f.unit || ''} (Ref: ${f.referenceRange || 'N/A'}) [${f.status || 'normal'}]`;
+              return acc;
+            }, {}),
+            summary: report.summary
+          }}
+        />
+      </div>
 
       {/* Findings Section */}
       <div className="space-y-6">

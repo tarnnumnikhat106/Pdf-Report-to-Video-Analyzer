@@ -42,11 +42,11 @@ export default function AnalysisLoadingPage() {
     return () => clearInterval(stepInterval);
   }, [reportId]);
 
-  // Navigate once finished after brief pause
+  // Navigate once finished after brief pause directly to ML Overview section
   useEffect(() => {
     if (isFinished) {
       const navTimer = setTimeout(() => {
-        navigate(`/analysis/${reportId}`);
+        navigate(`/analysis/${reportId}#ml-overview`);
       }, 700);
       return () => clearTimeout(navTimer);
     }
@@ -69,7 +69,7 @@ export default function AnalysisLoadingPage() {
           Analyzing Medical Report
         </h1>
         <p className="text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-          Our multi-stage pipeline is extracting laboratory values, matching reference ranges, and generating clear explanations.
+          Extracting laboratory parameters, evaluating standard reference ranges, and generating clinical guidance.
         </p>
       </div>
 
@@ -79,7 +79,7 @@ export default function AnalysisLoadingPage() {
         {/* Progress Bar */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
-            <span>AI Pipeline Execution</span>
+            <span>Processing Laboratory Findings</span>
             <span className="font-mono text-blue-700">{progressPercent}%</span>
           </div>
           <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
