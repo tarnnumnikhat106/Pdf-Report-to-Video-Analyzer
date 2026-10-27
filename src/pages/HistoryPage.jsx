@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-  History, 
-  Search, 
-  Filter, 
-  Calendar, 
-  FileText, 
-  Video, 
-  BarChart2, 
-  ArrowUpDown, 
-  PlusCircle, 
-  Sparkles,
-  Building2,
-  AlertTriangle,
-  CheckCircle2,
-  ArrowRight
+import {
+  History,
+  Search,
+  Calendar,
+  FileText,
+  Video,
+  BarChart2,
+  ArrowUpDown,
+  PlusCircle,
+  Building2
 } from 'lucide-react';
 import Card from '../components/common/Card';
 import SeverityBadge from '../components/common/SeverityBadge';
@@ -23,6 +18,7 @@ import EmptyState from '../components/common/EmptyState';
 import LoadingState from '../components/common/LoadingState';
 import Disclaimer from '../components/common/Disclaimer';
 import { getReports } from '../services/api';
+import { formatReportName } from '../utils/format';
 
 export default function HistoryPage() {
   const navigate = useNavigate();
@@ -54,11 +50,13 @@ export default function HistoryPage() {
   }, []);
 
   // Filter & Sort
+  const query = searchQuery.toLowerCase().trim();
+
   const filteredReports = reports.filter((item) => {
     const matchesSearch = 
-      item.reportName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.reportType && item.reportType.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (item.laboratory && item.laboratory.toLowerCase().includes(searchQuery.toLowerCase()));
+      formatReportName(item.reportName, '').toLowerCase().includes(query) ||
+      (item.reportType && item.reportType.toLowerCase().includes(query)) ||
+      (item.laboratory && item.laboratory.toLowerCase().includes(query));
 
     const matchesStatus = 
       statusFilter === 'all'
@@ -85,28 +83,23 @@ export default function HistoryPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-2">
-            <History className="w-3.5 h-3.5 text-blue-600" />
-            <span>Analysis Archive</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Report History
+          <p className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
+            <History className="h-3.5 w-3.5" />
+            Your reports
+          </p>
+          <h1 className="mt-2 font-display text-3xl tracking-tight text-ink sm:text-4xl">
+            Report history
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500">
-            Review previous diagnostic evaluations, view parameter dashboards, and re-watch educational videos.
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
+            Revisit earlier readings, compare panels, and replay the video walkthroughs.
           </p>
         </div>
 
         <Link to="/upload">
-          <Button
-            variant="primary"
-            size="md"
-            icon={PlusCircle}
-            className="shadow-sm shadow-blue-500/20"
-          >
-            Upload New Report
+          <Button variant="primary" size="md" icon={PlusCircle}>
+            Upload new report
           </Button>
         </Link>
       </div>
@@ -173,9 +166,9 @@ export default function HistoryPage() {
                 onChange={(e) => setSortBy(e.target.value)}
                 className="bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="date-desc">Newest First</option>
-                <option value="date-asc">Oldest First</option>
-                <option value="findings-desc">Most Findings</option>
+                <option value="date-desc">Newest first</option>
+                <option value="date-asc">Oldest first</option>
+                <option value="findings-desc">Most findings</option>
               </select>
             </div>
           </div>
@@ -203,7 +196,7 @@ export default function HistoryPage() {
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="text-base font-bold text-slate-900">
-                        {item.reportName}
+                        {formatReportName(item.reportName, item.reportType || 'Medical report')}
                       </h3>
                       <SeverityBadge status={item.status} size="sm" />
                       <span className="text-xs font-mono text-slate-400">
@@ -215,13 +208,13 @@ export default function HistoryPage() {
                       <span className="font-semibold text-slate-700">
                         {item.reportType || "Standard Panel"}
                       </span>
-                      <span>•</span>
+                      <span>â€¢</span>
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3.5 h-3.5" /> {item.date}
                       </span>
                       {item.laboratory && (
                         <>
-                          <span>•</span>
+                          <span>â€¢</span>
                           <span className="flex items-center gap-1">
                             <Building2 className="w-3.5 h-3.5" /> {item.laboratory}
                           </span>
@@ -231,7 +224,7 @@ export default function HistoryPage() {
 
                     <div className="flex items-center gap-3 pt-1 text-xs text-slate-600">
                       <span><strong>{item.findingsCount}</strong> findings evaluated</span>
-                      <span>•</span>
+                      <span>â€¢</span>
                       <span className={item.attentionCount > 0 ? 'text-amber-700 font-semibold' : 'text-emerald-700'}>
                         {item.attentionCount > 0 ? `${item.attentionCount} require doctor review` : 'All parameters standard'}
                       </span>
@@ -247,7 +240,7 @@ export default function HistoryPage() {
                       size="sm"
                       icon={BarChart2}
                     >
-                      View Analysis
+                      View analysis
                     </Button>
                   </Link>
 
@@ -258,7 +251,7 @@ export default function HistoryPage() {
                       icon={Video}
                       className="shadow-xs"
                     >
-                      View Video
+                      View video
                     </Button>
                   </Link>
                 </div>

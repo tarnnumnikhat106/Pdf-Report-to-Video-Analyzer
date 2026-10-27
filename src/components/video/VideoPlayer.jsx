@@ -1,22 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Play, 
-  Pause, 
-  Volume2, 
-  VolumeX, 
-  Maximize2, 
-  RotateCcw, 
-  Download, 
-  Share2, 
-  FileText, 
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  RotateCcw,
+  Download,
+  Share2,
+  FileText,
   Sparkles,
   Layers,
-  CheckCircle2,
   Subtitles,
   Activity
 } from 'lucide-react';
 import Button from '../common/Button';
 import { useToast } from '../../context/ToastContext';
+import { formatReportName } from '../../utils/format';
+
+const FALLBACK_CHAPTERS = [
+  { time: "0:00", title: "Introduction & Overview", timestamp: 0 },
+  { time: "0:35", title: "Key Findings Walkthrough", timestamp: 35 },
+  { time: "1:20", title: "Biological Meaning & Reference Intervals", timestamp: 80 },
+  { time: "2:10", title: "Doctor Discussion Points", timestamp: 130 }
+];
 
 export default function VideoPlayer({
   videoData,
@@ -28,19 +34,20 @@ export default function VideoPlayer({
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(videoData?.durationSeconds || 165);
-  const [volume, setVolume] = useState(0.85);
+  const [volume] = useState(0.85);
   const [isMuted, setIsMuted] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [activeChapterIndex, setActiveChapterIndex] = useState(0);
   const [showCaptions, setShowCaptions] = useState(true);
   const [activeTab, setActiveTab] = useState('player'); // 'player' | 'transcript'
+  const [videoFailed, setVideoFailed] = useState(false);
 
-  const chapters = videoData?.chapters || [
-    { time: "0:00", title: "Introduction & Overview", timestamp: 0 },
-    { time: "0:35", title: "Key Findings Walkthrough", timestamp: 35 },
-    { time: "1:20", title: "Biological Meaning & Reference Intervals", timestamp: 80 },
-    { time: "2:10", title: "Doctor Discussion Points", timestamp: 130 }
-  ];
+  const chapters = videoData?.chapters || FALLBACK_CHAPTERS;
+  const activeChapter = chapters[activeChapterIndex];
+  const activeCaption = activeChapter?.caption || (videoData?.videoUrl ? videoData?.transcript : null);
+
+  const videoUrl = videoData?.videoUrl;
+  const hasRealVideo = Boolean(videoUrl) && !videoFailed;
 
   // Sync chapters with current time
   useEffect(() => {
@@ -53,10 +60,10 @@ export default function VideoPlayer({
     setActiveChapterIndex(currentIdx);
   }, [currentTime, chapters]);
 
-  // Simulated video playback timer if video tag isn't native or paused
+  // Simulated playback timer used only when no real media is available
   useEffect(() => {
     let interval = null;
-    if (isPlaying) {
+    if (isPlaying && !hasRealVideo) {
       interval = setInterval(() => {
         setCurrentTime((prev) => {
           if (prev >= duration) {
@@ -68,19 +75,41 @@ export default function VideoPlayer({
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isPlaying, duration, playbackSpeed]);
+  }, [isPlaying, duration, playbackSpeed, hasRealVideo]);
+
+  // Keep duration, volume, mute, and playback rate in sync with the media element
+  useEffect(() => {
+    if (videoData?.durationSeconds) {
+      setDuration(videoData.durationSeconds);
+    }
+  }, [videoData?.durationSeconds]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.volume = volume;
+      videoRef.current.muted = isMuted;
+    }
+  }, [volume, isMuted, hasRealVideo]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = playbackSpeed;
+    }
+  }, [playbackSpeed, hasRealVideo]);
 
   const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play().catch(() => {
-          // Fallback if browser autoplays restriction
+    const media = videoRef.current;
+    if (media) {
+      if (media.paused) {
+        media.play().catch(() => {
+          // Browser autoplay restrictions or an unavailable stream
         });
+      } else {
+        media.pause();
       }
+      return;
     }
-    setIsPlaying(!isPlaying);
+    setIsPlaying((prev) => !prev);
   };
 
   const handleSeek = (e) => {
@@ -95,6 +124,7 @@ export default function VideoPlayer({
     setCurrentTime(timestamp);
     if (videoRef.current) {
       videoRef.current.currentTime = timestamp;
+      videoRef.current.play().catch(() => {});
     }
     setIsPlaying(true);
   };
@@ -106,8 +136,20 @@ export default function VideoPlayer({
   };
 
   const handleDownload = () => {
+    if (videoUrl) {
+      const link = document.createElement('a');
+      link.href = videoUrl;
+      link.download = `${videoData?.title || 'medvision-explanation'}.mp4`;
+      link.rel = 'noopener';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      addToast('Video download started.', 'info');
+      return;
+    }
+
     addToast('Downloading educational video package (MP4 & PDF summary)...', 'info');
-    // Simulate download trigger
+    // Simulate download trigger while no rendered media exists
     setTimeout(() => {
       addToast('Download completed successfully.', 'success');
     }, 1500);
@@ -123,51 +165,53 @@ export default function VideoPlayer({
   return (
     <div className="space-y-6">
       {/* Tab Switcher for Player vs Full Script */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-line">
+        <div className="flex items-center gap-4 sm:gap-5">
           <button
             type="button"
             onClick={() => setActiveTab('player')}
-            className={`px-3.5 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+            className={`-mb-px border-b-2 px-0.5 py-2.5 text-sm font-medium transition-colors ${
               activeTab === 'player'
-                ? 'bg-blue-600 text-white'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                ? 'border-accent text-ink'
+                : 'border-transparent text-muted hover:text-ink'
             }`}
           >
-            Video Presentation
+            Video presentation
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('transcript')}
-            className={`px-3.5 py-1.5 rounded-lg text-sm font-semibold transition-colors flex items-center gap-1.5 ${
+            className={`-mb-px flex items-center gap-1.5 border-b-2 px-0.5 py-2.5 text-sm font-medium transition-colors ${
               activeTab === 'transcript'
-                ? 'bg-blue-600 text-white'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                ? 'border-accent text-ink'
+                : 'border-transparent text-muted hover:text-ink'
             }`}
           >
-            <FileText className="w-4 h-4" />
-            <span>Full Script & Transcript</span>
+            <FileText className="h-4 w-4" />
+            <span>Transcript</span>
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={handleShare}
             icon={Share2}
-            className="text-xs"
+            aria-label="Share video"
+            className="text-xs px-2.5 sm:px-3"
           >
-            Share
+            <span className="hidden sm:inline">Share</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={handleDownload}
             icon={Download}
-            className="text-xs"
+            aria-label="Download video"
+            className="text-xs px-2.5 sm:px-3"
           >
-            Download
+            <span className="hidden sm:inline">Download</span>
           </Button>
         </div>
       </div>
@@ -178,44 +222,73 @@ export default function VideoPlayer({
           <div className="lg:col-span-2 space-y-4">
             <div className="relative rounded-2xl overflow-hidden bg-slate-950 shadow-2xl border border-slate-800 aspect-video flex flex-col justify-between">
               
+              {/* Real generated video when the backend provides a URL */}
+              {hasRealVideo && (
+                <video
+                  ref={videoRef}
+                  src={videoUrl}
+                  className="absolute inset-0 h-full w-full object-cover bg-black"
+                  playsInline
+                  onLoadedMetadata={(e) => {
+                    const mediaDuration = e.currentTarget.duration;
+                    if (Number.isFinite(mediaDuration) && mediaDuration > 0) {
+                      setDuration(mediaDuration);
+                    }
+                    e.currentTarget.volume = volume;
+                    e.currentTarget.muted = isMuted;
+                    e.currentTarget.playbackRate = playbackSpeed;
+                  }}
+                  onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                  onEnded={() => setIsPlaying(false)}
+                  onError={() => {
+                    setVideoFailed(true);
+                    setIsPlaying(false);
+                  }}
+                />
+              )}
+
               {/* Fallback & Visual Infographic Presentation Layer */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center select-none bg-radial from-slate-900 to-slate-950">
-                <div className="space-y-4 max-w-lg">
-                  <div className="w-14 h-14 rounded-2xl bg-blue-600/30 border border-blue-500/40 text-blue-300 flex items-center justify-center mx-auto shadow-lg shadow-blue-500/20">
-                    <Activity className={`w-7 h-7 ${isPlaying ? 'animate-pulse' : ''}`} />
+              <div className={`absolute inset-0 flex flex-col items-center justify-center p-6 text-center select-none pointer-events-none ${hasRealVideo ? '' : 'bg-radial from-slate-900 to-slate-950'}`}>
+                {!hasRealVideo && (
+                <div className="max-w-lg space-y-4">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-md border border-paper/15 bg-paper/10 text-paper/70">
+                    <Activity className={`h-7 w-7 ${isPlaying ? 'animate-pulse' : ''}`} />
                   </div>
                   
-                  <div className="space-y-1">
-                    <span className="text-[11px] font-semibold tracking-widest text-blue-400 uppercase">
-                      MedVision AI • Chapter {activeChapterIndex + 1} of {chapters.length}
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-paper/45">
+                      MedVision · Chapter {activeChapterIndex + 1} of {chapters.length}
                     </span>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                    <h3 className="font-display text-2xl tracking-tight text-paper sm:text-3xl">
                       {chapters[activeChapterIndex]?.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto line-clamp-2">
-                      {reportName || "Medical Report Clinical Breakdown"}
+                    <p className="mx-auto max-w-md text-xs text-paper/50 sm:text-sm">
+                      {formatReportName(reportName, "Medical report breakdown")}
                     </p>
                   </div>
 
                   {/* Active Slide Infographic Badge */}
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs text-white backdrop-blur-xs">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>AI Narration & Visual Explainer</span>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs text-paper/70">
+                    <span className="h-2 w-2 rounded-full bg-accent" />
+                    <span>Preview · narration and slides</span>
                   </div>
                 </div>
+                )}
 
                 {/* Subtitle / Closed Caption Strip */}
                 {showCaptions && (
-                  <div className="absolute bottom-16 left-6 right-6 p-2.5 rounded-lg bg-black/80 border border-white/10 text-white text-xs sm:text-sm font-medium backdrop-blur-sm transition-all">
+                  <div className="absolute bottom-16 left-6 right-6 z-10 p-2.5 rounded-lg bg-black/80 border border-white/10 text-white text-xs sm:text-sm font-medium backdrop-blur-sm transition-all">
                     <p className="line-clamp-2 italic">
-                      "{chapters[activeChapterIndex]?.title}: Converting dense clinical terminology into transparent, physician-ready discussion points."
+                      {activeCaption ? `"${activeCaption}"` : 'Preview ? narration and slides'}
                     </p>
                   </div>
                 )}
               </div>
 
               {/* Big Center Play Button Overlay when Paused */}
-              {!isPlaying && (
+              {hasRealVideo && !isPlaying && (
                 <button
                   type="button"
                   onClick={togglePlay}
@@ -265,6 +338,10 @@ export default function VideoPlayer({
                       type="button"
                       onClick={() => {
                         setCurrentTime(0);
+                        if (videoRef.current) {
+                          videoRef.current.currentTime = 0;
+                          videoRef.current.play().catch(() => {});
+                        }
                         setIsPlaying(true);
                       }}
                       className="p-1.5 hover:text-blue-400 transition-colors"
@@ -310,7 +387,7 @@ export default function VideoPlayer({
                     </div>
 
                     <span className="text-[11px] text-slate-400 hidden sm:inline">
-                      1080p HD
+                      {hasRealVideo ? (videoData?.resolution || 'Video') : 'Simulated preview'}
                     </span>
                   </div>
                 </div>
@@ -318,13 +395,13 @@ export default function VideoPlayer({
             </div>
 
             {/* Video metadata card */}
-            <div className="p-4 rounded-xl bg-white border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-line bg-surface p-4">
               <div>
-                <h4 className="font-bold text-slate-900 text-base">
-                  {videoData?.title || "Your Medical Report Explained"}
+                <h4 className="font-display text-lg text-ink">
+                  {videoData?.title || "Your report, explained"}
                 </h4>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Generated with MedVision Multi-Modal Pipeline • Duration: {videoData?.duration || "2m 45s"} • Language: {videoData?.language || "English"}
+                <p className="mt-0.5 text-xs text-muted">
+                  MedVision walkthrough · {videoData?.duration || "2m 45s"} · {videoData?.language || "English"}
                 </p>
               </div>
 
@@ -335,7 +412,7 @@ export default function VideoPlayer({
                   onClick={onGenerateNew}
                   icon={Sparkles}
                 >
-                  Regenerate Video
+                  Regenerate video
                 </Button>
               )}
             </div>
@@ -343,11 +420,11 @@ export default function VideoPlayer({
 
           {/* Interactive Chapter Sidebar */}
           <div className="space-y-4">
-            <div className="p-4 rounded-xl bg-white border border-slate-200">
-              <div className="flex items-center gap-2 mb-3">
-                <Layers className="w-4 h-4 text-blue-600" />
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                  Interactive Chapters
+            <div className="rounded-lg border border-line bg-surface p-4">
+              <div className="mb-3 flex items-center gap-2">
+                <Layers className="h-4 w-4 text-accent" />
+                <h4 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+                  Chapters
                 </h4>
               </div>
               <div className="space-y-2">
@@ -358,21 +435,21 @@ export default function VideoPlayer({
                       key={idx}
                       type="button"
                       onClick={() => jumpToChapter(chap.timestamp)}
-                      className={`w-full text-left p-3 rounded-lg border transition-all text-xs flex items-center justify-between gap-3 ${
+                      className={`flex w-full items-center justify-between gap-3 rounded-md border p-3 text-left text-xs transition-colors ${
                         isCurrent
-                          ? 'bg-blue-50/80 border-blue-300 text-blue-900 font-semibold'
-                          : 'bg-slate-50/60 border-slate-200/80 text-slate-700 hover:bg-slate-100 hover:border-slate-300'
+                          ? 'border-accent/30 bg-accent-soft/60 font-semibold text-accent-deep'
+                          : 'border-line bg-paper/40 text-ink-soft hover:border-line/80 hover:bg-paper'
                       }`}
                     >
                       <div className="flex items-center gap-2.5 truncate">
-                        <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] shrink-0 font-bold ${
-                          isCurrent ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-600'
+                        <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded text-[10px] font-semibold ${
+                          isCurrent ? 'bg-accent text-surface' : 'bg-paper-deep text-muted'
                         }`}>
                           {idx + 1}
                         </span>
                         <span className="truncate">{chap.title}</span>
                       </div>
-                      <span className="font-mono text-slate-400 text-[11px] shrink-0">
+                      <span className="shrink-0 font-mono text-[11px] text-muted">
                         {chap.time}
                       </span>
                     </button>
@@ -382,26 +459,26 @@ export default function VideoPlayer({
             </div>
 
             {/* Quick Tips Box */}
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-2">
-              <p className="font-semibold text-slate-900">How to use this video:</p>
-              <ul className="list-disc pl-4 space-y-1 text-slate-500">
-                <li>Watch the chapter covering your specific attention findings.</li>
-                <li>Write down questions generated during the discussion points segment.</li>
-                <li>Play this explanation for family members or caregivers to enhance clarity.</li>
+            <div className="space-y-2 rounded-lg border border-line bg-paper-deep/40 p-4 text-xs text-muted">
+              <p className="font-semibold text-ink">How to use this walkthrough</p>
+              <ul className="list-disc space-y-1 pl-4">
+                <li>Start with the chapter covering your flagged finding.</li>
+                <li>Note the questions that come up while you listen.</li>
+                <li>Replay it with a family member or caregiver if that helps.</li>
               </ul>
             </div>
           </div>
         </div>
       ) : (
         /* Full Transcript View */
-        <div className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div className="space-y-6 rounded-lg border border-line bg-surface p-6 sm:p-8">
+          <div className="flex items-center justify-between gap-4 border-b border-line-soft pb-4">
             <div>
-              <h3 className="text-lg font-bold text-slate-900">
-                Complete Video Narration Script
+              <h3 className="font-display text-xl text-ink">
+                Video transcript
               </h3>
-              <p className="text-xs text-slate-500">
-                Verbatim transcript generated from AI natural language simplification.
+              <p className="mt-0.5 text-xs text-muted">
+                The narration, word for word. Copy it into your notes if useful.
               </p>
             </div>
             <Button
@@ -413,11 +490,11 @@ export default function VideoPlayer({
                 addToast('Transcript copied to clipboard', 'success');
               }}
             >
-              Copy Script
+              Copy transcript
             </Button>
           </div>
 
-          <div className="prose prose-slate max-w-none text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50 p-6 rounded-xl border border-slate-200/80 font-mono">
+          <div className="whitespace-pre-line rounded-md border border-line bg-paper/50 p-6 font-mono text-sm leading-relaxed text-ink-soft">
             {videoData?.transcript || "No transcript recorded for this report."}
           </div>
         </div>

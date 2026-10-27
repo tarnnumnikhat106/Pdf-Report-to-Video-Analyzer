@@ -6,6 +6,10 @@ const ToastContext = createContext(null);
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
+  const removeToast = useCallback((id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
   const addToast = useCallback((message, type = 'info', duration = 4000) => {
     const id = Date.now() + Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, message, type }]);
@@ -16,18 +20,14 @@ export function ToastProvider({ children }) {
       }, duration);
     }
     return id;
-  }, []);
-
-  const removeToast = useCallback((id) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  }, []);
+  }, [removeToast]);
 
   return (
     <ToastContext.Provider value={{ addToast, removeToast }}>
       {children}
       {/* Toast container floating bottom-right */}
       <div 
-        className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none"
+        className="pointer-events-none fixed bottom-5 left-4 right-4 z-50 flex flex-col gap-2.5 sm:left-auto sm:right-5 sm:w-full sm:max-w-sm"
         aria-live="polite"
         role="region"
         aria-label="Notifications"

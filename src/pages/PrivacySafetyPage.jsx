@@ -1,14 +1,5 @@
 import React from 'react';
-import { 
-  ShieldCheck, 
-  Lock, 
-  AlertTriangle, 
-  Stethoscope, 
-  FileWarning, 
-  UserCheck, 
-  Info,
-  HeartPulse
-} from 'lucide-react';
+import { ShieldCheck, Lock, AlertTriangle, Stethoscope, Info, HeartPulse } from 'lucide-react';
 import Card from '../components/common/Card';
 import Disclaimer from '../components/common/Disclaimer';
 

@@ -1,28 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Video, 
-  Sparkles, 
-  FileText, 
-  Download, 
-  Share2, 
-  CheckCircle2, 
-  Clock, 
-  Globe, 
-  Layers,
-  HelpCircle,
-  ExternalLink
-} from 'lucide-react';
+import { ArrowLeft, Layers } from 'lucide-react';
 import VideoPlayer from '../components/video/VideoPlayer';
 import VideoGeneratorModal from '../components/video/VideoGeneratorModal';
 import Disclaimer from '../components/common/Disclaimer';
 import LoadingState from '../components/common/LoadingState';
 import EmptyState from '../components/common/EmptyState';
-import Button from '../components/common/Button';
 import Card from '../components/common/Card';
-import { getReport, generateVideo } from '../services/api';
+import { getReport } from '../services/api';
 import { useToast } from '../context/ToastContext';
+import { formatReportName } from '../utils/format';
 
 export default function VideoExplanationPage() {
   const { reportId = 'MR-001' } = useParams();
@@ -57,13 +44,13 @@ export default function VideoExplanationPage() {
 
   const handleVideoGenerationComplete = async () => {
     try {
-      const result = await generateVideo(reportId);
-      if (result?.video) {
-        setVideoData(result.video);
-      }
+      const refreshed = await getReport(reportId);
+      setReport(refreshed);
+      setVideoData(refreshed?.videoData || null);
       addToast('Educational video generated successfully!', 'success');
     } catch (err) {
-      console.error(err);
+      console.error('Could not refresh the generated video:', err);
+      addToast('The video was generated, but the page could not refresh. Reload to view it.', 'error');
     }
   };
 
@@ -92,69 +79,69 @@ export default function VideoExplanationPage() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
       
       {/* Navigation and Report Context Strip */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col gap-3 border-b border-line pb-4 sm:flex-row sm:items-center sm:justify-between">
         <Link
           to={`/analysis/${reportId}`}
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-medium text-muted transition-colors hover:text-ink sm:text-sm"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to Analysis Dashboard</span>
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back to analysis dashboard</span>
         </Link>
-        <div className="flex items-center gap-3 text-xs text-slate-500">
-          <span className="font-medium text-slate-700">{report.reportName}</span>
-          <span>•</span>
+        <div className="flex items-center gap-2.5 text-xs text-muted">
+          <span className="font-medium text-ink-soft">{formatReportName(report.reportName, reportId)}</span>
+          <span aria-hidden="true" className="text-line">·</span>
           <span className="font-mono">{report.date}</span>
         </div>
       </div>
 
       {/* Page Title & Subtitle */}
-      <div className="space-y-1">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold">
-          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-          <span>Multi-Modal AI Synthesis</span>
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-          Educational Video Explanation
+      <div>
+        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
+          Video walkthrough
+        </p>
+        <h1 className="mt-2 font-display text-3xl tracking-tight text-ink sm:text-4xl">
+          Educational video explanation
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
-          Watch a chapter-by-chapter audiovisual walkthrough summarizing your report findings, reference ranges, and proactive questions to discuss with your physician.
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+          A chapter-by-chapter walkthrough of your findings, reference ranges, and the questions worth raising with your physician.
         </p>
       </div>
 
       {/* Video Player Container */}
       <VideoPlayer
+        key={videoData?.videoUrl || 'fallback'}
         videoData={videoData || report.videoData}
         reportName={report.reportName}
         onGenerateNew={() => setIsVideoModalOpen(true)}
       />
 
       {/* Video Generation Pipeline Architecture Note */}
-      <Card padding="p-6" className="bg-slate-50/70 border-slate-200 space-y-4">
-        <div className="flex items-center gap-2 text-slate-800">
-          <Layers className="w-5 h-5 text-blue-600" />
-          <h3 className="text-sm font-bold uppercase tracking-wider">
-            Backend Video Generation Architecture
-          </h3>
+      <Card padding="p-6" className="space-y-4">
+        <div className="flex items-center gap-2.5">
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent-soft text-accent-deep">
+            <Layers className="h-4 w-4" />
+          </span>
+          <h2 className="font-display text-xl text-ink">How this video is made</h2>
         </div>
-        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-          In production with the Python backend, this video is programmatically compiled through a pipeline consisting of:
+        <p className="text-sm leading-relaxed text-muted">
+          When the Python backend is running, the walkthrough is assembled in four stages.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
-          <div className="p-3 bg-white rounded-lg border border-slate-200">
-            <span className="font-bold text-slate-900 block mb-0.5">1. Clinical LLM Prompt</span>
-            <span className="text-slate-500">Extracts lab metrics into plain-language dialogue script.</span>
+        <div className="grid grid-cols-1 gap-3 text-xs sm:grid-cols-4">
+          <div className="rounded-md border border-line bg-paper/60 p-4">
+            <span className="block font-semibold text-ink">1. Clinical LLM prompt</span>
+            <span className="mt-1 block leading-relaxed text-muted">Turns the measured values into a plain-language script.</span>
           </div>
-          <div className="p-3 bg-white rounded-lg border border-slate-200">
-            <span className="font-bold text-slate-900 block mb-0.5">2. Text-to-Speech (TTS)</span>
-            <span className="text-slate-500">Synthesizes calm, empathetic audio narration in MP3/WAV.</span>
+          <div className="rounded-md border border-line bg-paper/60 p-4">
+            <span className="block font-semibold text-ink">2. Text to speech</span>
+            <span className="mt-1 block leading-relaxed text-muted">Synthesizes narration with natural neural voices, plus an offline fallback.</span>
           </div>
-          <div className="p-3 bg-white rounded-lg border border-slate-200">
-            <span className="font-bold text-slate-900 block mb-0.5">3. Dynamic Video Compositor</span>
-            <span className="text-slate-500">Assembles gauge charts and parameter slides via MoviePy / FFmpeg.</span>
+          <div className="rounded-md border border-line bg-paper/60 p-4">
+            <span className="block font-semibold text-ink">3. Video compositor</span>
+            <span className="mt-1 block leading-relaxed text-muted">Builds static chapter slides and joins them with FFmpeg.</span>
           </div>
-          <div className="p-3 bg-white rounded-lg border border-slate-200">
-            <span className="font-bold text-slate-900 block mb-0.5">4. Encrypted Streaming</span>
-            <span className="text-slate-500">Serves secure 1080p stream with synchronized WebVTT captions.</span>
+          <div className="rounded-md border border-line bg-paper/60 p-4">
+            <span className="block font-semibold text-ink">4. Delivery</span>
+            <span className="mt-1 block leading-relaxed text-muted">Serves the finished MP4 with chapter markers and captions.</span>
           </div>
         </div>
       </Card>

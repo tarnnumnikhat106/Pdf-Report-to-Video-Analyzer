@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
-  FileText, 
-  Calendar, 
-  User, 
-  Building2, 
   Search, 
-  Filter, 
   Video, 
-  Download, 
   Printer, 
-  Sparkles, 
+  Play,
   AlertTriangle, 
   CheckCircle2, 
+  ShieldCheck,
   Activity, 
   ArrowRight,
-  Share2,
-  ChevronRight
+  Share2
 } from 'lucide-react';
 import StatCard from '../components/common/StatCard';
 import SummaryCard from '../components/report/SummaryCard';
@@ -31,6 +25,7 @@ import EmptyState from '../components/common/EmptyState';
 import Button from '../components/common/Button';
 import { getReport } from '../services/api';
 import { useToast } from '../context/ToastContext';
+import { formatReportName } from '../utils/format';
 
 export default function AnalysisDashboardPage() {
   const { reportId = 'MR-001' } = useParams();
@@ -148,122 +143,92 @@ export default function AnalysisDashboardPage() {
   const normalFindingsCount = (report.findings || []).filter(f => f.status === 'normal').length;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
-      
-      {/* Top Header Card */}
-      <div className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-6">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-100">
-          
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md">
-                {report.reportType || "Laboratory Diagnostics"}
-              </span>
-              <span className="text-xs font-mono text-slate-400">
-                ID: {report.reportId}
-              </span>
+    <div className="mx-auto max-w-6xl space-y-8 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <header className="border-b border-line pb-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="flex flex-wrap items-center gap-3 text-[11px] font-medium uppercase tracking-[0.16em] text-muted">
+              <span className="text-accent-deep">{report.reportType || 'Laboratory diagnostics'}</span>
+              <span aria-hidden="true" className="h-3 w-px bg-line" />
+              <span className="font-mono normal-case tracking-normal">ID {report.reportId}</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Medical Report Analysis
+            <h1 className="mt-3 font-display text-3xl tracking-tight text-ink sm:text-4xl">
+              {formatReportName(report.reportName)}
             </h1>
-            
-            <p className="text-xs sm:text-sm text-slate-500 flex flex-wrap items-center gap-y-1 gap-x-4 pt-1">
-              <span className="flex items-center gap-1.5 font-medium text-slate-700">
-                <FileText className="w-4 h-4 text-slate-400" />
-                {report.reportName}
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4 text-slate-400" />
-                Analyzed on {report.date}
-              </span>
-              {report.laboratory && (
-                <>
-                  <span>•</span>
-                  <span className="flex items-center gap-1.5">
-                    <Building2 className="w-4 h-4 text-slate-400" />
-                    {report.laboratory}
-                  </span>
-                </>
-              )}
+
+            <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
+              {report.laboratory && <span>{report.laboratory}</span>}
+              {report.laboratory && <span aria-hidden="true" className="text-line">·</span>}
+              <span>Analyzed {report.date}</span>
             </p>
           </div>
 
-          {/* Quick Header Actions */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               variant="primary"
               size="md"
               icon={Video}
               onClick={() => setIsVideoModalOpen(true)}
-              className="shadow-sm shadow-blue-500/20"
             >
-              Generate Video
+              Generate video
             </Button>
 
             <Link to={`/video/${report.reportId}`}>
-              <Button
-                variant="outline"
-                size="md"
-                icon={Sparkles}
-              >
-                Watch Video
+              <Button variant="outline" size="md" icon={Play}>
+                Watch
               </Button>
             </Link>
 
-            <Button
-              variant="outline"
-              size="md"
-              icon={Printer}
-              onClick={handlePrintSummary}
-              className="hidden sm:inline-flex"
-            >
-              Print
-            </Button>
+            <div className="hidden sm:inline-flex">
+              <Button
+                variant="ghost"
+                size="md"
+                icon={Printer}
+                onClick={handlePrintSummary}
+              >
+                Print
+              </Button>
+            </div>
 
             <Button
-              variant="outline"
+              variant="ghost"
               size="md"
               icon={Share2}
               onClick={handleShareDashboard}
-              title="Share"
+              aria-label="Copy dashboard link"
+              className="px-2.5"
             />
           </div>
         </div>
 
-        {/* Top Metric Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
-            title="Total Findings"
+            title="Findings"
             value={report.findings?.length || 0}
-            subtitle="Parameters analyzed across report"
+            subtitle="Parameters read from the report"
             icon={Activity}
-            colorScheme="blue"
           />
           <StatCard
-            title="Requires Attention"
+            title="Outside range"
             value={attentionFindingsCount}
-            subtitle="Values outside reference interval"
+            subtitle="Values to review with a clinician"
             icon={AlertTriangle}
-            colorScheme={attentionFindingsCount > 0 ? "amber" : "emerald"}
           />
           <StatCard
-            title="Normal Parameters"
+            title="In range"
             value={normalFindingsCount}
-            subtitle="Within standard healthy baseline"
+            subtitle="Within the printed reference interval"
             icon={CheckCircle2}
-            colorScheme="emerald"
           />
           <StatCard
-            title="Review Status"
+            title="Report status"
             value="Complete"
-            subtitle="Laboratory findings summarized"
+            subtitle="Findings summarized"
             icon={ShieldCheck}
-            colorScheme="slate"
           />
         </div>
-      </div>
+      </header>
 
       {/* Report Summary Card ("Your Report in Simple Language") */}
       <SummaryCard
@@ -300,39 +265,36 @@ export default function AnalysisDashboardPage() {
       <div className="space-y-6">
         
         {/* Section Header with Filters & Search */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Report Findings & Parameters
+            <h2 className="font-display text-2xl tracking-tight text-ink">
+              Findings
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Select any parameter to review its biological significance and questions for your doctor.
+            <p className="mt-1 text-sm text-muted">
+              Every value from the report, with its range and a plain-language note.
             </p>
           </div>
 
-          {/* Filter and Search Controls */}
           <div className="flex flex-wrap items-center gap-2.5">
-            {/* Search Input */}
             <div className="relative min-w-[200px]">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search parameter..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Search tests"
+                className="w-full rounded-md border border-line bg-surface py-1.5 pl-9 pr-3 text-xs text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 sm:text-sm"
               />
             </div>
 
-            {/* Status Filter Buttons */}
-            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
+            <div className="flex items-center gap-0.5 rounded-md border border-line bg-paper-deep p-0.5">
               <button
                 type="button"
                 onClick={() => setStatusFilter('all')}
-                className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-colors ${
+                className={`rounded-sm px-2.5 py-1 text-xs font-medium transition-colors ${
                   statusFilter === 'all'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-surface text-ink'
+                    : 'text-muted hover:text-ink'
                 }`}
               >
                 All ({report.findings?.length || 0})
@@ -340,45 +302,44 @@ export default function AnalysisDashboardPage() {
               <button
                 type="button"
                 onClick={() => setStatusFilter('attention')}
-                className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-colors ${
+                className={`rounded-sm px-2.5 py-1 text-xs font-medium transition-colors ${
                   statusFilter === 'attention'
-                    ? 'bg-amber-100 text-amber-900 shadow-xs'
-                    : 'text-amber-700 hover:bg-amber-50'
+                    ? 'bg-attention-soft text-attention'
+                    : 'text-muted hover:text-ink'
                 }`}
               >
-                Attention ({attentionFindingsCount})
+                Review ({attentionFindingsCount})
               </button>
               <button
                 type="button"
                 onClick={() => setStatusFilter('normal')}
-                className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-colors ${
+                className={`rounded-sm px-2.5 py-1 text-xs font-medium transition-colors ${
                   statusFilter === 'normal'
-                    ? 'bg-emerald-100 text-emerald-900 shadow-xs'
-                    : 'text-emerald-700 hover:bg-emerald-50'
+                    ? 'bg-accent-soft text-accent-deep'
+                    : 'text-muted hover:text-ink'
                 }`}
               >
-                Normal ({normalFindingsCount})
+                In range ({normalFindingsCount})
               </button>
             </div>
           </div>
         </div>
 
-        {/* Category Pills if multiple exist */}
         {categories.length > 2 && (
           <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-            <span className="text-slate-400 font-medium shrink-0">Category:</span>
+            <span className="shrink-0 font-medium text-muted">Category</span>
             {categories.map((cat) => (
               <button
                 key={cat}
                 type="button"
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1 rounded-full font-medium transition-colors shrink-0 capitalize ${
+                className={`shrink-0 rounded-md px-3 py-1 font-medium capitalize transition-colors ${
                   selectedCategory === cat
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    ? 'bg-accent text-surface'
+                    : 'border border-line bg-surface text-muted hover:text-ink'
                 }`}
               >
-                {cat === 'all' ? 'All Categories' : cat}
+                {cat === 'all' ? 'All' : cat}
               </button>
             ))}
           </div>
@@ -410,16 +371,14 @@ export default function AnalysisDashboardPage() {
       </div>
 
       {/* Video Generation Callout Bar */}
-      <div className="p-6 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="flex flex-col items-center justify-between gap-4 rounded-lg border border-line bg-paper-deep/60 p-6 sm:flex-row">
         <div className="space-y-1 text-center sm:text-left">
-          <div className="flex items-center justify-center sm:justify-start gap-2">
-            <Video className="w-5 h-5 text-blue-400" />
-            <h3 className="font-bold text-base sm:text-lg">
-              Want a spoken video explanation of this report?
-            </h3>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
-            Our multi-modal generator synthesizes an educational walkthrough covering your specific lab ranges and doctor discussion questions.
+          <h3 className="font-display text-xl tracking-tight text-ink">
+            One more pass, as a video.
+          </h3>
+          <p className="max-w-xl text-sm leading-relaxed text-muted">
+            A chaptered walkthrough of this report: the findings, what they measure,
+            and questions to ask.
           </p>
         </div>
 
@@ -431,7 +390,7 @@ export default function AnalysisDashboardPage() {
           onClick={() => navigate(`/video/${report.reportId}`)}
           className="shrink-0"
         >
-          Watch Video Explanation
+          Watch the walkthrough
         </Button>
       </div>
 

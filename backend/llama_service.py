@@ -15,6 +15,8 @@ import json
 import requests
 from typing import Dict, Any, Optional
 
+from llm_provider import chat_completion, get_status as get_llm_status, is_configured, parse_json_object
+
 OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
 LLAMA_MODEL_NAME = os.environ.get("LLAMA_MODEL_NAME", "llama3.2")
 
@@ -94,6 +96,116 @@ Respond ONLY with a valid JSON object matching this exact schema:
   }}
 }}
 Do NOT output markdown code fences (```json), output only the raw JSON string."""
+
+
+def generate_video_script(report_data: Dict[str, Any], language: str = "en", timeout_seconds: int = 60) -> Optional[Dict[str, Any]]:
+    """Uses the configured API provider to write the narration for the slide video."""
+    if not is_configured():
+        return None
+
+    findings = report_data.get("findings") or []
+    attention = [f for f in findings if f.get("status") == "attention"]
+    normal = [f for f in findings if f.get("status") == "normal"]
+    llama = report_data.get("llamaAnalysis") or {}
+
+    hindi = str(language or "").strip().lower() in {"hi", "hindi", "हिन्दी", "हिंदी", "hinglish"}
+    language_name = (
+        "natural Hinglish: conversational Hindi written in Devanagari, mixed with common English words "
+        "transliterated into Devanagari"
+        if hindi
+        else "English"
+    )
+    direct_address = (
+        "Address the viewer directly as 'आप'. Sound like a friendly Indian clinician talking casually, "
+        "not like a textbook. Use everyday Hinglish and avoid pure or Sanskritized Hindi. Keep familiar "
+        "English words such as रिपोर्ट, वैल्यू, नॉर्मल रेंज, डॉक्टर, टेस्ट, रिज़ल्ट, लाइफस्टाइल, and डाइट. "
+        "Say 'नॉर्मल रेंज' instead of 'सामान्य सीमा', and 'डॉक्टर' instead of 'चिकित्सक'."
+        if hindi
+        else "Address the viewer directly as 'you' and 'your'. Keep the tone warm, calm, and conversational, "
+        "as if you are sitting beside them explaining their report. Use contractions and short sentences."
+    )
+    script_language_rule = (
+        "- Even though the JSON template is in English, write every narration and question value in Devanagari Hinglish. Keep finding names exactly as given.\n"
+        "- Example tone: \"नमस्ते! चलिए आपकी रिपोर्ट को समझते हैं। आपका हीमोग्लोबिन 9.4 g/dL है, जो नॉर्मल रेंज से कम है।\"\n"
+        if hindi
+        else ""
+    )
+
+    payload = {
+        "report_name": report_data.get("reportName", "Lab report"),
+        "summary": report_data.get("summary", ""),
+        "attention_findings": [
+            {
+                "name": f.get("name"),
+                "value": f.get("value"),
+                "unit": f.get("unit"),
+                "referenceRange": f.get("referenceRange"),
+                "simpleExplanation": f.get("simpleExplanation"),
+                "whyItMatters": f.get("whyItMatters"),
+            }
+            for f in attention[:3]
+        ],
+        "normal_findings": [
+            {"name": f.get("name"), "value": f.get("value"), "unit": f.get("unit")}
+            for f in normal[:5]
+        ],
+        "doctor_questions": (llama.get("questions_for_doctor") or [])[:3],
+    }
+
+    prompt = f"""Write narration for a short educational lab-report video.
+Use ONLY the values and facts in this JSON. Do not diagnose, do not prescribe, and do not invent numbers.
+Write every narration and question in {language_name}. Use plain, everyday language. Be calm and non-alarming.
+{direct_address}
+
+Input:
+{json.dumps(payload, indent=2)}
+
+Return ONLY this JSON object:
+{{
+  "cover_narration": "2-3 warm sentences that speak directly to the viewer, say this is their report walkthrough, and state how many of their values need review.",
+  "finding_narrations": [
+    {{"name": "exact finding name from input", "narration": "2-3 sentences: say what their value was, compare it with their reference range, then explain what it means for them in plain language. Speak to them, not about them."}}
+  ],
+  "next_narration": "1-2 sentences inviting the viewer to bring the questions to their clinician.",
+  "questions": ["3 practical questions the viewer can ask a clinician, based only on the supplied findings"]
+}}
+
+Rules:
+{script_language_rule}- Include one finding_narrations item for each attention_finding, in the same order.
+- If there are no attention findings, finding_narrations may be empty and cover_narration should say the measured values are in range.
+- Do not mention a condition as confirmed. Use phrases such as "may be linked to" or "can be seen with".
+- Do not add markdown fences or text outside the JSON object.
+- Keep every narration item to 3 sentences or fewer so it fits a short slide."""
+
+    try:
+        result = chat_completion(
+            [
+                {
+                    "role": "system",
+                    "content": (
+                        "You write careful, warm patient education scripts that speak directly to the viewer. "
+                        "You never diagnose or prescribe. Return only valid JSON."
+                    ),
+                },
+                {"role": "user", "content": prompt},
+            ],
+            json_mode=True,
+            temperature=0.3,
+            max_tokens=2200 if hindi else 1500,
+            timeout=max(timeout_seconds, 45),
+        )
+        if not result:
+            return None
+        parsed = parse_json_object(result["content"])
+        if not isinstance(parsed.get("finding_narrations"), list):
+            parsed["finding_narrations"] = []
+        if not isinstance(parsed.get("questions"), list):
+            parsed["questions"] = []
+        parsed["_model_used"] = f"{get_llm_status().get('provider_label') or 'LLM'} ? {result.get('model', 'model')}"
+        return parsed
+    except Exception as exc:
+        print(f"[Video Script] External LLM note: {type(exc).__name__}. Using the built-in script.")
+        return None
 
 
 def generate_fallback_advice(ml_output_json: Dict[str, Any]) -> Dict[str, Any]:
@@ -309,15 +421,51 @@ def generate_fallback_advice(ml_output_json: Dict[str, Any]) -> Dict[str, Any]:
             }
 
 
+def _apply_high_risk_safety(parsed: Dict[str, Any], is_high_risk: bool) -> Dict[str, Any]:
+    if is_high_risk:
+        parsed["connect_to_doctor"] = True
+        parsed["risk_level"] = "High Risk"
+        if not parsed.get("doctor_message") or len(str(parsed.get("doctor_message", ""))) < 10:
+            parsed["doctor_message"] = "High Risk Detected: Please connect with a qualified physician or specialist promptly for clinical diagnosis and guidance."
+        if not parsed.get("doctor_urgency"):
+            parsed["doctor_urgency"] = "Immediate"
+    return parsed
+
+
 def query_llama_medical_advisor(ml_output_json: Dict[str, Any], timeout_seconds: int = 40) -> Dict[str, Any]:
     """
-    Feeds the ML diagnostic JSON output into Llama 3.2 via Ollama.
+    Feeds the ML diagnostic JSON output into the configured LLM, then Ollama.
     Returns structured clinical overview, dietary guidance, and doctor escalation.
     """
     status = ml_output_json.get("status", "Normal")
     is_high_risk = "high" in status.lower() or ml_output_json.get("prediction", 0) == 1
 
     prompt = build_clinical_prompt(ml_output_json)
+
+    if is_configured():
+        try:
+            external = chat_completion(
+                [
+                    {
+                        "role": "system",
+                        "content": "You are a careful clinical education assistant. You explain laboratory results in plain language. You never diagnose or prescribe. Return only valid JSON.",
+                    },
+                    {"role": "user", "content": prompt},
+                ],
+                json_mode=True,
+                temperature=0.2,
+                max_tokens=1500,
+                timeout=max(timeout_seconds, 45),
+            )
+            if external:
+                parsed = parse_json_object(external["content"])
+                parsed = _apply_high_risk_safety(parsed, is_high_risk)
+                label = get_llm_status().get("provider_label") or external.get("provider", "LLM")
+                parsed["model_used"] = f"{label} ? {external.get('model', 'model')} (API)"
+                parsed["ml_input_processed"] = ml_output_json
+                return parsed
+        except Exception as exc:
+            print(f"[Llama Advisor] External LLM note: {type(exc).__name__}. Trying Ollama.")
 
     try:
         response = requests.post(
@@ -351,14 +499,7 @@ def query_llama_medical_advisor(ml_output_json: Dict[str, Any], timeout_seconds:
             parsed = json.loads(raw_text)
 
             # Enforce High Risk safety rule strictly
-            if is_high_risk:
-                parsed["connect_to_doctor"] = True
-                parsed["risk_level"] = "High Risk"
-                if not parsed.get("doctor_message") or len(parsed.get("doctor_message", "")) < 10:
-                    parsed["doctor_message"] = "⚠️ High Risk Detected: Please connect with a qualified physician or specialist promptly for clinical diagnosis and guidance."
-                if not parsed.get("doctor_urgency"):
-                    parsed["doctor_urgency"] = "Immediate"
-
+            parsed = _apply_high_risk_safety(parsed, is_high_risk)
             parsed["model_used"] = f"Meta Llama 3.2 (via Ollama)"
             parsed["ml_input_processed"] = ml_output_json
             return parsed
@@ -420,6 +561,24 @@ Guidelines for Your Answers:
 
     # Append current message
     messages.append({"role": "user", "content": user_message})
+
+    if is_configured():
+        try:
+            external = chat_completion(
+                messages,
+                temperature=0.4,
+                max_tokens=700,
+                timeout=max(timeout_seconds, 45),
+            )
+            if external:
+                label = get_llm_status().get("provider_label") or external.get("provider", "LLM")
+                return {
+                    "reply": external["content"],
+                    "model_used": f"{label} ? {external.get('model', 'model')} (API)",
+                    "success": True,
+                }
+        except Exception as exc:
+            print(f"[Llama Chat] External LLM note: {type(exc).__name__}. Trying Ollama.")
 
     try:
         response = requests.post(

@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  Activity, 
-  Cpu, 
-  Sparkles, 
-  ShieldCheck, 
-  ArrowRight,
-  Info
-} from 'lucide-react';
+import { Activity, Info } from 'lucide-react';
 import Card from '../components/common/Card';
 import ProgressSteps from '../components/report/ProgressSteps';
 import Disclaimer from '../components/common/Disclaimer';

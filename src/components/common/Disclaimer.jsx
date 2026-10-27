@@ -8,19 +8,20 @@ export default function Disclaimer({
 }) {
   if (variant === 'banner') {
     return (
-      <aside 
-        aria-label="Medical Disclaimer"
-        className={`bg-slate-900 text-slate-200 py-2.5 px-4 text-xs font-medium border-b border-slate-800 ${className}`}
+      <aside
+        aria-label="Medical disclaimer"
+        className={`border-b border-ink bg-ink px-4 py-2 text-[11px] text-paper/70 ${className}`}
       >
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
-          <div className="flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0" />
+        <div className="mx-auto flex max-w-6xl items-center justify-center gap-2 text-center sm:justify-between sm:text-left">
+          <span className="flex items-center gap-2">
+            <ShieldAlert className="h-3.5 w-3.5 shrink-0 text-[#e0b374]" />
             <span>
-              <strong>Educational Tool Only:</strong> MedVision AI does not provide medical diagnoses, treatment plans, or clinical prescriptions.
+              <span className="font-semibold text-paper/90">Educational tool.</span>{' '}
+              Not a diagnosis, treatment plan, or prescription.
             </span>
-          </div>
-          <span className="text-slate-400 text-[11px]">
-            Always consult a licensed physician regarding your test results.
+          </span>
+          <span className="hidden text-paper/45 sm:inline">
+            Talk to a clinician about your results.
           </span>
         </div>
       </aside>
@@ -29,14 +30,15 @@ export default function Disclaimer({
 
   if (variant === 'compact') {
     return (
-      <div 
+      <div
         role="note"
-        aria-label="Medical Disclaimer Note"
-        className={`flex items-start gap-2.5 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-600 ${className}`}
+        aria-label="Medical disclaimer note"
+        className={`flex items-start gap-2.5 rounded-md border border-line bg-paper p-3 text-xs text-ink-soft ${className}`}
       >
-        <Info className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
         <p className="leading-relaxed">
-          <strong>Notice:</strong> This explanation is generated for patient education and health literacy. It is not a clinical diagnosis and cannot replace a doctor's consultation.
+          <strong className="font-semibold text-ink">Note:</strong> This explanation
+          is for education. It is not a diagnosis and does not replace a consultation.
         </p>
       </div>
     );
@@ -44,17 +46,19 @@ export default function Disclaimer({
 
   if (variant === 'callout') {
     return (
-      <div 
+      <div
         role="region"
-        aria-label="Safety and Clinical Notice"
-        className={`rounded-xl border border-amber-200/80 bg-amber-50/70 p-4 text-amber-900 ${className}`}
+        aria-label="Safety notice"
+        className={`rounded-lg border border-attention/30 bg-attention-soft/70 p-4 text-attention ${className}`}
       >
         <div className="flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
           <div className="space-y-1 text-xs sm:text-sm">
-            <h4 className="font-semibold text-amber-900">Important Medical Safety Boundary</h4>
-            <p className="text-amber-800/90 leading-relaxed">
-              MedVision AI assists in understanding complex laboratory terminology. The system does not determine whether surgery is required, prescribe medications, predict cures, or provide a definitive medical verdict.
+            <h4 className="font-semibold">Read this as context, not care</h4>
+            <p className="leading-relaxed text-attention/85">
+              MedVision helps you understand laboratory terms. It does not decide
+              whether surgery is needed, prescribe medication, or give a definitive
+              verdict.
             </p>
           </div>
         </div>
@@ -62,33 +66,34 @@ export default function Disclaimer({
     );
   }
 
-  // Default 'card' presentation
   return (
-    <div 
+    <div
       role="region"
-      aria-label="Clinical Decision Support Disclaimer"
-      className={`rounded-xl border border-blue-100 bg-blue-50/60 p-5 ${className}`}
+      aria-label="Medical disclaimer"
+      className={`rounded-lg border border-line bg-surface p-5 ${className}`}
     >
       <div className="flex items-start gap-4">
-        <div className="p-2.5 rounded-lg bg-blue-100 text-blue-700 shrink-0">
-          <Stethoscope className="w-5 h-5" />
+        <div className="shrink-0 rounded-md bg-accent-soft p-2.5 text-accent-deep">
+          <Stethoscope className="h-5 w-5" />
         </div>
-        <div className="space-y-2 text-xs sm:text-sm text-slate-700">
-          <h4 className="font-semibold text-slate-900 text-base">
-            Medical Disclaimer & Clinical Decision Support Notice
+        <div className="space-y-2 text-xs text-ink-soft sm:text-sm">
+          <h4 className="font-display text-lg tracking-tight text-ink">
+            Not medical advice
           </h4>
-          <p className="leading-relaxed text-slate-600">
-            MedVision AI is an educational analysis system designed to promote patient health literacy and facilitate informed dialogues between patients and healthcare providers.
+          <p className="leading-relaxed">
+            This tool explains what your lab values mean. It does not establish a
+            doctor-patient relationship or replace your clinician&apos;s reading of the
+            report.
           </p>
-          <ul className="list-disc pl-5 space-y-1 text-slate-600 text-xs">
-            <li>It does <strong>not</strong> establish a physician-patient relationship.</li>
-            <li>It does <strong>not</strong> recommend or prescribe medications.</li>
-            <li>It cannot evaluate whether a procedure or surgery is indicated.</li>
-            <li>Never alter, pause, or start medications based on this automated summary.</li>
+          <ul className="list-disc space-y-1 pl-5 text-xs leading-relaxed text-muted">
+            <li>It does not diagnose a condition.</li>
+            <li>It does not recommend or adjust medication.</li>
+            <li>It cannot say whether a procedure or surgery is needed.</li>
+            <li>Do not start, stop, or change treatment based on this summary.</li>
           </ul>
           {showDoctorNote && (
-            <p className="pt-1 text-xs font-medium text-blue-900">
-              Please share these findings and discussion points directly with your treating physician.
+            <p className="pt-1 text-xs font-medium text-accent-deep">
+              Bring these notes to your treating clinician.
             </p>
           )}
         </div>

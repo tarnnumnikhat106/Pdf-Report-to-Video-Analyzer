@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  UploadCloud, 
-  ShieldCheck, 
-  Lock, 
-  FileCheck2, 
-  AlertTriangle, 
-  Info, 
-  Sparkles,
-  ArrowRight
-} from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import FileUploader from '../components/report/FileUploader';
 import Disclaimer from '../components/common/Disclaimer';
-import Card from '../components/common/Card';
 import { uploadReport } from '../services/api';
 import { useToast } from '../context/ToastContext';
+
+const steps = [
+  {
+    title: 'Read the document',
+    body: 'Text and values are pulled from the PDF or image. A straight, well-lit scan reads best.',
+  },
+  {
+    title: 'Mark the ranges',
+    body: 'Each result is compared with the reference interval printed on the report.',
+  },
+  {
+    title: 'Explain the findings',
+    body: 'You get a plain-language note for each value, plus questions to raise with a clinician.',
+  },
+];
 
 export default function UploadPage() {
   const navigate = useNavigate();
@@ -33,47 +38,46 @@ export default function UploadPage() {
         setUploadProgress(progress);
       });
 
-      addToast('Report uploaded successfully. Launching analysis pipeline...', 'success');
-      
-      // Navigate to the analysis loading transition page with the reportId
+      addToast('Report uploaded. Opening the analysis…', 'success');
+
       const reportId = response.reportId || 'MR-001';
       setTimeout(() => {
         navigate(`/analysis-loading/${reportId}`);
       }, 400);
-
     } catch (err) {
       console.error('Upload failed:', err);
-      setUploadError(err.message || 'Failed to upload report document. Please try again.');
-      addToast('Upload encountered an error.', 'error');
+      setUploadError(err.message || 'The report could not be uploaded. Try again.');
+      addToast('Upload failed.', 'error');
     } finally {
       setIsUploading(false);
     }
   };
 
   const handleSelectSample = (sampleReportId) => {
-    addToast(`Loading sample clinical report (${sampleReportId})...`, 'info');
+    addToast(`Opening sample report ${sampleReportId}…`, 'info');
     navigate(`/analysis-loading/${sampleReportId}`);
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
-      
-      {/* Page Header */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold">
-          <FileCheck2 className="w-3.5 h-3.5 text-blue-600" />
-          <span>Laboratory Report Upload & Review</span>
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-          Upload Your Medical Report
-        </h1>
-        <p className="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
-          Provide your laboratory blood work or diagnostic panel in PDF or image format to review your findings, doctor questions, and dietary guidance.
+    <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <header className="max-w-2xl">
+        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
+          Upload
         </p>
-      </div>
+        <h1 className="mt-4 font-display text-4xl tracking-tight text-ink sm:text-5xl">
+          Upload a lab report.
+        </h1>
+        <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
+          PDF, JPG, JPEG, or PNG up to 15 MB. We read the values and reference
+          ranges, then show the findings in plain language.
+        </p>
+        <p className="mt-3 inline-flex items-center gap-2 text-xs text-muted">
+          <ShieldCheck className="h-3.5 w-3.5 text-accent" />
+          Educational use only. Not a diagnosis.
+        </p>
+      </header>
 
-      {/* Main Upload Area */}
-      <Card padding="p-6 sm:p-8" className="border-slate-200 shadow-md">
+      <div className="mt-10 rounded-lg border border-line bg-surface p-6 sm:p-8">
         <FileUploader
           onSubmit={handleUploadSubmit}
           isUploading={isUploading}
@@ -82,49 +86,28 @@ export default function UploadPage() {
           onClearError={() => setUploadError(null)}
           onSelectSample={handleSelectSample}
         />
-      </Card>
-
-      {/* Security & Privacy Pillars */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-        <div className="p-4 rounded-xl bg-white border border-slate-200/90 flex items-start gap-3">
-          <div className="p-2 rounded-lg bg-emerald-50 text-emerald-600 shrink-0">
-            <Lock className="w-4 h-4" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-slate-900">Encrypted Transport</h4>
-            <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
-              Files are processed over secure SSL connections without persistent public storage.
-            </p>
-          </div>
-        </div>
-
-        <div className="p-4 rounded-xl bg-white border border-slate-200/90 flex items-start gap-3">
-          <div className="p-2 rounded-lg bg-blue-50 text-blue-600 shrink-0">
-            <FileCheck2 className="w-4 h-4" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-slate-900">Clean OCR Parsing</h4>
-            <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
-              Accepts high-resolution scans and digital PDF laboratory outputs from major providers.
-            </p>
-          </div>
-        </div>
-
-        <div className="p-4 rounded-xl bg-white border border-slate-200/90 flex items-start gap-3">
-          <div className="p-2 rounded-lg bg-amber-50 text-amber-600 shrink-0">
-            <ShieldCheck className="w-4 h-4" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-slate-900">Educational Scope</h4>
-            <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
-              Intended to support patient literacy and prepare talking points for your doctor.
-            </p>
-          </div>
-        </div>
       </div>
 
-      {/* Mandatory Disclaimer */}
-      <Disclaimer variant="callout" />
+      <section className="mt-14 border-t border-line pt-8">
+        <h2 className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted">
+          What happens next
+        </h2>
+        <div className="mt-6 grid gap-6 sm:grid-cols-3">
+          {steps.map((step, index) => (
+            <div key={step.title}>
+              <span className="font-mono text-[11px] text-muted">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h3 className="mt-2 text-sm font-semibold text-ink">{step.title}</h3>
+              <p className="mt-1.5 text-xs leading-relaxed text-muted">{step.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="mt-12">
+        <Disclaimer variant="callout" />
+      </div>
     </div>
   );
 }

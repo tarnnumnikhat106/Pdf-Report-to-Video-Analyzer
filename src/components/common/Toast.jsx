@@ -1,36 +1,37 @@
 import React from 'react';
 import { CheckCircle2, AlertTriangle, AlertCircle, Info, X } from 'lucide-react';
 
-export default function Toast({ id, message, type = 'info', onClose }) {
+export default function Toast({ message, type = 'info', onClose }) {
   const icons = {
-    success: <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />,
-    warning: <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />,
-    error: <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />,
-    info: <Info className="w-5 h-5 text-blue-600 shrink-0" />,
+    success: <CheckCircle2 className="h-4 w-4 shrink-0 text-accent" />,
+    warning: <AlertTriangle className="h-4 w-4 shrink-0 text-attention" />,
+    error: <AlertCircle className="h-4 w-4 shrink-0 text-danger" />,
+    info: <Info className="h-4 w-4 shrink-0 text-ink-soft" />,
   };
 
-  const borderStyles = {
-    success: 'border-emerald-200 bg-white/95 text-slate-800 shadow-emerald-500/10',
-    warning: 'border-amber-200 bg-white/95 text-slate-800 shadow-amber-500/10',
-    error: 'border-rose-200 bg-white/95 text-slate-800 shadow-rose-500/10',
-    info: 'border-blue-200 bg-white/95 text-slate-800 shadow-blue-500/10',
+  const accents = {
+    success: 'border-l-accent',
+    warning: 'border-l-attention',
+    error: 'border-l-danger',
+    info: 'border-l-ink-soft',
   };
 
   return (
     <div
       role="alert"
-      className={`pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border shadow-lg backdrop-blur-sm transition-all duration-300 animate-in slide-in-from-bottom-2 ${borderStyles[type] || borderStyles.info}`}
+      className={`pointer-events-auto flex items-start gap-3 rounded-md border border-line border-l-2 bg-surface p-3.5 shadow-[0_18px_40px_-28px_rgba(28,27,24,0.55)] transition-all duration-300 animate-in slide-in-from-bottom-2 ${
+        accents[type] || accents.info
+      }`}
     >
       {icons[type] || icons.info}
-      <div className="flex-1 text-sm font-medium leading-relaxed pr-1">
-        {message}
-      </div>
+      <div className="flex-1 pr-1 text-sm leading-relaxed text-ink">{message}</div>
       <button
+        type="button"
         onClick={onClose}
-        className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-md hover:bg-slate-100"
+        className="rounded-sm p-1 text-muted transition-colors hover:bg-paper-deep hover:text-ink"
         aria-label="Dismiss notification"
       >
-        <X className="w-4 h-4" />
+        <X className="h-4 w-4" />
       </button>
     </div>
   );

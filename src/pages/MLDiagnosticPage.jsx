@@ -1,22 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Sparkles, 
-  Activity, 
-  Stethoscope, 
-  Cpu, 
-  ArrowRight, 
-  Check, 
-  Copy, 
-  AlertTriangle, 
-  Apple, 
-  Ban, 
-  Droplet, 
-  Pill, 
-  RotateCcw,
-  Sliders,
+import {
+  Sparkles,
+  Stethoscope,
+  Cpu,
+  Check,
+  AlertTriangle,
+  Apple,
+  Ban,
+  Droplet,
+  Pill,
   CheckCircle2,
-  FileCode,
-  ShieldCheck,
   RefreshCw
 } from 'lucide-react';
 import Card from '../components/common/Card';
@@ -211,7 +204,6 @@ export default function MLDiagnosticPage() {
   const [formData, setFormData] = useState(TEST_CONFIGS.CBC.presets.highRisk.values);
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
-  const [copiedJson, setCopiedJson] = useState(false);
   const [mlSystemStatus, setMlSystemStatus] = useState(null);
 
   // Check backend and Ollama status on mount
@@ -261,68 +253,70 @@ export default function MLDiagnosticPage() {
     }
   };
 
-  const handleCopyJson = () => {
-    if (result?.ml_output && navigator.clipboard) {
-      navigator.clipboard.writeText(JSON.stringify(result.ml_output, null, 2));
-      setCopiedJson(true);
-      setTimeout(() => setCopiedJson(false), 2000);
-    }
-  };
-
   const currentConfig = TEST_CONFIGS[activeTest];
   const mlOutput = result?.ml_output;
   const llamaGuidance = result?.llama_guidance;
-  const isHighRisk = llamaGuidance?.connect_to_doctor || mlOutput?.status?.toLowerCase().includes('high');
+  const isHighRisk = llamaGuidance?.connect_to_doctor || String(mlOutput?.status || '').toLowerCase().includes('high');
+  const doctorNote = String(llamaGuidance?.doctor_message || 'The model placed this panel in the high risk category. Prompt professional evaluation is advised.')
+    .replace(/^[^\p{L}\p{N}]+/u, '')
+    .replace(/^high risk detected[:\s-]*/i, '');
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
       
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-200">
-        <div className="space-y-1.5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold">
-            <Cpu className="w-3.5 h-3.5 text-indigo-600" />
-            <span>ML Models & Meta Llama 3.2 Diagnostic Engine</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Interactive ML Diagnostic & Dietary Advisor
+      <div className="flex flex-col gap-6 border-b border-line pb-6 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
+            <Cpu className="h-3.5 w-3.5" />
+            Model laboratory
+          </p>
+          <h1 className="mt-2 font-display text-3xl tracking-tight text-ink sm:text-4xl">
+            Diagnostic lab
           </h1>
-          <p className="text-sm text-slate-600 max-w-2xl leading-relaxed">
-            Run trained scikit-learn models from the <code className="px-1.5 py-0.5 rounded bg-slate-100 font-mono text-xs text-indigo-700">ML/</code> folder to produce a diagnostic JSON, automatically feed it into <span className="font-semibold text-slate-800">Llama 3.2</span>, and receive clinical diet guidance with high-risk doctor escalation.
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+            Run the trained scikit-learn models on a set of blood values, then read Llama 3.2's plain-language guidance and dietary notes. High-risk results surface questions for a clinician.
           </p>
         </div>
 
         {/* System Connectivity Indicator */}
-        <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
-          <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-            <CheckCircle2 className="w-5 h-5" />
+        <div className="flex items-center gap-3 rounded-md border border-line bg-surface p-3.5">
+          <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
+            mlSystemStatus?.ollama?.available
+              ? 'bg-accent-soft text-accent-deep'
+              : 'bg-attention-soft text-attention'
+          }`}>
+            {mlSystemStatus?.ollama?.available
+              ? <CheckCircle2 className="h-5 w-5" />
+              : <AlertTriangle className="h-5 w-5" />}
           </div>
           <div className="text-xs">
-            <div className="font-bold text-slate-900 flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 font-semibold text-ink">
               <span>Llama 3.2 (Ollama)</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className={`h-2 w-2 rounded-full ${
+                mlSystemStatus?.ollama?.available ? 'bg-accent' : 'bg-attention'
+              }`} />
             </div>
-            <p className="text-slate-500 text-[11px]">
-              {mlSystemStatus?.ollama?.available ? 'Connected to local Ollama' : 'Active & Ready'}
+            <p className="mt-0.5 text-[11px] text-muted">
+              {mlSystemStatus?.ollama?.available ? 'Connected locally' : 'Using sample guidance'}
             </p>
           </div>
         </div>
       </div>
 
       {/* Test Selector Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-2 p-1.5 bg-slate-100 rounded-2xl border border-slate-200/90 max-w-md">
+      <div className="flex max-w-md flex-wrap items-center gap-1 rounded-md border border-line bg-paper-deep p-1">
         {Object.keys(TEST_CONFIGS).map((tKey) => {
-          const cfg = TEST_CONFIGS[tKey];
           const isActive = activeTest === tKey;
           return (
             <button
               key={tKey}
               type="button"
               onClick={() => handleTestTypeChange(tKey)}
-              className={`flex-1 min-w-[100px] py-2 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+              className={`min-w-[100px] flex-1 rounded px-4 py-2 text-xs font-semibold transition-colors sm:text-sm ${
                 isActive
-                  ? 'bg-white text-indigo-700 shadow-xs scale-[1.02]'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-surface text-accent-deep shadow-xs'
+                  : 'text-muted hover:text-ink'
               }`}
             >
               {tKey} Test
@@ -336,58 +330,56 @@ export default function MLDiagnosticPage() {
         
         {/* Left Column: Parameter Form & Preset Loader */}
         <div className="lg:col-span-5 space-y-6">
-          <Card padding="p-6 sm:p-7" className="border-slate-200 shadow-sm space-y-6">
+          <Card padding="p-6 sm:p-7" className="space-y-6">
             
             {/* Form Title & Presets */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 tracking-tight">
-                    {currentConfig.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    {currentConfig.description}
-                  </p>
-                </div>
+              <div>
+                <h2 className="font-display text-xl text-ink">
+                  {currentConfig.title}
+                </h2>
+                <p className="mt-1 text-xs leading-relaxed text-muted">
+                  {currentConfig.description}
+                </p>
               </div>
 
               {/* Quick Preset Buttons */}
               <div className="space-y-1.5">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                  Quick Load Clinical Presets:
+                <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted">
+                  Sample values
                 </span>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => handleLoadPreset('highRisk')}
-                    className="p-2.5 rounded-xl border border-red-200 bg-red-50/70 hover:bg-red-100/70 text-red-700 text-xs font-bold text-left transition-colors flex items-center justify-between"
+                    className="flex items-center justify-between rounded-md border border-danger/20 bg-danger-soft/60 p-2.5 text-left text-xs font-semibold text-danger transition-colors hover:border-danger/40"
                   >
-                    <span>High Risk Preset</span>
-                    <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-red-500" />
+                    <span>High risk</span>
+                    <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
                   </button>
                   <button
                     type="button"
                     onClick={() => handleLoadPreset('normal')}
-                    className="p-2.5 rounded-xl border border-emerald-200 bg-emerald-50/70 hover:bg-emerald-100/70 text-emerald-700 text-xs font-bold text-left transition-colors flex items-center justify-between"
+                    className="flex items-center justify-between rounded-md border border-accent/20 bg-accent-soft/60 p-2.5 text-left text-xs font-semibold text-accent-deep transition-colors hover:border-accent/40"
                   >
-                    <span>Normal Preset</span>
-                    <Check className="w-3.5 h-3.5 shrink-0 text-emerald-500" />
+                    <span>In range</span>
+                    <Check className="h-3.5 w-3.5 shrink-0" />
                   </button>
                 </div>
               </div>
             </div>
 
             {/* Input Controls */}
-            <div className="space-y-4 pt-2 border-t border-slate-100 max-h-[460px] overflow-y-auto pr-1">
+            <div className="max-h-[460px] space-y-3 overflow-y-auto border-t border-line-soft pt-4 pr-1">
               {currentConfig.features.map((feat) => {
                 const val = formData[feat.key] ?? '';
                 return (
-                  <div key={feat.key} className="space-y-1.5 bg-slate-50/70 p-3 rounded-xl border border-slate-200/70">
-                    <div className="flex items-center justify-between text-xs">
-                      <label htmlFor={feat.key} className="font-semibold text-slate-700">
+                  <div key={feat.key} className="space-y-1.5 rounded-md border border-line-soft bg-paper/60 p-3">
+                    <div className="flex items-center justify-between gap-3 text-xs">
+                      <label htmlFor={feat.key} className="font-medium text-ink-soft">
                         {feat.label}
                       </label>
-                      <span className="font-mono font-bold text-indigo-700">
+                      <span className="shrink-0 font-mono text-[11px] text-muted">
                         {val} {feat.unit}
                       </span>
                     </div>
@@ -399,7 +391,7 @@ export default function MLDiagnosticPage() {
                       max={feat.max}
                       value={val}
                       onChange={(e) => handleInputChange(feat.key, e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                      className="w-full rounded border border-line bg-surface px-3 py-1.5 font-mono text-xs focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/25 sm:text-sm"
                     />
                   </div>
                 );
@@ -413,9 +405,9 @@ export default function MLDiagnosticPage() {
               icon={Sparkles}
               onClick={handleRunPipeline}
               isLoading={isRunning}
-              className="w-full justify-center bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-500/20 py-3"
+              className="w-full justify-center py-3"
             >
-              {isRunning ? 'Running ML & Llama 3.2...' : 'Run ML Model & Generate Llama 3.2 Guidance'}
+              {isRunning ? 'Running the model...' : 'Run model and generate guidance'}
             </Button>
           </Card>
         </div>
@@ -424,16 +416,14 @@ export default function MLDiagnosticPage() {
         <div className="lg:col-span-7 space-y-6">
           
           {!result && !isRunning && (
-            <Card padding="p-10" className="border-slate-200 border-dashed text-center space-y-4 bg-slate-50/50">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 mx-auto flex items-center justify-center">
-                <Cpu className="w-7 h-7" />
+            <Card padding="p-10" className="space-y-4 border-dashed bg-paper/50 text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-md bg-accent-soft text-accent-deep">
+                <Cpu className="h-7 w-7" />
               </div>
-              <div className="space-y-1">
-                <h4 className="text-base font-bold text-slate-800">
-                  Ready to Run Diagnostic Pipeline
-                </h4>
-                <p className="text-xs text-slate-500 max-w-md mx-auto">
-                  Click the button on the left to pass these biomarkers into the trained ML model, extract the output JSON, and feed it into Meta Llama 3.2.
+              <div className="space-y-1.5">
+                <h2 className="font-display text-xl text-ink">Ready when you are</h2>
+                <p className="mx-auto max-w-md text-sm leading-relaxed text-muted">
+                  Run the current values through the model to see the classification, then read Llama's guidance on diet and next steps.
                 </p>
               </div>
               <Button
@@ -443,22 +433,20 @@ export default function MLDiagnosticPage() {
                 onClick={handleRunPipeline}
                 className="mt-2"
               >
-                Run Test with Current Values
+                Run with current values
               </Button>
             </Card>
           )}
 
           {isRunning && (
-            <Card padding="p-10" className="border-slate-200 text-center space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white mx-auto flex items-center justify-center animate-spin">
-                <RefreshCw className="w-6 h-6" />
+            <Card padding="p-10" className="space-y-4 text-center">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-md bg-accent-soft text-accent-deep">
+                <RefreshCw className="h-6 w-6 animate-spin" />
               </div>
-              <div className="space-y-1">
-                <h4 className="text-base font-bold text-slate-900">
-                  Executing ML Classifier & Llama 3.2 Reasoner
-                </h4>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                  Generating classification probability, synthesizing dietary recommendations, and formatting physician escalation rules...
+              <div className="space-y-1.5">
+                <h2 className="font-display text-xl text-ink">Reading the values</h2>
+                <p className="mx-auto max-w-sm text-sm leading-relaxed text-muted">
+                  Classifying the panel, drafting dietary notes, and preparing questions for a clinician if needed.
                 </p>
               </div>
             </Card>
@@ -476,41 +464,44 @@ export default function MLDiagnosticPage() {
 
               {/* STEP 3: HIGH RISK DOCTOR ALERT (MANDATORY IF HIGH RISK) */}
               {isHighRisk && (
-                <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-red-600 via-rose-600 to-amber-700 text-white shadow-lg shadow-red-500/25 space-y-5 animate-pulse-subtle">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/15 pb-4">
+                <div className="space-y-5 rounded-lg border border-danger/25 bg-danger-soft/60 p-6 sm:p-7">
+                  <div className="flex flex-col gap-3 border-b border-danger/15 pb-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-xl bg-white/20 border border-white/30 flex items-center justify-center text-white shrink-0">
-                        <Stethoscope className="w-6 h-6 animate-bounce" />
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-danger/20 bg-surface text-danger">
+                        <Stethoscope className="h-5 w-5" />
                       </div>
                       <div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-amber-200">
-                          High Risk Detected
-                        </span>
-                        <h3 className="text-xl font-black tracking-tight text-white">
-                          ⚠️ Connect to a Doctor Immediately
-                        </h3>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-danger">
+                          High risk detected
+                        </p>
+                        <h2 className="mt-0.5 font-display text-2xl text-ink">
+                          Talk to a doctor.
+                        </h2>
                       </div>
                     </div>
 
-                    <div className="px-3 py-1.5 rounded-xl bg-white/10 text-xs font-bold text-amber-200 border border-white/20">
-                      Specialist: {llamaGuidance?.recommended_doctor_specialty || "Specialist Physician"}
+                    <div className="rounded-md border border-danger/15 bg-surface/70 px-3 py-2 text-xs">
+                      <span className="block text-[10px] uppercase tracking-[0.14em] text-muted">Suggested specialty</span>
+                      <span className="mt-0.5 block font-semibold text-ink">
+                        {llamaGuidance?.recommended_doctor_specialty || "Specialist physician"}
+                      </span>
                     </div>
                   </div>
 
-                  <p className="text-sm sm:text-base font-medium text-white/95 leading-relaxed bg-black/20 p-4 rounded-xl border border-white/10">
-                    {llamaGuidance?.doctor_message || "The ML analysis indicated high clinical risk. Immediate professional evaluation is strongly advised."}
+                  <p className="rounded-md border border-danger/15 bg-surface/70 p-4 text-sm leading-relaxed text-ink-soft">
+                    {doctorNote}
                   </p>
 
                   {/* Doctor Questions Checklist */}
                   {llamaGuidance?.questions_for_doctor?.length > 0 && (
                     <div className="space-y-2">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-200">
-                        Questions for Your Doctor Visit:
-                      </h4>
-                      <ul className="space-y-1.5 text-xs text-slate-100">
+                      <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
+                        Questions for your doctor
+                      </h3>
+                      <ul className="space-y-1.5 text-xs text-ink-soft">
                         {llamaGuidance.questions_for_doctor.map((q, idx) => (
-                          <li key={idx} className="flex items-start gap-2 bg-white/10 p-2.5 rounded-lg border border-white/10">
-                            <span className="text-amber-300 font-bold mt-0.5">•</span>
+                          <li key={idx} className="flex items-start gap-2 rounded-md border border-line bg-surface px-3 py-2.5">
+                            <span className="mt-0.5 text-danger">·</span>
                             <span>{q}</span>
                           </li>
                         ))}
@@ -521,52 +512,52 @@ export default function MLDiagnosticPage() {
               )}
 
               {/* STEP 4: LLAMA 3.2 OVERVIEW & DIETARY GUIDANCE */}
-              <Card padding="p-6 sm:p-7" className="border-slate-200 shadow-sm space-y-6">
+              <Card padding="p-6 sm:p-7" className="space-y-6">
                 
                 {/* Llama 3.2 Header */}
-                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                <div className="flex items-center justify-between border-b border-line-soft pb-4">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold">
-                      <Sparkles className="w-4 h-4" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent-soft text-accent-deep">
+                      <Sparkles className="h-4 w-4" />
                     </div>
                     <div>
-                      <h4 className="text-base font-bold text-slate-900">
-                        Step 2: Llama 3.2 Medical & Dietary Advice
-                      </h4>
-                      <p className="text-xs text-slate-500">
-                        Synthesized by {llamaGuidance?.model_used || "Meta Llama 3.2"}
+                      <h2 className="font-display text-xl text-ink">
+                        Guidance from Llama 3.2
+                      </h2>
+                      <p className="mt-0.5 text-xs text-muted">
+                        {llamaGuidance?.model_used || "Meta Llama 3.2"}
                       </p>
                     </div>
                   </div>
                 </div>
 
                 {/* Overview */}
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-700 leading-relaxed">
-                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
-                    Clinical Overview
-                  </h5>
+                <div className="rounded-md border border-line bg-paper/60 p-4 text-sm leading-relaxed text-ink-soft">
+                  <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
+                    Clinical overview
+                  </h3>
                   {llamaGuidance?.overview}
                 </div>
 
                 {/* Dietary Guidance 2-Column Grid */}
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
-                    <Apple className="w-4 h-4 text-emerald-600" />
-                    <span>Evidence-Based Diet Guidance</span>
+                  <div className="flex items-center gap-2 text-sm font-semibold text-ink">
+                    <Apple className="h-4 w-4 text-accent" />
+                    <span>Dietary notes</span>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     
                     {/* Foods to Eat */}
-                    <div className="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-2">
-                      <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs uppercase tracking-wider">
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Recommended Foods</span>
+                    <div className="space-y-2 rounded-md border border-line bg-surface p-4">
+                      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-accent-deep">
+                        <Check className="h-3.5 w-3.5" />
+                        <span>Foods to include</span>
                       </div>
-                      <ul className="space-y-1.5 text-xs text-emerald-950">
+                      <ul className="space-y-1.5 text-xs leading-relaxed text-ink-soft">
                         {llamaGuidance?.diet_guidance?.recommended_foods?.map((f, i) => (
                           <li key={i} className="flex items-start gap-1.5">
-                            <span className="text-emerald-500 font-bold">•</span>
+                            <span className="text-accent">·</span>
                             <span>{f}</span>
                           </li>
                         ))}
@@ -574,15 +565,15 @@ export default function MLDiagnosticPage() {
                     </div>
 
                     {/* Foods to Avoid */}
-                    <div className="p-4 rounded-xl bg-rose-50/70 border border-rose-200 space-y-2">
-                      <div className="flex items-center gap-2 text-rose-800 font-bold text-xs uppercase tracking-wider">
-                        <Ban className="w-3.5 h-3.5 text-rose-600" />
-                        <span>Foods to Avoid / Limit</span>
+                    <div className="space-y-2 rounded-md border border-danger/20 bg-danger-soft/40 p-4">
+                      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-danger">
+                        <Ban className="h-3.5 w-3.5" />
+                        <span>Foods to limit</span>
                       </div>
-                      <ul className="space-y-1.5 text-xs text-rose-950">
+                      <ul className="space-y-1.5 text-xs leading-relaxed text-ink-soft">
                         {llamaGuidance?.diet_guidance?.foods_to_avoid?.map((f, i) => (
                           <li key={i} className="flex items-start gap-1.5">
-                            <span className="text-rose-500 font-bold">•</span>
+                            <span className="text-danger/70">·</span>
                             <span>{f}</span>
                           </li>
                         ))}

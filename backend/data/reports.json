@@ -222,30 +222,50 @@
       }
     ],
     "videoData": {
-      "title": "Educational Analysis - CBC_Comprehensive_Blood_Panel.pdf",
-      "duration": "0m 24s",
-      "durationSeconds": 24,
-      "language": "English",
-      "resolution": "1080p Full HD",
-      "videoUrl": "/media/videos/MR-001_explanation.mp4",
+      "title": "Educational Analysis - CBC Comprehensive Blood Panel",
+      "duration": "1:58",
+      "durationSeconds": 118,
+      "language": "Hinglish",
+      "narrationLanguage": "hi",
+      "resolution": "1080p",
+      "fps": 10,
+      "mode": "low_power",
+      "narrationMode": "built_in",
+      "scriptModel": null,
+      "videoUrl": "http://localhost:8000/media/videos/MR-001_explanation.mp4?v=1793114437",
       "chapters": [
         {
           "time": "0:00",
-          "title": "Introduction & Overview",
-          "timestamp": 0
+          "title": "Report overview",
+          "timestamp": 0,
+          "caption": "\u0928\u092e\u0938\u094d\u0924\u0947! \u091a\u0932\u093f\u090f \u0906\u092a\u0915\u0940 \u0932\u0948\u092c \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0915\u094b \u0938\u093e\u0925 \u092e\u0947\u0902 \u0938\u092e\u091d\u0924\u0947 \u0939\u0948\u0902\u0964 \u0906\u092a\u0915\u0940 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092e\u0947\u0902 7 \u0935\u0948\u0932\u094d\u092f\u0942\u091c\u093c \u0928\u0949\u0930\u094d\u092e\u0932 \u0930\u0947\u0902\u091c \u0938\u0947 \u092c\u093e\u0939\u0930 \u0906\u0908 \u0939\u0948\u0902\u0964 \u092e\u0948\u0902 \u0906\u0938\u093e\u0928 \u092d\u093e\u0937\u093e \u092e\u0947\u0902 \u092c\u0924\u093e\u090a\u0901\u0917\u093e \u0915\u093f \u0907\u0928\u0915\u093e \u0906\u092a\u0915\u0947 \u0932\u093f\u090f \u0915\u094d\u092f\u093e \u092e\u0924\u0932\u092c \u0939\u0948\u0964"
         },
         {
-          "time": "0:10",
-          "title": "Key Biomarker Walkthrough",
-          "timestamp": 10
+          "time": "0:18",
+          "title": "Hemoglobin (Hb)",
+          "timestamp": 18,
+          "caption": "\u0906\u092a\u0915\u0940 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092e\u0947\u0902 \u0939\u0940\u092e\u094b\u0917\u094d\u0932\u094b\u092c\u093f\u0928 9.4 g/dL \u0939\u0948, \u091c\u094b \u0928\u0949\u0930\u094d\u092e\u0932 \u0930\u0947\u0902\u091c 12.0 - 15.5 g/dL \u0938\u0947 \u0915\u092e \u0939\u0948\u0964 \u0907\u0938\u0915\u093e \u092e\u0924\u0932\u092c \u0939\u0948 \u0915\u093f \u092f\u0939 \u0935\u0948\u0932\u094d\u092f\u0942 \u0928\u0949\u0930\u094d\u092e\u0932 \u0938\u0947 \u0925\u094b\u0921\u093c\u0940 \u0905\u0932\u0917 \u0939\u0948\u0964 \u092f\u0939 \u0905\u0915\u0947\u0932\u0947 \u0915\u093f\u0938\u0940 \u092c\u0940\u092e\u093e\u0930\u0940 \u0915\u094b \u0915\u0928\u094d\u092b\u0930\u094d\u092e \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u093e, \u0907\u0938\u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0921\u0949\u0915\u094d\u091f\u0930 \u0915\u0947 \u0938\u093e\u0925 \u0907\u0938\u0947 \u091c\u093c\u0930\u0942\u0930 \u0921\u093f\u0938\u094d\u0915\u0938 \u0915\u0930\u0947\u0902\u0964"
         },
         {
-          "time": "0:25",
-          "title": "Physician Discussion Points",
-          "timestamp": 25
+          "time": "0:44",
+          "title": "Red Blood Cell Count (RBC)",
+          "timestamp": 44,
+          "caption": "\u0906\u092a\u0915\u0940 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092e\u0947\u0902 \u0906\u0930\u092c\u0940\u0938\u0940 \u0915\u093e\u0909\u0902\u091f 3.9 x10^6/\u00b5L \u0939\u0948, \u091c\u094b \u0928\u0949\u0930\u094d\u092e\u0932 \u0930\u0947\u0902\u091c 4.0 - 5.2 x10^6/\u00b5L \u0938\u0947 \u0915\u092e \u0939\u0948\u0964 \u0907\u0938\u0915\u093e \u092e\u0924\u0932\u092c \u0939\u0948 \u0915\u093f \u092f\u0939 \u0935\u0948\u0932\u094d\u092f\u0942 \u0928\u0949\u0930\u094d\u092e\u0932 \u0938\u0947 \u0925\u094b\u0921\u093c\u0940 \u0905\u0932\u0917 \u0939\u0948\u0964 \u092f\u0939 \u0905\u0915\u0947\u0932\u0947 \u0915\u093f\u0938\u0940 \u092c\u0940\u092e\u093e\u0930\u0940 \u0915\u094b \u0915\u0928\u094d\u092b\u0930\u094d\u092e \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u093e, \u0907\u0938\u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0921\u0949\u0915\u094d\u091f\u0930 \u0915\u0947 \u0938\u093e\u0925 \u0907\u0938\u0947 \u091c\u093c\u0930\u0942\u0930 \u0921\u093f\u0938\u094d\u0915\u0938 \u0915\u0930\u0947\u0902\u0964"
+        },
+        {
+          "time": "1:10",
+          "title": "Hematocrit (Hct)",
+          "timestamp": 70,
+          "caption": "\u0906\u092a\u0915\u0940 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092e\u0947\u0902 \u0939\u0940\u092e\u0947\u091f\u094b\u0915\u094d\u0930\u093f\u091f 29.5 % \u0939\u0948, \u091c\u094b \u0928\u0949\u0930\u094d\u092e\u0932 \u0930\u0947\u0902\u091c 36.0 - 46.0 % \u0938\u0947 \u0915\u092e \u0939\u0948\u0964 \u0907\u0938\u0915\u093e \u092e\u0924\u0932\u092c \u0939\u0948 \u0915\u093f \u092f\u0939 \u0935\u0948\u0932\u094d\u092f\u0942 \u0928\u0949\u0930\u094d\u092e\u0932 \u0938\u0947 \u0925\u094b\u0921\u093c\u0940 \u0905\u0932\u0917 \u0939\u0948\u0964 \u092f\u0939 \u0905\u0915\u0947\u0932\u0947 \u0915\u093f\u0938\u0940 \u092c\u0940\u092e\u093e\u0930\u0940 \u0915\u094b \u0915\u0928\u094d\u092b\u0930\u094d\u092e \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u093e, \u0907\u0938\u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0921\u0949\u0915\u094d\u091f\u0930 \u0915\u0947 \u0938\u093e\u0925 \u0907\u0938\u0947 \u091c\u093c\u0930\u0942\u0930 \u0921\u093f\u0938\u094d\u0915\u0938 \u0915\u0930\u0947\u0902\u0964"
+        },
+        {
+          "time": "1:36",
+          "title": "Questions for your doctor",
+          "timestamp": 96,
+          "caption": "\u0921\u0949\u0915\u094d\u091f\u0930 \u0938\u0947 \u092e\u093f\u0932\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947, \u092f\u0947 \u0938\u0935\u093e\u0932 \u0938\u093e\u0925 \u0930\u0916\u0947\u0902\u0964 \u0915\u094d\u092f\u093e \u0907\u0928\u092e\u0947\u0902 \u0938\u0947 \u0915\u094b\u0908 \u092d\u0940 \u0930\u093f\u091c\u093c\u0932\u094d\u091f \u0926\u094b\u092c\u093e\u0930\u093e \u091f\u0947\u0938\u094d\u091f \u0915\u0930\u0928\u0947 \u0915\u0940 \u091c\u093c\u0930\u0942\u0930\u0924 \u0930\u0916\u0924\u093e \u0939\u0948? \u0915\u094d\u092f\u093e \u092e\u0947\u0930\u0940 \u0932\u093e\u0907\u092b\u0938\u094d\u091f\u093e\u0907\u0932 \u092f\u093e \u0921\u093e\u0907\u091f \u092e\u0947\u0902 \u0915\u094b\u0908 \u092c\u0926\u0932\u093e\u0935 \u092e\u0926\u0926 \u0915\u0930 \u0938\u0915\u0924\u093e \u0939\u0948? \u0915\u094c\u0928 \u0938\u0947 \u0938\u093f\u092e\u094d\u092a\u094d\u091f\u092e\u094d\u0938 \u0926\u093f\u0916\u0928\u0947 \u092a\u0930 \u092e\u0941\u091d\u0947 \u091c\u0932\u094d\u0926\u0940 \u0921\u0949\u0915\u094d\u091f\u0930 \u0938\u0947 \u092e\u093f\u0932\u0928\u093e \u091a\u093e\u0939\u093f\u090f?"
         }
       ],
-      "transcript": "Welcome to your MedVision AI educational report overview. We have analyzed your complete blood count results. Our machine learning model identified notable indicators, especially in Hemoglobin (Hb) at 9.4 g/dL. Your immune and clotting markers remain stable. Please schedule a consultation with your physician to discuss these findings."
+      "transcript": "\u0928\u092e\u0938\u094d\u0924\u0947! \u091a\u0932\u093f\u090f \u0906\u092a\u0915\u0940 \u0932\u0948\u092c \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0915\u094b \u0938\u093e\u0925 \u092e\u0947\u0902 \u0938\u092e\u091d\u0924\u0947 \u0939\u0948\u0902\u0964 \u0906\u092a\u0915\u0940 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092e\u0947\u0902 7 \u0935\u0948\u0932\u094d\u092f\u0942\u091c\u093c \u0928\u0949\u0930\u094d\u092e\u0932 \u0930\u0947\u0902\u091c \u0938\u0947 \u092c\u093e\u0939\u0930 \u0906\u0908 \u0939\u0948\u0902\u0964 \u092e\u0948\u0902 \u0906\u0938\u093e\u0928 \u092d\u093e\u0937\u093e \u092e\u0947\u0902 \u092c\u0924\u093e\u090a\u0901\u0917\u093e \u0915\u093f \u0907\u0928\u0915\u093e \u0906\u092a\u0915\u0947 \u0932\u093f\u090f \u0915\u094d\u092f\u093e \u092e\u0924\u0932\u092c \u0939\u0948\u0964 \u0906\u092a\u0915\u0940 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092e\u0947\u0902 \u0939\u0940\u092e\u094b\u0917\u094d\u0932\u094b\u092c\u093f\u0928 9.4 g/dL \u0939\u0948, \u091c\u094b \u0928\u0949\u0930\u094d\u092e\u0932 \u0930\u0947\u0902\u091c 12.0 - 15.5 g/dL \u0938\u0947 \u0915\u092e \u0939\u0948\u0964 \u0907\u0938\u0915\u093e \u092e\u0924\u0932\u092c \u0939\u0948 \u0915\u093f \u092f\u0939 \u0935\u0948\u0932\u094d\u092f\u0942 \u0928\u0949\u0930\u094d\u092e\u0932 \u0938\u0947 \u0925\u094b\u0921\u093c\u0940 \u0905\u0932\u0917 \u0939\u0948\u0964 \u092f\u0939 \u0905\u0915\u0947\u0932\u0947 \u0915\u093f\u0938\u0940 \u092c\u0940\u092e\u093e\u0930\u0940 \u0915\u094b \u0915\u0928\u094d\u092b\u0930\u094d\u092e \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u093e, \u0907\u0938\u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0921\u0949\u0915\u094d\u091f\u0930 \u0915\u0947 \u0938\u093e\u0925 \u0907\u0938\u0947 \u091c\u093c\u0930\u0942\u0930 \u0921\u093f\u0938\u094d\u0915\u0938 \u0915\u0930\u0947\u0902\u0964 \u0906\u092a\u0915\u0940 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092e\u0947\u0902 \u0906\u0930\u092c\u0940\u0938\u0940 \u0915\u093e\u0909\u0902\u091f 3.9 x10^6/\u00b5L \u0939\u0948, \u091c\u094b \u0928\u0949\u0930\u094d\u092e\u0932 \u0930\u0947\u0902\u091c 4.0 - 5.2 x10^6/\u00b5L \u0938\u0947 \u0915\u092e \u0939\u0948\u0964 \u0907\u0938\u0915\u093e \u092e\u0924\u0932\u092c \u0939\u0948 \u0915\u093f \u092f\u0939 \u0935\u0948\u0932\u094d\u092f\u0942 \u0928\u0949\u0930\u094d\u092e\u0932 \u0938\u0947 \u0925\u094b\u0921\u093c\u0940 \u0905\u0932\u0917 \u0939\u0948\u0964 \u092f\u0939 \u0905\u0915\u0947\u0932\u0947 \u0915\u093f\u0938\u0940 \u092c\u0940\u092e\u093e\u0930\u0940 \u0915\u094b \u0915\u0928\u094d\u092b\u0930\u094d\u092e \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u093e, \u0907\u0938\u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0921\u0949\u0915\u094d\u091f\u0930 \u0915\u0947 \u0938\u093e\u0925 \u0907\u0938\u0947 \u091c\u093c\u0930\u0942\u0930 \u0921\u093f\u0938\u094d\u0915\u0938 \u0915\u0930\u0947\u0902\u0964 \u0906\u092a\u0915\u0940 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092e\u0947\u0902 \u0939\u0940\u092e\u0947\u091f\u094b\u0915\u094d\u0930\u093f\u091f 29.5 % \u0939\u0948, \u091c\u094b \u0928\u0949\u0930\u094d\u092e\u0932 \u0930\u0947\u0902\u091c 36.0 - 46.0 % \u0938\u0947 \u0915\u092e \u0939\u0948\u0964 \u0907\u0938\u0915\u093e \u092e\u0924\u0932\u092c \u0939\u0948 \u0915\u093f \u092f\u0939 \u0935\u0948\u0932\u094d\u092f\u0942 \u0928\u0949\u0930\u094d\u092e\u0932 \u0938\u0947 \u0925\u094b\u0921\u093c\u0940 \u0905\u0932\u0917 \u0939\u0948\u0964 \u092f\u0939 \u0905\u0915\u0947\u0932\u0947 \u0915\u093f\u0938\u0940 \u092c\u0940\u092e\u093e\u0930\u0940 \u0915\u094b \u0915\u0928\u094d\u092b\u0930\u094d\u092e \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u093e, \u0907\u0938\u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0921\u0949\u0915\u094d\u091f\u0930 \u0915\u0947 \u0938\u093e\u0925 \u0907\u0938\u0947 \u091c\u093c\u0930\u0942\u0930 \u0921\u093f\u0938\u094d\u0915\u0938 \u0915\u0930\u0947\u0902\u0964 \u0921\u0949\u0915\u094d\u091f\u0930 \u0938\u0947 \u092e\u093f\u0932\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947, \u092f\u0947 \u0938\u0935\u093e\u0932 \u0938\u093e\u0925 \u0930\u0916\u0947\u0902\u0964 \u0915\u094d\u092f\u093e \u0907\u0928\u092e\u0947\u0902 \u0938\u0947 \u0915\u094b\u0908 \u092d\u0940 \u0930\u093f\u091c\u093c\u0932\u094d\u091f \u0926\u094b\u092c\u093e\u0930\u093e \u091f\u0947\u0938\u094d\u091f \u0915\u0930\u0928\u0947 \u0915\u0940 \u091c\u093c\u0930\u0942\u0930\u0924 \u0930\u0916\u0924\u093e \u0939\u0948? \u0915\u094d\u092f\u093e \u092e\u0947\u0930\u0940 \u0932\u093e\u0907\u092b\u0938\u094d\u091f\u093e\u0907\u0932 \u092f\u093e \u0921\u093e\u0907\u091f \u092e\u0947\u0902 \u0915\u094b\u0908 \u092c\u0926\u0932\u093e\u0935 \u092e\u0926\u0926 \u0915\u0930 \u0938\u0915\u0924\u093e \u0939\u0948? \u0915\u094c\u0928 \u0938\u0947 \u0938\u093f\u092e\u094d\u092a\u094d\u091f\u092e\u094d\u0938 \u0926\u093f\u0916\u0928\u0947 \u092a\u0930 \u092e\u0941\u091d\u0947 \u091c\u0932\u094d\u0926\u0940 \u0921\u0949\u0915\u094d\u091f\u0930 \u0938\u0947 \u092e\u093f\u0932\u0928\u093e \u091a\u093e\u0939\u093f\u090f?"
     },
     "mlAnalysis": {
       "predicted_condition": "Microcytic Iron Deficiency Anemia",
@@ -344,5 +364,2100 @@
     "normalCount": 0,
     "findings": [],
     "videoData": null
+  },
+  "MR-1E1324": {
+    "reportId": "MR-1E1324",
+    "reportName": "report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 38,
+    "patientGender": "Adult",
+    "date": "2026-10-27",
+    "laboratory": "Diagnostic Health Labs",
+    "doctor": "Dr. A. Verma, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\pdf-report-to-video-analyzer\\backend\\uploads\\MR-1E1324_report.pdf",
+    "summary": "Report uploaded. Ready for AI & ML analysis.",
+    "attentionCount": 0,
+    "normalCount": 0,
+    "findings": [],
+    "videoData": null
+  },
+  "MR-8CE06B": {
+    "reportId": "MR-8CE06B",
+    "reportName": "report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 38,
+    "patientGender": "Adult",
+    "date": "2026-10-27",
+    "laboratory": "Diagnostic Health Labs",
+    "doctor": "Dr. A. Verma, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\pdf-report-to-video-analyzer\\backend\\uploads\\MR-8CE06B_report.pdf",
+    "summary": "Report uploaded. Ready for AI & ML analysis.",
+    "attentionCount": 0,
+    "normalCount": 0,
+    "findings": [],
+    "videoData": null
+  },
+  "MR-3E60CD": {
+    "reportId": "MR-3E60CD",
+    "reportName": "MR-CFA301_report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 38,
+    "patientGender": "Adult",
+    "date": "2026-10-27",
+    "laboratory": "Diagnostic Health Labs",
+    "doctor": "Dr. A. Verma, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\pdf-report-to-video-analyzer\\backend\\uploads\\MR-3E60CD_MR-CFA301_report.pdf",
+    "summary": "Report uploaded. Ready for AI & ML analysis.",
+    "attentionCount": 0,
+    "normalCount": 0,
+    "findings": [],
+    "videoData": null
+  },
+  "MR-6DC4D3": {
+    "reportId": "MR-6DC4D3",
+    "reportName": "MR-CFA301_report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 38,
+    "patientGender": "Adult",
+    "date": "2026-10-27",
+    "laboratory": "Diagnostic Health Labs",
+    "doctor": "Dr. A. Verma, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\pdf-report-to-video-analyzer\\backend\\uploads\\MR-6DC4D3_MR-CFA301_report.pdf",
+    "summary": "Report uploaded. Ready for AI & ML analysis.",
+    "attentionCount": 0,
+    "normalCount": 0,
+    "findings": [],
+    "videoData": null
+  },
+  "MR-B03534": {
+    "reportId": "MR-B03534",
+    "reportName": "MR-CFA301_report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 30,
+    "patientGender": "Adult",
+    "date": "October 16, 2026",
+    "laboratory": "Metropolis Clinical Diagnostics",
+    "doctor": "Dr. Alex Mercer, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\pdf-report-to-video-analyzer\\backend\\uploads\\MR-B03534_MR-CFA301_report.pdf",
+    "summary": "All analyzed blood biomarkers are comfortably within physiological reference limits. The ML diagnostic model confirmed a Healthy Homeostatic Baseline (92.0% confidence).",
+    "attentionCount": 0,
+    "normalCount": 12,
+    "findings": [
+      {
+        "id": "f-01",
+        "name": "Hemoglobin (Hb)",
+        "category": "Complete Blood Count",
+        "value": 15.0,
+        "unit": "g/dL",
+        "referenceRange": "12.0 - 17.5 g/dL",
+        "minRef": 12.0,
+        "maxRef": 17.5,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (15.0 g/dL).",
+        "simpleExplanation": "Hemoglobin (Hb) is well-balanced within the normal healthy range (12.0 - 17.5 g/dL).",
+        "detailedDescription": "Essential iron-rich protein in red blood cells that transports oxygen from your lungs to your muscles, brain, and tissues.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hemoglobin (Hb) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-02",
+        "name": "Red Blood Cell Count (RBC)",
+        "category": "Complete Blood Count",
+        "value": 5.0,
+        "unit": "x10^6/\u00b5L",
+        "referenceRange": "4.0 - 5.9 x10^6/\u00b5L",
+        "minRef": 4.0,
+        "maxRef": 5.9,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (5.0 x10^6/\u00b5L).",
+        "simpleExplanation": "Red Blood Cell Count (RBC) is well-balanced within the normal healthy range (4.0 - 5.9 x10^6/\u00b5L).",
+        "detailedDescription": "The absolute count of circulating oxygen-carrying cells produced in your bone marrow.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Red Blood Cell Count (RBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-03",
+        "name": "Hematocrit / Packed Cell Volume (PCV)",
+        "category": "Complete Blood Count",
+        "value": 44.0,
+        "unit": "%",
+        "referenceRange": "36.0 - 50.0 %",
+        "minRef": 36.0,
+        "maxRef": 50.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (44.0 %).",
+        "simpleExplanation": "Hematocrit / Packed Cell Volume (PCV) is well-balanced within the normal healthy range (36.0 - 50.0 %).",
+        "detailedDescription": "The percentage of your total blood volume occupied by red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hematocrit / Packed Cell Volume (PCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-04",
+        "name": "White Blood Cell Count (WBC)",
+        "category": "Complete Blood Count",
+        "value": 7000.0,
+        "unit": "cells/\u00b5L",
+        "referenceRange": "4500.0 - 11000.0 cells/\u00b5L",
+        "minRef": 4500.0,
+        "maxRef": 11000.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (7000.0 cells/\u00b5L).",
+        "simpleExplanation": "White Blood Cell Count (WBC) is well-balanced within the normal healthy range (4500.0 - 11000.0 cells/\u00b5L).",
+        "detailedDescription": "Primary defensive immune cells circulating in the blood to fight off bacteria and viruses.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My White Blood Cell Count (WBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-05",
+        "name": "Blood Glucose (BGR)",
+        "category": "Metabolic Panel",
+        "value": 100.0,
+        "unit": "mg/dL",
+        "referenceRange": "70.0 - 140.0 mg/dL",
+        "minRef": 70.0,
+        "maxRef": 140.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (100.0 mg/dL).",
+        "simpleExplanation": "Blood Glucose (BGR) is well-balanced within the normal healthy range (70.0 - 140.0 mg/dL).",
+        "detailedDescription": "Primary circulating sugar supplying cellular energy; regulated primarily by insulin.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Glucose (BGR) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-06",
+        "name": "Blood Urea (BU)",
+        "category": "Renal & Metabolic Panel",
+        "value": 35.0,
+        "unit": "mg/dL",
+        "referenceRange": "15.0 - 40.0 mg/dL",
+        "minRef": 15.0,
+        "maxRef": 40.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (35.0 mg/dL).",
+        "simpleExplanation": "Blood Urea (BU) is well-balanced within the normal healthy range (15.0 - 40.0 mg/dL).",
+        "detailedDescription": "Primary waste product of protein metabolism cleared by the kidneys.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Urea (BU) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-07",
+        "name": "Serum Creatinine (SC)",
+        "category": "Renal & Metabolic Panel",
+        "value": 0.9,
+        "unit": "mg/dL",
+        "referenceRange": "0.6 - 1.2 mg/dL",
+        "minRef": 0.6,
+        "maxRef": 1.2,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (0.9 mg/dL).",
+        "simpleExplanation": "Serum Creatinine (SC) is well-balanced within the normal healthy range (0.6 - 1.2 mg/dL).",
+        "detailedDescription": "Critical biochemical byproduct of muscle energy metabolism; accurate indicator of kidney filtration.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Creatinine (SC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-08",
+        "name": "Serum Sodium (Sod)",
+        "category": "Electrolyte Panel",
+        "value": 138.0,
+        "unit": "mEq/L",
+        "referenceRange": "135.0 - 145.0 mEq/L",
+        "minRef": 135.0,
+        "maxRef": 145.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (138.0 mEq/L).",
+        "simpleExplanation": "Serum Sodium (Sod) is well-balanced within the normal healthy range (135.0 - 145.0 mEq/L).",
+        "detailedDescription": "Essential extracellular electrolyte regulating fluid balance, nerve conduction, and blood pressure.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Sodium (Sod) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-09",
+        "name": "Serum Potassium (Pot)",
+        "category": "Electrolyte Panel",
+        "value": 4.5,
+        "unit": "mEq/L",
+        "referenceRange": "3.5 - 5.1 mEq/L",
+        "minRef": 3.5,
+        "maxRef": 5.1,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (4.5 mEq/L).",
+        "simpleExplanation": "Serum Potassium (Pot) is well-balanced within the normal healthy range (3.5 - 5.1 mEq/L).",
+        "detailedDescription": "Critical intracellular electrolyte vital for cardiac rhythm stability and neuromuscular transmission.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Potassium (Pot) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-10",
+        "name": "Urine Specific Gravity (SG)",
+        "category": "Urinalysis",
+        "value": 1.02,
+        "unit": "",
+        "referenceRange": "1.005 - 1.03 ",
+        "minRef": 1.005,
+        "maxRef": 1.03,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (1.02 ).",
+        "simpleExplanation": "Urine Specific Gravity (SG) is well-balanced within the normal healthy range (1.005 - 1.03 ).",
+        "detailedDescription": "Reflects the kidney's ability to concentrate or dilute urine.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Urine Specific Gravity (SG) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-11",
+        "name": "Mean Corpuscular Volume (MCV)",
+        "category": "Red Blood Cell Indices",
+        "value": 88.0,
+        "unit": "fL",
+        "referenceRange": "80.0 - 100.0 fL",
+        "minRef": 80.0,
+        "maxRef": 100.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (88.0 fL).",
+        "simpleExplanation": "Mean Corpuscular Volume (MCV) is well-balanced within the normal healthy range (80.0 - 100.0 fL).",
+        "detailedDescription": "The average physical volume and size of individual red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Volume (MCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-12",
+        "name": "Mean Corpuscular Hemoglobin (MCH)",
+        "category": "Red Blood Cell Indices",
+        "value": 30.0,
+        "unit": "pg",
+        "referenceRange": "27.0 - 33.0 pg",
+        "minRef": 27.0,
+        "maxRef": 33.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (30.0 pg).",
+        "simpleExplanation": "Mean Corpuscular Hemoglobin (MCH) is well-balanced within the normal healthy range (27.0 - 33.0 pg).",
+        "detailedDescription": "The average weight of hemoglobin contained inside each individual red blood cell.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Hemoglobin (MCH) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      }
+    ],
+    "videoData": null,
+    "mlAnalysis": {
+      "predicted_condition": "Normal Homeostasis",
+      "confidence_score": 92.0,
+      "prediction_index": 0,
+      "probabilities": {
+        "Normal Homeostasis": 92.0,
+        "Microcytic Iron Deficiency Anemia": 8.0
+      },
+      "ml_payload": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    },
+    "llamaAnalysis": {
+      "overview": "Your recent CBC results indicate a 'Normal' status with a 92.0% statistical likelihood of being within healthy ranges. This suggests that the key components of your blood, such as red blood cells, white blood cells, and platelets, are currently within expected limits for your age and gender. It's reassuring to see these results, indicating good general blood health at this time.",
+      "risk_level": "Normal",
+      "connect_to_doctor": false,
+      "doctor_urgency": "Routine",
+      "doctor_message": "While your results are currently normal, it's always beneficial to discuss any health concerns or routine check-ups with your General Physician to ensure ongoing well-being and address any questions you may have.",
+      "recommended_doctor_specialty": "General Physician",
+      "questions_for_doctor": [
+        "Are there any specific lifestyle adjustments I should consider to maintain these healthy blood parameters?",
+        "How often should I have a CBC test done as part of my routine health monitoring?",
+        "Are there any other preventative screenings or tests you would recommend based on my age and overall health?"
+      ],
+      "diet_guidance": {
+        "recommended_foods": [
+          "Lean proteins (e.g., chicken, fish, beans, lentils) for overall cell health.",
+          "Whole grains (e.g., oats, brown rice, quinoa) for sustained energy and fiber.",
+          "A variety of fruits and vegetables (e.g., berries, leafy greens, bell peppers) for antioxidants and vitamins.",
+          "Healthy fats (e.g., avocados, nuts, seeds, olive oil) for essential fatty acids.",
+          "Dairy or fortified plant-based alternatives for calcium and vitamin D."
+        ],
+        "foods_to_avoid": [
+          "Excessive intake of highly processed foods high in unhealthy fats and sugars.",
+          "Large amounts of artificial sweeteners and additives.",
+          "Excessive alcohol consumption, which can impact overall health."
+        ],
+        "hydration_and_habits": [
+          "Drink adequate water throughout the day to support blood volume and overall bodily functions.",
+          "Engage in regular physical activity, such as walking or cycling, to promote circulation and cardiovascular health.",
+          "Aim for 7-9 hours of quality sleep per night to support cellular repair and regeneration."
+        ],
+        "key_nutrients": [
+          "Iron (essential for hemoglobin production and oxygen transport)",
+          "Vitamin B12 (crucial for red blood cell formation and neurological function)",
+          "Folate (important for DNA synthesis and cell division, including blood cells)",
+          "Vitamin C (enhances iron absorption and acts as an antioxidant)"
+        ]
+      },
+      "model_used": "Google Gemini ? gemini-2.5-flash (API)",
+      "ml_input_processed": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    }
+  },
+  "MR-565423": {
+    "reportId": "MR-565423",
+    "reportName": "MR-CFA301_report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 30,
+    "patientGender": "Adult",
+    "date": "October 16, 2026",
+    "laboratory": "Metropolis Clinical Diagnostics",
+    "doctor": "Dr. Alex Mercer, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\pdf-report-to-video-analyzer\\backend\\uploads\\MR-565423_MR-CFA301_report.pdf",
+    "summary": "All analyzed blood biomarkers are comfortably within physiological reference limits. The ML diagnostic model confirmed a Healthy Homeostatic Baseline (92.0% confidence).",
+    "attentionCount": 0,
+    "normalCount": 12,
+    "findings": [
+      {
+        "id": "f-01",
+        "name": "Hemoglobin (Hb)",
+        "category": "Complete Blood Count",
+        "value": 15.0,
+        "unit": "g/dL",
+        "referenceRange": "12.0 - 17.5 g/dL",
+        "minRef": 12.0,
+        "maxRef": 17.5,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (15.0 g/dL).",
+        "simpleExplanation": "Hemoglobin (Hb) is well-balanced within the normal healthy range (12.0 - 17.5 g/dL).",
+        "detailedDescription": "Essential iron-rich protein in red blood cells that transports oxygen from your lungs to your muscles, brain, and tissues.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hemoglobin (Hb) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-02",
+        "name": "Red Blood Cell Count (RBC)",
+        "category": "Complete Blood Count",
+        "value": 5.0,
+        "unit": "x10^6/\u00b5L",
+        "referenceRange": "4.0 - 5.9 x10^6/\u00b5L",
+        "minRef": 4.0,
+        "maxRef": 5.9,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (5.0 x10^6/\u00b5L).",
+        "simpleExplanation": "Red Blood Cell Count (RBC) is well-balanced within the normal healthy range (4.0 - 5.9 x10^6/\u00b5L).",
+        "detailedDescription": "The absolute count of circulating oxygen-carrying cells produced in your bone marrow.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Red Blood Cell Count (RBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-03",
+        "name": "Hematocrit / Packed Cell Volume (PCV)",
+        "category": "Complete Blood Count",
+        "value": 44.0,
+        "unit": "%",
+        "referenceRange": "36.0 - 50.0 %",
+        "minRef": 36.0,
+        "maxRef": 50.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (44.0 %).",
+        "simpleExplanation": "Hematocrit / Packed Cell Volume (PCV) is well-balanced within the normal healthy range (36.0 - 50.0 %).",
+        "detailedDescription": "The percentage of your total blood volume occupied by red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hematocrit / Packed Cell Volume (PCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-04",
+        "name": "White Blood Cell Count (WBC)",
+        "category": "Complete Blood Count",
+        "value": 7000.0,
+        "unit": "cells/\u00b5L",
+        "referenceRange": "4500.0 - 11000.0 cells/\u00b5L",
+        "minRef": 4500.0,
+        "maxRef": 11000.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (7000.0 cells/\u00b5L).",
+        "simpleExplanation": "White Blood Cell Count (WBC) is well-balanced within the normal healthy range (4500.0 - 11000.0 cells/\u00b5L).",
+        "detailedDescription": "Primary defensive immune cells circulating in the blood to fight off bacteria and viruses.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My White Blood Cell Count (WBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-05",
+        "name": "Blood Glucose (BGR)",
+        "category": "Metabolic Panel",
+        "value": 100.0,
+        "unit": "mg/dL",
+        "referenceRange": "70.0 - 140.0 mg/dL",
+        "minRef": 70.0,
+        "maxRef": 140.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (100.0 mg/dL).",
+        "simpleExplanation": "Blood Glucose (BGR) is well-balanced within the normal healthy range (70.0 - 140.0 mg/dL).",
+        "detailedDescription": "Primary circulating sugar supplying cellular energy; regulated primarily by insulin.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Glucose (BGR) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-06",
+        "name": "Blood Urea (BU)",
+        "category": "Renal & Metabolic Panel",
+        "value": 35.0,
+        "unit": "mg/dL",
+        "referenceRange": "15.0 - 40.0 mg/dL",
+        "minRef": 15.0,
+        "maxRef": 40.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (35.0 mg/dL).",
+        "simpleExplanation": "Blood Urea (BU) is well-balanced within the normal healthy range (15.0 - 40.0 mg/dL).",
+        "detailedDescription": "Primary waste product of protein metabolism cleared by the kidneys.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Urea (BU) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-07",
+        "name": "Serum Creatinine (SC)",
+        "category": "Renal & Metabolic Panel",
+        "value": 0.9,
+        "unit": "mg/dL",
+        "referenceRange": "0.6 - 1.2 mg/dL",
+        "minRef": 0.6,
+        "maxRef": 1.2,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (0.9 mg/dL).",
+        "simpleExplanation": "Serum Creatinine (SC) is well-balanced within the normal healthy range (0.6 - 1.2 mg/dL).",
+        "detailedDescription": "Critical biochemical byproduct of muscle energy metabolism; accurate indicator of kidney filtration.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Creatinine (SC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-08",
+        "name": "Serum Sodium (Sod)",
+        "category": "Electrolyte Panel",
+        "value": 138.0,
+        "unit": "mEq/L",
+        "referenceRange": "135.0 - 145.0 mEq/L",
+        "minRef": 135.0,
+        "maxRef": 145.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (138.0 mEq/L).",
+        "simpleExplanation": "Serum Sodium (Sod) is well-balanced within the normal healthy range (135.0 - 145.0 mEq/L).",
+        "detailedDescription": "Essential extracellular electrolyte regulating fluid balance, nerve conduction, and blood pressure.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Sodium (Sod) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-09",
+        "name": "Serum Potassium (Pot)",
+        "category": "Electrolyte Panel",
+        "value": 4.5,
+        "unit": "mEq/L",
+        "referenceRange": "3.5 - 5.1 mEq/L",
+        "minRef": 3.5,
+        "maxRef": 5.1,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (4.5 mEq/L).",
+        "simpleExplanation": "Serum Potassium (Pot) is well-balanced within the normal healthy range (3.5 - 5.1 mEq/L).",
+        "detailedDescription": "Critical intracellular electrolyte vital for cardiac rhythm stability and neuromuscular transmission.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Potassium (Pot) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-10",
+        "name": "Urine Specific Gravity (SG)",
+        "category": "Urinalysis",
+        "value": 1.02,
+        "unit": "",
+        "referenceRange": "1.005 - 1.03 ",
+        "minRef": 1.005,
+        "maxRef": 1.03,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (1.02 ).",
+        "simpleExplanation": "Urine Specific Gravity (SG) is well-balanced within the normal healthy range (1.005 - 1.03 ).",
+        "detailedDescription": "Reflects the kidney's ability to concentrate or dilute urine.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Urine Specific Gravity (SG) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-11",
+        "name": "Mean Corpuscular Volume (MCV)",
+        "category": "Red Blood Cell Indices",
+        "value": 88.0,
+        "unit": "fL",
+        "referenceRange": "80.0 - 100.0 fL",
+        "minRef": 80.0,
+        "maxRef": 100.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (88.0 fL).",
+        "simpleExplanation": "Mean Corpuscular Volume (MCV) is well-balanced within the normal healthy range (80.0 - 100.0 fL).",
+        "detailedDescription": "The average physical volume and size of individual red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Volume (MCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-12",
+        "name": "Mean Corpuscular Hemoglobin (MCH)",
+        "category": "Red Blood Cell Indices",
+        "value": 30.0,
+        "unit": "pg",
+        "referenceRange": "27.0 - 33.0 pg",
+        "minRef": 27.0,
+        "maxRef": 33.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (30.0 pg).",
+        "simpleExplanation": "Mean Corpuscular Hemoglobin (MCH) is well-balanced within the normal healthy range (27.0 - 33.0 pg).",
+        "detailedDescription": "The average weight of hemoglobin contained inside each individual red blood cell.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Hemoglobin (MCH) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      }
+    ],
+    "videoData": null,
+    "mlAnalysis": {
+      "predicted_condition": "Normal Homeostasis",
+      "confidence_score": 92.0,
+      "prediction_index": 0,
+      "probabilities": {
+        "Normal Homeostasis": 92.0,
+        "Microcytic Iron Deficiency Anemia": 8.0
+      },
+      "ml_payload": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    },
+    "llamaAnalysis": {
+      "overview": "All Complete Blood Count parameters are balanced within standard healthy intervals. The ML model detected no acute hematological abnormalities, reflecting stable oxygen transport and immune reserves.",
+      "risk_level": "Normal",
+      "connect_to_doctor": false,
+      "doctor_urgency": "Routine",
+      "doctor_message": "Your blood counts are currently in the normal reference range. Continue routine annual preventive health screenings.",
+      "recommended_doctor_specialty": "General Physician",
+      "questions_for_doctor": [
+        "Are there any specific blood markers you recommend monitoring annually?",
+        "Does my current diet provide adequate micronutrients for active lifestyle needs?"
+      ],
+      "diet_guidance": {
+        "recommended_foods": [
+          "Balanced proteins: Fish, lean poultry, legumes, and eggs",
+          "Rainbow vegetables: Cruciferous vegetables, carrots, bell peppers, and beets",
+          "Whole grains: Quinoa, oats, brown rice, and whole wheat",
+          "Healthy fats: Olive oil, walnuts, chia seeds, and avocados"
+        ],
+        "foods_to_avoid": [
+          "Excessive refined sugars and sweetened beverages",
+          "Heavy trans fats and heavily deep-fried foods"
+        ],
+        "hydration_and_habits": [
+          "Maintain steady hydration with 2 to 2.5 liters of clean water daily",
+          "Engage in 150 minutes of moderate aerobic exercise weekly",
+          "Maintain consistent sleep hygiene for optimal cellular regeneration"
+        ],
+        "key_nutrients": [
+          "Balanced Protein",
+          "Dietary Fiber",
+          "Antioxidants",
+          "B-Complex Vitamins"
+        ]
+      },
+      "model_used": "Llama 3.2 Clinical Engine (Clinical Rule Fallback)",
+      "ml_input_processed": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    }
+  },
+  "MR-17DC68": {
+    "reportId": "MR-17DC68",
+    "reportName": "report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 30,
+    "patientGender": "Adult",
+    "date": "October 16, 2026",
+    "laboratory": "Metropolis Clinical Diagnostics",
+    "doctor": "Dr. Alex Mercer, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\pdf-report-to-video-analyzer\\backend\\uploads\\MR-17DC68_report.pdf",
+    "summary": "All analyzed blood biomarkers are comfortably within physiological reference limits. The ML diagnostic model confirmed a Healthy Homeostatic Baseline (92.0% confidence).",
+    "attentionCount": 0,
+    "normalCount": 12,
+    "findings": [
+      {
+        "id": "f-01",
+        "name": "Hemoglobin (Hb)",
+        "category": "Complete Blood Count",
+        "value": 15.0,
+        "unit": "g/dL",
+        "referenceRange": "12.0 - 17.5 g/dL",
+        "minRef": 12.0,
+        "maxRef": 17.5,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (15.0 g/dL).",
+        "simpleExplanation": "Hemoglobin (Hb) is well-balanced within the normal healthy range (12.0 - 17.5 g/dL).",
+        "detailedDescription": "Essential iron-rich protein in red blood cells that transports oxygen from your lungs to your muscles, brain, and tissues.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hemoglobin (Hb) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-02",
+        "name": "Red Blood Cell Count (RBC)",
+        "category": "Complete Blood Count",
+        "value": 5.0,
+        "unit": "x10^6/\u00b5L",
+        "referenceRange": "4.0 - 5.9 x10^6/\u00b5L",
+        "minRef": 4.0,
+        "maxRef": 5.9,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (5.0 x10^6/\u00b5L).",
+        "simpleExplanation": "Red Blood Cell Count (RBC) is well-balanced within the normal healthy range (4.0 - 5.9 x10^6/\u00b5L).",
+        "detailedDescription": "The absolute count of circulating oxygen-carrying cells produced in your bone marrow.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Red Blood Cell Count (RBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-03",
+        "name": "Hematocrit / Packed Cell Volume (PCV)",
+        "category": "Complete Blood Count",
+        "value": 44.0,
+        "unit": "%",
+        "referenceRange": "36.0 - 50.0 %",
+        "minRef": 36.0,
+        "maxRef": 50.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (44.0 %).",
+        "simpleExplanation": "Hematocrit / Packed Cell Volume (PCV) is well-balanced within the normal healthy range (36.0 - 50.0 %).",
+        "detailedDescription": "The percentage of your total blood volume occupied by red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hematocrit / Packed Cell Volume (PCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-04",
+        "name": "White Blood Cell Count (WBC)",
+        "category": "Complete Blood Count",
+        "value": 7000.0,
+        "unit": "cells/\u00b5L",
+        "referenceRange": "4500.0 - 11000.0 cells/\u00b5L",
+        "minRef": 4500.0,
+        "maxRef": 11000.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (7000.0 cells/\u00b5L).",
+        "simpleExplanation": "White Blood Cell Count (WBC) is well-balanced within the normal healthy range (4500.0 - 11000.0 cells/\u00b5L).",
+        "detailedDescription": "Primary defensive immune cells circulating in the blood to fight off bacteria and viruses.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My White Blood Cell Count (WBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-05",
+        "name": "Blood Glucose (BGR)",
+        "category": "Metabolic Panel",
+        "value": 100.0,
+        "unit": "mg/dL",
+        "referenceRange": "70.0 - 140.0 mg/dL",
+        "minRef": 70.0,
+        "maxRef": 140.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (100.0 mg/dL).",
+        "simpleExplanation": "Blood Glucose (BGR) is well-balanced within the normal healthy range (70.0 - 140.0 mg/dL).",
+        "detailedDescription": "Primary circulating sugar supplying cellular energy; regulated primarily by insulin.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Glucose (BGR) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-06",
+        "name": "Blood Urea (BU)",
+        "category": "Renal & Metabolic Panel",
+        "value": 35.0,
+        "unit": "mg/dL",
+        "referenceRange": "15.0 - 40.0 mg/dL",
+        "minRef": 15.0,
+        "maxRef": 40.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (35.0 mg/dL).",
+        "simpleExplanation": "Blood Urea (BU) is well-balanced within the normal healthy range (15.0 - 40.0 mg/dL).",
+        "detailedDescription": "Primary waste product of protein metabolism cleared by the kidneys.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Urea (BU) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-07",
+        "name": "Serum Creatinine (SC)",
+        "category": "Renal & Metabolic Panel",
+        "value": 0.9,
+        "unit": "mg/dL",
+        "referenceRange": "0.6 - 1.2 mg/dL",
+        "minRef": 0.6,
+        "maxRef": 1.2,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (0.9 mg/dL).",
+        "simpleExplanation": "Serum Creatinine (SC) is well-balanced within the normal healthy range (0.6 - 1.2 mg/dL).",
+        "detailedDescription": "Critical biochemical byproduct of muscle energy metabolism; accurate indicator of kidney filtration.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Creatinine (SC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-08",
+        "name": "Serum Sodium (Sod)",
+        "category": "Electrolyte Panel",
+        "value": 138.0,
+        "unit": "mEq/L",
+        "referenceRange": "135.0 - 145.0 mEq/L",
+        "minRef": 135.0,
+        "maxRef": 145.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (138.0 mEq/L).",
+        "simpleExplanation": "Serum Sodium (Sod) is well-balanced within the normal healthy range (135.0 - 145.0 mEq/L).",
+        "detailedDescription": "Essential extracellular electrolyte regulating fluid balance, nerve conduction, and blood pressure.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Sodium (Sod) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-09",
+        "name": "Serum Potassium (Pot)",
+        "category": "Electrolyte Panel",
+        "value": 4.5,
+        "unit": "mEq/L",
+        "referenceRange": "3.5 - 5.1 mEq/L",
+        "minRef": 3.5,
+        "maxRef": 5.1,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (4.5 mEq/L).",
+        "simpleExplanation": "Serum Potassium (Pot) is well-balanced within the normal healthy range (3.5 - 5.1 mEq/L).",
+        "detailedDescription": "Critical intracellular electrolyte vital for cardiac rhythm stability and neuromuscular transmission.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Potassium (Pot) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-10",
+        "name": "Urine Specific Gravity (SG)",
+        "category": "Urinalysis",
+        "value": 1.02,
+        "unit": "",
+        "referenceRange": "1.005 - 1.03 ",
+        "minRef": 1.005,
+        "maxRef": 1.03,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (1.02 ).",
+        "simpleExplanation": "Urine Specific Gravity (SG) is well-balanced within the normal healthy range (1.005 - 1.03 ).",
+        "detailedDescription": "Reflects the kidney's ability to concentrate or dilute urine.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Urine Specific Gravity (SG) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-11",
+        "name": "Mean Corpuscular Volume (MCV)",
+        "category": "Red Blood Cell Indices",
+        "value": 88.0,
+        "unit": "fL",
+        "referenceRange": "80.0 - 100.0 fL",
+        "minRef": 80.0,
+        "maxRef": 100.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (88.0 fL).",
+        "simpleExplanation": "Mean Corpuscular Volume (MCV) is well-balanced within the normal healthy range (80.0 - 100.0 fL).",
+        "detailedDescription": "The average physical volume and size of individual red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Volume (MCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-12",
+        "name": "Mean Corpuscular Hemoglobin (MCH)",
+        "category": "Red Blood Cell Indices",
+        "value": 30.0,
+        "unit": "pg",
+        "referenceRange": "27.0 - 33.0 pg",
+        "minRef": 27.0,
+        "maxRef": 33.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (30.0 pg).",
+        "simpleExplanation": "Mean Corpuscular Hemoglobin (MCH) is well-balanced within the normal healthy range (27.0 - 33.0 pg).",
+        "detailedDescription": "The average weight of hemoglobin contained inside each individual red blood cell.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Hemoglobin (MCH) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      }
+    ],
+    "videoData": null,
+    "mlAnalysis": {
+      "predicted_condition": "Normal Homeostasis",
+      "confidence_score": 92.0,
+      "prediction_index": 0,
+      "probabilities": {
+        "Normal Homeostasis": 92.0,
+        "Microcytic Iron Deficiency Anemia": 8.0
+      },
+      "ml_payload": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    },
+    "llamaAnalysis": {
+      "overview": "The CBC test result indicates that your blood work is within normal limits, with a low risk of any underlying health issues. However, it's essential to maintain a balanced diet and lifestyle to support overall health. Please consult your doctor if you have any concerns.",
+      "risk_level": "Normal",
+      "connect_to_doctor": false,
+      "doctor_urgency": "Routine",
+      "doctor_message": "Please consult your doctor to discuss any concerns and ensure your overall health is on track.",
+      "recommended_doctor_specialty": "General Physician",
+      "questions_for_doctor": [
+        "What are the best ways to maintain healthy hemoglobin levels?",
+        "How can I support my overall immune function?",
+        "Are there any specific nutrients I should be taking to support my health?",
+        "Can you recommend any lifestyle changes to reduce my risk of chronic diseases?"
+      ],
+      "diet_guidance": {
+        "recommended_foods": [
+          "Spinach",
+          "Sweet Potatoes",
+          "Salmon",
+          "Almonds"
+        ],
+        "foods_to_avoid": [
+          "Processed Meats",
+          "Refined Sugars",
+          "Fried Foods"
+        ],
+        "hydration_and_habits": [
+          "Drink at least 8 glasses of water a day",
+          "Eat 5 servings of fruits and vegetables daily"
+        ],
+        "key_nutrients": [
+          "Iron",
+          "Vitamin D",
+          "Omega-3 Fatty Acids"
+        ]
+      },
+      "model_used": "Meta Llama 3.2 (via Ollama)",
+      "ml_input_processed": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    }
+  },
+  "MR-A7D90F": {
+    "reportId": "MR-A7D90F",
+    "reportName": "report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 30,
+    "patientGender": "Adult",
+    "date": "October 16, 2026",
+    "laboratory": "Metropolis Clinical Diagnostics",
+    "doctor": "Dr. Alex Mercer, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\pdf-report-to-video-analyzer\\backend\\uploads\\MR-A7D90F_report.pdf",
+    "summary": "All analyzed blood biomarkers are comfortably within physiological reference limits. The ML diagnostic model confirmed a Healthy Homeostatic Baseline (92.0% confidence).",
+    "attentionCount": 0,
+    "normalCount": 12,
+    "findings": [
+      {
+        "id": "f-01",
+        "name": "Hemoglobin (Hb)",
+        "category": "Complete Blood Count",
+        "value": 15.0,
+        "unit": "g/dL",
+        "referenceRange": "12.0 - 17.5 g/dL",
+        "minRef": 12.0,
+        "maxRef": 17.5,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (15.0 g/dL).",
+        "simpleExplanation": "Hemoglobin (Hb) is well-balanced within the normal healthy range (12.0 - 17.5 g/dL).",
+        "detailedDescription": "Essential iron-rich protein in red blood cells that transports oxygen from your lungs to your muscles, brain, and tissues.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hemoglobin (Hb) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-02",
+        "name": "Red Blood Cell Count (RBC)",
+        "category": "Complete Blood Count",
+        "value": 5.0,
+        "unit": "x10^6/\u00b5L",
+        "referenceRange": "4.0 - 5.9 x10^6/\u00b5L",
+        "minRef": 4.0,
+        "maxRef": 5.9,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (5.0 x10^6/\u00b5L).",
+        "simpleExplanation": "Red Blood Cell Count (RBC) is well-balanced within the normal healthy range (4.0 - 5.9 x10^6/\u00b5L).",
+        "detailedDescription": "The absolute count of circulating oxygen-carrying cells produced in your bone marrow.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Red Blood Cell Count (RBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-03",
+        "name": "Hematocrit / Packed Cell Volume (PCV)",
+        "category": "Complete Blood Count",
+        "value": 44.0,
+        "unit": "%",
+        "referenceRange": "36.0 - 50.0 %",
+        "minRef": 36.0,
+        "maxRef": 50.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (44.0 %).",
+        "simpleExplanation": "Hematocrit / Packed Cell Volume (PCV) is well-balanced within the normal healthy range (36.0 - 50.0 %).",
+        "detailedDescription": "The percentage of your total blood volume occupied by red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hematocrit / Packed Cell Volume (PCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-04",
+        "name": "White Blood Cell Count (WBC)",
+        "category": "Complete Blood Count",
+        "value": 7000.0,
+        "unit": "cells/\u00b5L",
+        "referenceRange": "4500.0 - 11000.0 cells/\u00b5L",
+        "minRef": 4500.0,
+        "maxRef": 11000.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (7000.0 cells/\u00b5L).",
+        "simpleExplanation": "White Blood Cell Count (WBC) is well-balanced within the normal healthy range (4500.0 - 11000.0 cells/\u00b5L).",
+        "detailedDescription": "Primary defensive immune cells circulating in the blood to fight off bacteria and viruses.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My White Blood Cell Count (WBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-05",
+        "name": "Blood Glucose (BGR)",
+        "category": "Metabolic Panel",
+        "value": 100.0,
+        "unit": "mg/dL",
+        "referenceRange": "70.0 - 140.0 mg/dL",
+        "minRef": 70.0,
+        "maxRef": 140.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (100.0 mg/dL).",
+        "simpleExplanation": "Blood Glucose (BGR) is well-balanced within the normal healthy range (70.0 - 140.0 mg/dL).",
+        "detailedDescription": "Primary circulating sugar supplying cellular energy; regulated primarily by insulin.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Glucose (BGR) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-06",
+        "name": "Blood Urea (BU)",
+        "category": "Renal & Metabolic Panel",
+        "value": 35.0,
+        "unit": "mg/dL",
+        "referenceRange": "15.0 - 40.0 mg/dL",
+        "minRef": 15.0,
+        "maxRef": 40.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (35.0 mg/dL).",
+        "simpleExplanation": "Blood Urea (BU) is well-balanced within the normal healthy range (15.0 - 40.0 mg/dL).",
+        "detailedDescription": "Primary waste product of protein metabolism cleared by the kidneys.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Urea (BU) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-07",
+        "name": "Serum Creatinine (SC)",
+        "category": "Renal & Metabolic Panel",
+        "value": 0.9,
+        "unit": "mg/dL",
+        "referenceRange": "0.6 - 1.2 mg/dL",
+        "minRef": 0.6,
+        "maxRef": 1.2,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (0.9 mg/dL).",
+        "simpleExplanation": "Serum Creatinine (SC) is well-balanced within the normal healthy range (0.6 - 1.2 mg/dL).",
+        "detailedDescription": "Critical biochemical byproduct of muscle energy metabolism; accurate indicator of kidney filtration.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Creatinine (SC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-08",
+        "name": "Serum Sodium (Sod)",
+        "category": "Electrolyte Panel",
+        "value": 138.0,
+        "unit": "mEq/L",
+        "referenceRange": "135.0 - 145.0 mEq/L",
+        "minRef": 135.0,
+        "maxRef": 145.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (138.0 mEq/L).",
+        "simpleExplanation": "Serum Sodium (Sod) is well-balanced within the normal healthy range (135.0 - 145.0 mEq/L).",
+        "detailedDescription": "Essential extracellular electrolyte regulating fluid balance, nerve conduction, and blood pressure.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Sodium (Sod) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-09",
+        "name": "Serum Potassium (Pot)",
+        "category": "Electrolyte Panel",
+        "value": 4.5,
+        "unit": "mEq/L",
+        "referenceRange": "3.5 - 5.1 mEq/L",
+        "minRef": 3.5,
+        "maxRef": 5.1,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (4.5 mEq/L).",
+        "simpleExplanation": "Serum Potassium (Pot) is well-balanced within the normal healthy range (3.5 - 5.1 mEq/L).",
+        "detailedDescription": "Critical intracellular electrolyte vital for cardiac rhythm stability and neuromuscular transmission.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Potassium (Pot) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-10",
+        "name": "Urine Specific Gravity (SG)",
+        "category": "Urinalysis",
+        "value": 1.02,
+        "unit": "",
+        "referenceRange": "1.005 - 1.03 ",
+        "minRef": 1.005,
+        "maxRef": 1.03,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (1.02 ).",
+        "simpleExplanation": "Urine Specific Gravity (SG) is well-balanced within the normal healthy range (1.005 - 1.03 ).",
+        "detailedDescription": "Reflects the kidney's ability to concentrate or dilute urine.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Urine Specific Gravity (SG) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-11",
+        "name": "Mean Corpuscular Volume (MCV)",
+        "category": "Red Blood Cell Indices",
+        "value": 88.0,
+        "unit": "fL",
+        "referenceRange": "80.0 - 100.0 fL",
+        "minRef": 80.0,
+        "maxRef": 100.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (88.0 fL).",
+        "simpleExplanation": "Mean Corpuscular Volume (MCV) is well-balanced within the normal healthy range (80.0 - 100.0 fL).",
+        "detailedDescription": "The average physical volume and size of individual red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Volume (MCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-12",
+        "name": "Mean Corpuscular Hemoglobin (MCH)",
+        "category": "Red Blood Cell Indices",
+        "value": 30.0,
+        "unit": "pg",
+        "referenceRange": "27.0 - 33.0 pg",
+        "minRef": 27.0,
+        "maxRef": 33.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (30.0 pg).",
+        "simpleExplanation": "Mean Corpuscular Hemoglobin (MCH) is well-balanced within the normal healthy range (27.0 - 33.0 pg).",
+        "detailedDescription": "The average weight of hemoglobin contained inside each individual red blood cell.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Hemoglobin (MCH) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      }
+    ],
+    "videoData": null,
+    "mlAnalysis": {
+      "predicted_condition": "Normal Homeostasis",
+      "confidence_score": 92.0,
+      "prediction_index": 0,
+      "probabilities": {
+        "Normal Homeostasis": 92.0,
+        "Microcytic Iron Deficiency Anemia": 8.0
+      },
+      "ml_payload": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    },
+    "llamaAnalysis": {
+      "overview": "The CBC test result indicates that the patient's blood work is within normal limits, with a low risk of 92.0%. This suggests that the patient's current health status is stable, but it is essential to maintain a balanced diet and healthy lifestyle to support overall well-being.",
+      "risk_level": "Normal",
+      "connect_to_doctor": false,
+      "doctor_urgency": "Routine",
+      "doctor_message": "Please consult with your primary care physician to discuss any concerns or questions you may have about your health.",
+      "recommended_doctor_specialty": "General Physician",
+      "questions_for_doctor": [
+        "What are the best ways to maintain healthy hemoglobin levels?",
+        "Are there any specific nutrients or supplements that can support my overall health?",
+        "How often should I schedule follow-up blood tests to monitor my health?"
+      ],
+      "diet_guidance": {
+        "recommended_foods": [
+          "Spinach",
+          "Almonds",
+          "Sweet Potatoes",
+          "Fatty Fish"
+        ],
+        "foods_to_avoid": [
+          "Processed Meats",
+          "Refined Sugars",
+          "Fried Foods"
+        ],
+        "hydration_and_habits": [
+          "Drink at least 8 glasses of water a day",
+          "Limit sodium intake to less than 2,300mg"
+        ],
+        "key_nutrients": [
+          "Iron",
+          "Vitamin D",
+          "Omega-3 Fatty Acids"
+        ]
+      },
+      "model_used": "Meta Llama 3.2 (via Ollama)",
+      "ml_input_processed": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    }
+  },
+  "MR-9DCB72": {
+    "reportId": "MR-9DCB72",
+    "reportName": "report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 30,
+    "patientGender": "Adult",
+    "date": "October 16, 2026",
+    "laboratory": "Metropolis Clinical Diagnostics",
+    "doctor": "Dr. Alex Mercer, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\pdf-report-to-video-analyzer\\backend\\uploads\\MR-9DCB72_report.pdf",
+    "summary": "All analyzed blood biomarkers are comfortably within physiological reference limits. The ML diagnostic model confirmed a Healthy Homeostatic Baseline (92.0% confidence).",
+    "attentionCount": 0,
+    "normalCount": 12,
+    "findings": [
+      {
+        "id": "f-01",
+        "name": "Hemoglobin (Hb)",
+        "category": "Complete Blood Count",
+        "value": 15.0,
+        "unit": "g/dL",
+        "referenceRange": "12.0 - 17.5 g/dL",
+        "minRef": 12.0,
+        "maxRef": 17.5,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (15.0 g/dL).",
+        "simpleExplanation": "Hemoglobin (Hb) is well-balanced within the normal healthy range (12.0 - 17.5 g/dL).",
+        "detailedDescription": "Essential iron-rich protein in red blood cells that transports oxygen from your lungs to your muscles, brain, and tissues.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hemoglobin (Hb) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-02",
+        "name": "Red Blood Cell Count (RBC)",
+        "category": "Complete Blood Count",
+        "value": 5.0,
+        "unit": "x10^6/\u00b5L",
+        "referenceRange": "4.0 - 5.9 x10^6/\u00b5L",
+        "minRef": 4.0,
+        "maxRef": 5.9,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (5.0 x10^6/\u00b5L).",
+        "simpleExplanation": "Red Blood Cell Count (RBC) is well-balanced within the normal healthy range (4.0 - 5.9 x10^6/\u00b5L).",
+        "detailedDescription": "The absolute count of circulating oxygen-carrying cells produced in your bone marrow.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Red Blood Cell Count (RBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-03",
+        "name": "Hematocrit / Packed Cell Volume (PCV)",
+        "category": "Complete Blood Count",
+        "value": 44.0,
+        "unit": "%",
+        "referenceRange": "36.0 - 50.0 %",
+        "minRef": 36.0,
+        "maxRef": 50.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (44.0 %).",
+        "simpleExplanation": "Hematocrit / Packed Cell Volume (PCV) is well-balanced within the normal healthy range (36.0 - 50.0 %).",
+        "detailedDescription": "The percentage of your total blood volume occupied by red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hematocrit / Packed Cell Volume (PCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-04",
+        "name": "White Blood Cell Count (WBC)",
+        "category": "Complete Blood Count",
+        "value": 7000.0,
+        "unit": "cells/\u00b5L",
+        "referenceRange": "4500.0 - 11000.0 cells/\u00b5L",
+        "minRef": 4500.0,
+        "maxRef": 11000.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (7000.0 cells/\u00b5L).",
+        "simpleExplanation": "White Blood Cell Count (WBC) is well-balanced within the normal healthy range (4500.0 - 11000.0 cells/\u00b5L).",
+        "detailedDescription": "Primary defensive immune cells circulating in the blood to fight off bacteria and viruses.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My White Blood Cell Count (WBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-05",
+        "name": "Blood Glucose (BGR)",
+        "category": "Metabolic Panel",
+        "value": 100.0,
+        "unit": "mg/dL",
+        "referenceRange": "70.0 - 140.0 mg/dL",
+        "minRef": 70.0,
+        "maxRef": 140.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (100.0 mg/dL).",
+        "simpleExplanation": "Blood Glucose (BGR) is well-balanced within the normal healthy range (70.0 - 140.0 mg/dL).",
+        "detailedDescription": "Primary circulating sugar supplying cellular energy; regulated primarily by insulin.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Glucose (BGR) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-06",
+        "name": "Blood Urea (BU)",
+        "category": "Renal & Metabolic Panel",
+        "value": 35.0,
+        "unit": "mg/dL",
+        "referenceRange": "15.0 - 40.0 mg/dL",
+        "minRef": 15.0,
+        "maxRef": 40.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (35.0 mg/dL).",
+        "simpleExplanation": "Blood Urea (BU) is well-balanced within the normal healthy range (15.0 - 40.0 mg/dL).",
+        "detailedDescription": "Primary waste product of protein metabolism cleared by the kidneys.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Urea (BU) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-07",
+        "name": "Serum Creatinine (SC)",
+        "category": "Renal & Metabolic Panel",
+        "value": 0.9,
+        "unit": "mg/dL",
+        "referenceRange": "0.6 - 1.2 mg/dL",
+        "minRef": 0.6,
+        "maxRef": 1.2,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (0.9 mg/dL).",
+        "simpleExplanation": "Serum Creatinine (SC) is well-balanced within the normal healthy range (0.6 - 1.2 mg/dL).",
+        "detailedDescription": "Critical biochemical byproduct of muscle energy metabolism; accurate indicator of kidney filtration.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Creatinine (SC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-08",
+        "name": "Serum Sodium (Sod)",
+        "category": "Electrolyte Panel",
+        "value": 138.0,
+        "unit": "mEq/L",
+        "referenceRange": "135.0 - 145.0 mEq/L",
+        "minRef": 135.0,
+        "maxRef": 145.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (138.0 mEq/L).",
+        "simpleExplanation": "Serum Sodium (Sod) is well-balanced within the normal healthy range (135.0 - 145.0 mEq/L).",
+        "detailedDescription": "Essential extracellular electrolyte regulating fluid balance, nerve conduction, and blood pressure.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Sodium (Sod) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-09",
+        "name": "Serum Potassium (Pot)",
+        "category": "Electrolyte Panel",
+        "value": 4.5,
+        "unit": "mEq/L",
+        "referenceRange": "3.5 - 5.1 mEq/L",
+        "minRef": 3.5,
+        "maxRef": 5.1,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (4.5 mEq/L).",
+        "simpleExplanation": "Serum Potassium (Pot) is well-balanced within the normal healthy range (3.5 - 5.1 mEq/L).",
+        "detailedDescription": "Critical intracellular electrolyte vital for cardiac rhythm stability and neuromuscular transmission.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Potassium (Pot) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-10",
+        "name": "Urine Specific Gravity (SG)",
+        "category": "Urinalysis",
+        "value": 1.02,
+        "unit": "",
+        "referenceRange": "1.005 - 1.03 ",
+        "minRef": 1.005,
+        "maxRef": 1.03,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (1.02 ).",
+        "simpleExplanation": "Urine Specific Gravity (SG) is well-balanced within the normal healthy range (1.005 - 1.03 ).",
+        "detailedDescription": "Reflects the kidney's ability to concentrate or dilute urine.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Urine Specific Gravity (SG) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-11",
+        "name": "Mean Corpuscular Volume (MCV)",
+        "category": "Red Blood Cell Indices",
+        "value": 88.0,
+        "unit": "fL",
+        "referenceRange": "80.0 - 100.0 fL",
+        "minRef": 80.0,
+        "maxRef": 100.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (88.0 fL).",
+        "simpleExplanation": "Mean Corpuscular Volume (MCV) is well-balanced within the normal healthy range (80.0 - 100.0 fL).",
+        "detailedDescription": "The average physical volume and size of individual red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Volume (MCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-12",
+        "name": "Mean Corpuscular Hemoglobin (MCH)",
+        "category": "Red Blood Cell Indices",
+        "value": 30.0,
+        "unit": "pg",
+        "referenceRange": "27.0 - 33.0 pg",
+        "minRef": 27.0,
+        "maxRef": 33.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (30.0 pg).",
+        "simpleExplanation": "Mean Corpuscular Hemoglobin (MCH) is well-balanced within the normal healthy range (27.0 - 33.0 pg).",
+        "detailedDescription": "The average weight of hemoglobin contained inside each individual red blood cell.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Hemoglobin (MCH) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      }
+    ],
+    "videoData": null,
+    "mlAnalysis": {
+      "predicted_condition": "Normal Homeostasis",
+      "confidence_score": 92.0,
+      "prediction_index": 0,
+      "probabilities": {
+        "Normal Homeostasis": 92.0,
+        "Microcytic Iron Deficiency Anemia": 8.0
+      },
+      "ml_payload": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    },
+    "llamaAnalysis": {
+      "overview": "The CBC test result indicates that the patient's white blood cell count is within the normal range, suggesting no immediate health concerns. However, the patient's hemoglobin level is slightly low, which may indicate a need for iron-rich foods in their diet. We recommend regular check-ups with a qualified doctor to monitor the patient's health.",
+      "risk_level": "Normal",
+      "connect_to_doctor": false,
+      "doctor_urgency": "Routine",
+      "doctor_message": "Please consult with a doctor to discuss your test results and any concerns you may have.",
+      "recommended_doctor_specialty": "General Physician",
+      "questions_for_doctor": [
+        "What is the cause of my slightly low hemoglobin level?",
+        "How often should I get my CBC test done?",
+        "Are there any lifestyle changes I can make to improve my overall health?"
+      ],
+      "diet_guidance": {
+        "recommended_foods": [
+          "Spinach",
+          "Lentils",
+          "Chicken",
+          "Sweet Potatoes"
+        ],
+        "foods_to_avoid": [
+          "Processed Meats",
+          "Refined Sugars",
+          "Fried Foods"
+        ],
+        "hydration_and_habits": [
+          "Drink at least 8 glasses of water a day",
+          "Eat 5 servings of fruits and vegetables daily"
+        ],
+        "key_nutrients": [
+          "Iron",
+          "Vitamin B12",
+          "Folate"
+        ]
+      },
+      "model_used": "Meta Llama 3.2 (via Ollama)",
+      "ml_input_processed": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    }
+  },
+  "MR-CA8DA5": {
+    "reportId": "MR-CA8DA5",
+    "reportName": "report.pdf",
+    "patientInitials": "P.T.",
+    "patientAge": 30,
+    "patientGender": "Adult",
+    "date": "October 16, 2026",
+    "laboratory": "Metropolis Clinical Diagnostics",
+    "doctor": "Dr. Alex Mercer, MD",
+    "reportType": "Complete Blood Count & Metabolic Panel",
+    "filePath": "D:\\D_drive\\capstone\\pdf_to_report\\pdf-report-to-video-analyzer\\backend\\uploads\\MR-CA8DA5_report.pdf",
+    "summary": "All analyzed blood biomarkers are comfortably within physiological reference limits. The ML diagnostic model confirmed a Healthy Homeostatic Baseline (92.0% confidence).",
+    "attentionCount": 0,
+    "normalCount": 12,
+    "findings": [
+      {
+        "id": "f-01",
+        "name": "Hemoglobin (Hb)",
+        "category": "Complete Blood Count",
+        "value": 15.0,
+        "unit": "g/dL",
+        "referenceRange": "12.0 - 17.5 g/dL",
+        "minRef": 12.0,
+        "maxRef": 17.5,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (15.0 g/dL).",
+        "simpleExplanation": "Hemoglobin (Hb) is well-balanced within the normal healthy range (12.0 - 17.5 g/dL).",
+        "detailedDescription": "Essential iron-rich protein in red blood cells that transports oxygen from your lungs to your muscles, brain, and tissues.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hemoglobin (Hb) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-02",
+        "name": "Red Blood Cell Count (RBC)",
+        "category": "Complete Blood Count",
+        "value": 5.0,
+        "unit": "x10^6/\u00b5L",
+        "referenceRange": "4.0 - 5.9 x10^6/\u00b5L",
+        "minRef": 4.0,
+        "maxRef": 5.9,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (5.0 x10^6/\u00b5L).",
+        "simpleExplanation": "Red Blood Cell Count (RBC) is well-balanced within the normal healthy range (4.0 - 5.9 x10^6/\u00b5L).",
+        "detailedDescription": "The absolute count of circulating oxygen-carrying cells produced in your bone marrow.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Red Blood Cell Count (RBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-03",
+        "name": "Hematocrit / Packed Cell Volume (PCV)",
+        "category": "Complete Blood Count",
+        "value": 44.0,
+        "unit": "%",
+        "referenceRange": "36.0 - 50.0 %",
+        "minRef": 36.0,
+        "maxRef": 50.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (44.0 %).",
+        "simpleExplanation": "Hematocrit / Packed Cell Volume (PCV) is well-balanced within the normal healthy range (36.0 - 50.0 %).",
+        "detailedDescription": "The percentage of your total blood volume occupied by red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Hematocrit / Packed Cell Volume (PCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-04",
+        "name": "White Blood Cell Count (WBC)",
+        "category": "Complete Blood Count",
+        "value": 7000.0,
+        "unit": "cells/\u00b5L",
+        "referenceRange": "4500.0 - 11000.0 cells/\u00b5L",
+        "minRef": 4500.0,
+        "maxRef": 11000.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (7000.0 cells/\u00b5L).",
+        "simpleExplanation": "White Blood Cell Count (WBC) is well-balanced within the normal healthy range (4500.0 - 11000.0 cells/\u00b5L).",
+        "detailedDescription": "Primary defensive immune cells circulating in the blood to fight off bacteria and viruses.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My White Blood Cell Count (WBC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-05",
+        "name": "Blood Glucose (BGR)",
+        "category": "Metabolic Panel",
+        "value": 100.0,
+        "unit": "mg/dL",
+        "referenceRange": "70.0 - 140.0 mg/dL",
+        "minRef": 70.0,
+        "maxRef": 140.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (100.0 mg/dL).",
+        "simpleExplanation": "Blood Glucose (BGR) is well-balanced within the normal healthy range (70.0 - 140.0 mg/dL).",
+        "detailedDescription": "Primary circulating sugar supplying cellular energy; regulated primarily by insulin.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Glucose (BGR) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-06",
+        "name": "Blood Urea (BU)",
+        "category": "Renal & Metabolic Panel",
+        "value": 35.0,
+        "unit": "mg/dL",
+        "referenceRange": "15.0 - 40.0 mg/dL",
+        "minRef": 15.0,
+        "maxRef": 40.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (35.0 mg/dL).",
+        "simpleExplanation": "Blood Urea (BU) is well-balanced within the normal healthy range (15.0 - 40.0 mg/dL).",
+        "detailedDescription": "Primary waste product of protein metabolism cleared by the kidneys.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Blood Urea (BU) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-07",
+        "name": "Serum Creatinine (SC)",
+        "category": "Renal & Metabolic Panel",
+        "value": 0.9,
+        "unit": "mg/dL",
+        "referenceRange": "0.6 - 1.2 mg/dL",
+        "minRef": 0.6,
+        "maxRef": 1.2,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (0.9 mg/dL).",
+        "simpleExplanation": "Serum Creatinine (SC) is well-balanced within the normal healthy range (0.6 - 1.2 mg/dL).",
+        "detailedDescription": "Critical biochemical byproduct of muscle energy metabolism; accurate indicator of kidney filtration.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Creatinine (SC) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-08",
+        "name": "Serum Sodium (Sod)",
+        "category": "Electrolyte Panel",
+        "value": 138.0,
+        "unit": "mEq/L",
+        "referenceRange": "135.0 - 145.0 mEq/L",
+        "minRef": 135.0,
+        "maxRef": 145.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (138.0 mEq/L).",
+        "simpleExplanation": "Serum Sodium (Sod) is well-balanced within the normal healthy range (135.0 - 145.0 mEq/L).",
+        "detailedDescription": "Essential extracellular electrolyte regulating fluid balance, nerve conduction, and blood pressure.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Sodium (Sod) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-09",
+        "name": "Serum Potassium (Pot)",
+        "category": "Electrolyte Panel",
+        "value": 4.5,
+        "unit": "mEq/L",
+        "referenceRange": "3.5 - 5.1 mEq/L",
+        "minRef": 3.5,
+        "maxRef": 5.1,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (4.5 mEq/L).",
+        "simpleExplanation": "Serum Potassium (Pot) is well-balanced within the normal healthy range (3.5 - 5.1 mEq/L).",
+        "detailedDescription": "Critical intracellular electrolyte vital for cardiac rhythm stability and neuromuscular transmission.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Serum Potassium (Pot) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-10",
+        "name": "Urine Specific Gravity (SG)",
+        "category": "Urinalysis",
+        "value": 1.02,
+        "unit": "",
+        "referenceRange": "1.005 - 1.03 ",
+        "minRef": 1.005,
+        "maxRef": 1.03,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (1.02 ).",
+        "simpleExplanation": "Urine Specific Gravity (SG) is well-balanced within the normal healthy range (1.005 - 1.03 ).",
+        "detailedDescription": "Reflects the kidney's ability to concentrate or dilute urine.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Urine Specific Gravity (SG) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-11",
+        "name": "Mean Corpuscular Volume (MCV)",
+        "category": "Red Blood Cell Indices",
+        "value": 88.0,
+        "unit": "fL",
+        "referenceRange": "80.0 - 100.0 fL",
+        "minRef": 80.0,
+        "maxRef": 100.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (88.0 fL).",
+        "simpleExplanation": "Mean Corpuscular Volume (MCV) is well-balanced within the normal healthy range (80.0 - 100.0 fL).",
+        "detailedDescription": "The average physical volume and size of individual red blood cells.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Volume (MCV) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      },
+      {
+        "id": "f-12",
+        "name": "Mean Corpuscular Hemoglobin (MCH)",
+        "category": "Red Blood Cell Indices",
+        "value": 30.0,
+        "unit": "pg",
+        "referenceRange": "27.0 - 33.0 pg",
+        "minRef": 27.0,
+        "maxRef": 33.0,
+        "status": "normal",
+        "severityLevel": "NORMAL",
+        "technicalSummary": "Normal physiological baseline (30.0 pg).",
+        "simpleExplanation": "Mean Corpuscular Hemoglobin (MCH) is well-balanced within the normal healthy range (27.0 - 33.0 pg).",
+        "detailedDescription": "The average weight of hemoglobin contained inside each individual red blood cell.",
+        "whyItMatters": "Reflects optimal cellular balance and stable organ function.",
+        "doctorDiscussionPoints": [
+          "My Mean Corpuscular Hemoglobin (MCH) appears healthy; does this confirm stable organ baseline?"
+        ],
+        "biologicalContext": "Reference intervals represent values found in 95% of healthy individuals."
+      }
+    ],
+    "videoData": null,
+    "mlAnalysis": {
+      "predicted_condition": "Normal Homeostasis",
+      "confidence_score": 92.0,
+      "prediction_index": 0,
+      "probabilities": {
+        "Normal Homeostasis": 92.0,
+        "Microcytic Iron Deficiency Anemia": 8.0
+      },
+      "ml_payload": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    },
+    "llamaAnalysis": {
+      "overview": "The CBC test result indicates that your blood work is within normal limits, with a low risk of any underlying health conditions. However, it's essential to maintain a balanced diet and lifestyle to support overall health and prevent potential issues. Please consult with your doctor if you have any concerns.",
+      "risk_level": "Normal",
+      "connect_to_doctor": false,
+      "doctor_urgency": "Routine",
+      "doctor_message": "Please consult with your doctor to discuss your overall health and any concerns you may have.",
+      "recommended_doctor_specialty": "General Physician",
+      "questions_for_doctor": [
+        "What are the best ways to maintain healthy blood counts?",
+        "How can I support my overall health and well-being?",
+        "Are there any specific nutrients or supplements I should consider?",
+        "What are the signs of anemia or other blood disorders that I should be aware of?"
+      ],
+      "diet_guidance": {
+        "recommended_foods": [
+          "Spinach",
+          "Lentils",
+          "Sweet Potatoes",
+          "Avocados"
+        ],
+        "foods_to_avoid": [
+          "Processed Meats",
+          "Refined Sugars",
+          "Fried Foods"
+        ],
+        "hydration_and_habits": [
+          "Drink at least 8 glasses of water a day",
+          "Eat a balanced diet with plenty of fruits and vegetables"
+        ],
+        "key_nutrients": [
+          "Iron",
+          "Folate",
+          "Vitamin B12"
+        ]
+      },
+      "model_used": "Meta Llama 3.2 (via Ollama)",
+      "ml_input_processed": {
+        "test_type": "CBC",
+        "prediction": 0,
+        "status": "Normal",
+        "risk_percentage": "92.0%",
+        "input_features": {
+          "Age": 30,
+          "Gender": 0,
+          "Hemoglobin": 15.0,
+          "Platelet_Count": 220000.0,
+          "White_Blood_Cells": 7000.0,
+          "Red_Blood_Cells": 5.0,
+          "MCV": 88.0,
+          "MCH": 30.0,
+          "MCHC": 34.1
+        }
+      }
+    }
   }
 }

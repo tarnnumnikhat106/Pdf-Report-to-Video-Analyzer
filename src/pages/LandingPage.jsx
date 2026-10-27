@@ -1,357 +1,427 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { 
-  Sparkles, 
-  ArrowRight, 
-  UploadCloud, 
-  Cpu, 
-  FileText, 
-  Video, 
-  AlertTriangle, 
-  CheckCircle2, 
-  ShieldCheck, 
-  Activity, 
-  LineChart, 
-  BookOpen, 
-  History as HistoryIcon,
-  Stethoscope,
-  Eye,
-  Sliders,
-  Play
+import { Link } from 'react-router-dom';
+import {
+  ArrowRight,
+  ShieldCheck,
+  UploadCloud,
+  FileSearch,
+  BookOpen,
+  Video,
+  Minus,
+  Play,
 } from 'lucide-react';
 import Button from '../components/common/Button';
-import Card from '../components/common/Card';
-import SeverityBadge from '../components/common/SeverityBadge';
-import Disclaimer from '../components/common/Disclaimer';
+import Reveal from '../components/common/Reveal';
+
+const steps = [
+  {
+    n: '01',
+    title: 'Upload the report',
+    body: 'A digital PDF or a clear photo. JPG and PNG are fine.',
+    icon: UploadCloud,
+  },
+  {
+    n: '02',
+    title: 'Values are read',
+    body: 'Each test, result, unit, and reference range is pulled from the document.',
+    icon: FileSearch,
+  },
+  {
+    n: '03',
+    title: 'Findings are explained',
+    body: 'Out-of-range values get a plain-language note and the context behind them.',
+    icon: BookOpen,
+  },
+  {
+    n: '04',
+    title: 'A video is optional',
+    body: 'Turn the same report into a short, chaptered walkthrough you can replay.',
+    icon: Video,
+  },
+];
+
+const does = [
+  {
+    title: 'Reads the numbers',
+    body: 'Test names, measured values, units, and the reference range printed beside them.',
+  },
+  {
+    title: 'Flags what is outside the range',
+    body: 'Anything below or above the printed interval is marked for review, not called a diagnosis.',
+  },
+  {
+    title: 'Explains in everyday terms',
+    body: 'What the test measures, why it matters, and how it fits with the rest of the panel.',
+  },
+  {
+    title: 'Gives you questions to ask',
+    body: 'Short prompts you can bring to an appointment, based on the findings in front of you.',
+  },
+];
+
+const doesNot = [
+  'Diagnose a condition or name a disease.',
+  'Recommend, start, or stop medication.',
+  'Replace your clinician’s reading of the report.',
+  'Replace an in-person appointment or emergency care.',
+];
 
 export default function LandingPage() {
-  const navigate = useNavigate();
-
-  const howItWorksSteps = [
-    {
-      number: "01",
-      title: "Upload Report",
-      description: "Securely upload your medical report as a PDF, JPG, or PNG document directly through our encrypted portal.",
-      icon: UploadCloud,
-    },
-    {
-      number: "02",
-      title: "Extract Lab Parameters",
-      description: "OCR and biomedical entity extraction detect tests, numerical values, units, and reference ranges.",
-      icon: Cpu,
-    },
-    {
-      number: "03",
-      title: "Findings Are Explained",
-      description: "Dense clinical terminology is translated into plain, empathetic language with clear context.",
-      icon: FileText,
-    },
-    {
-      number: "04",
-      title: "Generate Video",
-      description: "Produce a multi-modal narrated video walkthrough that visually breaks down what to discuss with your doctor.",
-      icon: Video,
-    },
-  ];
-
-  const keyFeatures = [
-    {
-      title: "Smart Report Analysis",
-      desc: "Instant parsing of blood work, metabolic panels, and lipid profiles into structured digital insights.",
-      icon: Activity,
-    },
-    {
-      title: "Abnormal Finding Detection",
-      desc: "Clear visual flags for values falling outside typical reference intervals, categorized by attention priority.",
-      icon: AlertTriangle,
-    },
-    {
-      title: "Medical Term Simplification",
-      desc: "Plain-language definitions for complex terms like Ferritin, MCV, Non-HDL, and Creatinine.",
-      icon: BookOpen,
-    },
-    {
-      title: "Clinical & Dietary Guidance",
-      desc: "Structured breakdowns explaining biological context, dietary factors, and lifestyle relevance.",
-      icon: Sparkles,
-    },
-    {
-      title: "Visual Report Insights",
-      desc: "Interactive range gauges and comparison bars so you can see where your numbers sit relative to healthy baselines.",
-      icon: LineChart,
-    },
-    {
-      title: "Educational Video Generation",
-      desc: "Automated video presentations with synced chapters, captions, and synthesized narration.",
-      icon: Video,
-    },
-    {
-      title: "Analysis History",
-      desc: "Search, filter, and review your previous analyses anytime to monitor health literacy over time.",
-      icon: HistoryIcon,
-    },
-  ];
-
   return (
-    <div className="space-y-16 sm:space-y-24 pb-16">
-      
-      {/* Hero Section */}
-      <section className="relative pt-8 sm:pt-16 pb-12 overflow-hidden">
-        {/* Subtle decorative radial background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-radial from-blue-100/60 to-transparent -z-10 blur-3xl pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
-            {/* Left Column: Headlines & CTA */}
-            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold">
-                <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
-                <span>Clinical Laboratory Insights & Patient Education</span>
-              </div>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
-                Understand Your Medical Report <span className="text-blue-600">Clearly</span>
-              </h1>
-
-              <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                MedVision translates complex laboratory parameters into clear clinical summaries, dietary recommendations, and doctor visit talking points.
+    <div className="pb-20">
+      <section className="relative overflow-hidden border-b border-line">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(15,90,74,0.09),transparent_58%)]"
+        />
+        <div className="relative mx-auto grid max-w-6xl gap-14 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-12 lg:items-center lg:gap-10 lg:px-8">
+          <div className="lg:col-span-7">
+            <Reveal>
+              <p className="flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
+                <span aria-hidden="true" className="h-px w-8 bg-accent" />
+                Lab report explainer
               </p>
+            </Reveal>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+            <Reveal delay={70}>
+              <h1 className="mt-6 font-display text-[2.7rem] leading-[1.03] tracking-tight text-ink sm:text-6xl lg:text-[4.2rem]">
+                Your lab results,
+                <br className="hidden sm:block" /> in plain language.
+              </h1>
+            </Reveal>
+
+            <Reveal delay={140}>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg">
+                Upload a blood test. MedVision reads the measured values, flags
+                anything outside the printed reference range, and explains what each
+                result means — so you can ask better questions at your next
+                appointment.
+              </p>
+            </Reveal>
+
+            <Reveal delay={210}>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Link to="/upload" className="w-full sm:w-auto">
                   <Button
-                    variant="primary"
                     size="lg"
                     icon={ArrowRight}
                     iconPosition="right"
-                    className="w-full sm:w-auto shadow-md shadow-blue-500/20"
-                  >
-                    Analyze My Report
-                  </Button>
-                </Link>
-                <Link to="/about" className="w-full sm:w-auto">
-                  <Button
-                    variant="outline"
-                    size="lg"
                     className="w-full sm:w-auto"
                   >
-                    How It Works
+                    Upload a report
+                  </Button>
+                </Link>
+                <Link to="/analysis/MR-001" className="w-full sm:w-auto">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                    View a sample report
                   </Button>
                 </Link>
               </div>
+            </Reveal>
 
-              {/* Trust Indicators */}
-              <div className="pt-6 border-t border-slate-200/80 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-slate-500 font-medium">
-                <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  Educational Decision Support
+            <Reveal delay={280}>
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted">
+                <span className="inline-flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-accent" />
+                  Educational use, not a diagnosis
                 </span>
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-blue-600" />
-                  PDF, JPG & PNG Ingestion
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Video className="w-4 h-4 text-indigo-600" />
-                  Automated Video Explanations
-                </span>
+                <span>PDF, JPG, or PNG</span>
+                <span>No account required</span>
               </div>
-            </div>
+            </Reveal>
+          </div>
 
-            {/* Right Column: Interactive Medical/AI Preview Card */}
-            <div className="lg:col-span-5">
-              <div className="relative mx-auto max-w-md lg:max-w-none">
-                {/* Glow ring */}
-                <div className="absolute -inset-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur-sm opacity-25" />
-
-                <Card className="relative bg-white shadow-xl border-slate-200/80 overflow-hidden" padding="p-6">
-                  {/* Mock Report Header */}
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center">
-                        <Activity className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
-                          Clinical Laboratory Analysis
-                        </span>
-                        <h4 className="text-sm font-bold text-slate-900">
-                          Complete Blood Count (CBC)
-                        </h4>
-                      </div>
-                    </div>
-                    <SeverityBadge status="attention" size="sm" />
-                  </div>
-
-                  {/* Sample Parameter 1: Attention */}
-                  <div className="p-3.5 rounded-xl bg-amber-50/60 border border-amber-200/70 mb-3 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-900">Hemoglobin (Hb)</span>
-                      <span className="text-xs font-mono font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">
-                        9.2 g/dL (Low)
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-600 leading-relaxed">
-                      Carries oxygen to organs and muscles. Result is below the standard range (12.0 - 15.5 g/dL).
-                    </p>
-                    <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                      <div className="h-full bg-amber-500 rounded-full w-[35%]" />
-                    </div>
-                  </div>
-
-                  {/* Sample Parameter 2: Normal */}
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 mb-4 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-900">White Blood Cells (WBC)</span>
-                      <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
-                        6.8 x10^3/µL (Normal)
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-600 leading-relaxed">
-                      Immune system defenders. Perfectly centered within the healthy physiological band.
-                    </p>
-                    <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                      <div className="h-full bg-emerald-500 rounded-full w-[60%]" />
-                    </div>
-                  </div>
-
-                  {/* Multimedia Video Preview Ribbon */}
-                  <div className="p-3 rounded-xl bg-slate-900 text-white flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shrink-0">
-                        <Play className="w-4 h-4 ml-0.5 fill-white" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold leading-tight">Educational Video Ready</div>
-                        <div className="text-[10px] text-slate-400">2m 45s • Spoken Explainer</div>
-                      </div>
-                    </div>
-                    <Link to="/video/MR-001">
-                      <span className="text-xs text-blue-400 hover:text-blue-300 font-semibold underline underline-offset-2">
-                        Preview
-                      </span>
-                    </Link>
-                  </div>
-                </Card>
-              </div>
-            </div>
-
+          <div className="lg:col-span-5">
+            <Reveal delay={180}>
+              <ReportPreview />
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
-          <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">
-            Step-by-Step Transparency
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1 mb-3">
-            How It Works
-          </h2>
-          <p className="text-sm sm:text-base text-slate-600">
-            A reliable 4-step pipeline that takes your raw medical report and creates an intuitive learning experience.
-          </p>
-        </div>
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <Reveal>
+              <h2 className="font-display text-3xl tracking-tight text-ink sm:text-4xl">
+                What it does
+              </h2>
+            </Reveal>
+            <Reveal delay={60}>
+              <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted">
+                Four things, done carefully and within clear limits.
+              </p>
+            </Reveal>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {howItWorksSteps.map((step) => {
-            const Icon = step.icon;
-            return (
-              <Card key={step.number} className="relative group border-slate-200/90 hover:border-blue-300 transition-all" padding="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <span className="text-2xl font-black text-slate-200 group-hover:text-blue-200 font-mono transition-colors">
-                    {step.number}
-                  </span>
+          <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:col-span-8">
+            {does.map((item, index) => (
+              <Reveal key={item.title} delay={index * 70}>
+                <div className="border-t border-line pt-4">
+                  <h3 className="text-sm font-semibold text-ink">{item.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                    {item.body}
+                  </p>
                 </div>
-                <h3 className="text-base font-bold text-slate-900 mb-2">
-                  {step.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  {step.description}
-                </p>
-              </Card>
-            );
-          })}
+              </Reveal>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-16 grid gap-10 border-t border-line pt-12 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <Reveal>
+              <h2 className="font-display text-3xl tracking-tight text-ink sm:text-4xl">
+                What it doesn’t do
+              </h2>
+            </Reveal>
+            <Reveal delay={60}>
+              <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted">
+                The boundary matters more than the feature list.
+              </p>
+            </Reveal>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:col-span-8">
+            {doesNot.map((item, index) => (
+              <Reveal key={item} delay={index * 60}>
+                <div className="flex items-start gap-2.5 text-sm leading-relaxed text-ink-soft">
+                  <Minus className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted" />
+                  <span>{item}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Key Features Section */}
-      <section className="bg-slate-100/70 py-16 sm:py-20 border-y border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">
-              System Capabilities
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1 mb-3">
-              Key Features
-            </h2>
-            <p className="text-sm sm:text-base text-slate-600">
-              Designed from the ground up for clarity, medical safety, and patient empowerment.
-            </p>
-          </div>
+      <section className="border-y border-line bg-paper-deep/60">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+          <Reveal>
+            <div className="max-w-xl">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
+                How it works
+              </p>
+              <h2 className="mt-4 font-display text-3xl tracking-tight text-ink sm:text-4xl">
+                From a PDF to a conversation.
+              </h2>
+            </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {keyFeatures.map((feat, idx) => {
-              const Icon = feat.icon;
+          <ol className="mt-10 grid gap-0 sm:grid-cols-2 lg:grid-cols-4">
+            {steps.map((step, index) => {
+              const Icon = step.icon;
               return (
-                <div
-                  key={idx}
-                  className="bg-white rounded-xl p-5 border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between"
-                >
-                  <div className="space-y-3">
-                    <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                      <Icon className="w-5 h-5" />
+                <Reveal key={step.n} delay={index * 80}>
+                  <li className="border-t border-line py-5 sm:pr-6">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-[11px] text-muted">{step.n}</span>
+                      <Icon className="h-4 w-4 text-accent" />
                     </div>
-                    <h3 className="text-sm font-bold text-slate-900">
-                      {feat.title}
+                    <h3 className="mt-4 font-display text-xl tracking-tight text-ink">
+                      {step.title}
                     </h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      {feat.desc}
+                    <p className="mt-2 text-sm leading-relaxed text-muted">
+                      {step.body}
                     </p>
-                  </div>
-                </div>
+                  </li>
+                </Reveal>
               );
             })}
-          </div>
+          </ol>
         </div>
       </section>
 
-      {/* Safety & Medical Boundary Disclaimer Callout */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Disclaimer variant="card" />
-      </section>
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+        <Reveal>
+          <div className="grid gap-8 rounded-lg border border-line bg-surface p-6 sm:p-10 lg:grid-cols-12 lg:items-center">
+            <div className="lg:col-span-7">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
+                If you want a walkthrough
+              </p>
+              <h2 className="mt-3 font-display text-3xl tracking-tight text-ink">
+                The same report, as a short video.
+              </h2>
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">
+                Each chapter follows the report: the finding, what the test measures,
+                and a question you can take to your clinician. Captions stay on by
+                default.
+              </p>
+              <div className="mt-6">
+                <Link to="/video/MR-001">
+                  <Button variant="outline" icon={ArrowRight} iconPosition="right">
+                    Watch the sample
+                  </Button>
+                </Link>
+              </div>
+            </div>
 
-      {/* Bottom CTA Banner */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-slate-900 text-white p-8 sm:p-12 text-center relative overflow-hidden">
-          <div className="relative z-10 max-w-2xl mx-auto space-y-5">
-            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-              Ready to analyze your medical report?
-            </h2>
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-              Upload your PDF or image to extract findings, view plain-language definitions, and generate an educational video explanation.
-            </p>
-            <div className="pt-2">
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={() => navigate('/upload')}
-                icon={ArrowRight}
-                iconPosition="right"
-                className="shadow-lg shadow-blue-500/20"
-              >
-                Start Report Analysis
-              </Button>
+            <div className="lg:col-span-5">
+              <div className="overflow-hidden rounded-md border border-line bg-ink p-5 text-paper">
+                <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.16em] text-paper/45">
+                  <span>Sample walkthrough</span>
+                  <span className="font-mono">2:45</span>
+                </div>
+
+                <div className="mt-4 flex items-center gap-3">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-paper/25">
+                    <Play className="ml-0.5 h-4 w-4 fill-paper/90 text-paper/90" />
+                  </span>
+                  <div>
+                    <p className="font-display text-lg leading-tight">
+                      Hemoglobin, explained
+                    </p>
+                    <p className="text-xs text-paper/50">Chapter 2 of 4</p>
+                  </div>
+                </div>
+
+                <div className="mt-5 space-y-2 text-xs text-paper/55">
+                  <div className="flex justify-between border-b border-paper/10 pb-2">
+                    <span>Introduction</span>
+                    <span className="font-mono">0:00</span>
+                  </div>
+                  <div className="flex justify-between border-b border-paper/10 pb-2 text-paper/85">
+                    <span>What hemoglobin does</span>
+                    <span className="font-mono">0:35</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Questions to ask</span>
+                    <span className="font-mono">2:10</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div className="rounded-lg bg-accent px-6 py-12 text-center text-surface sm:px-12">
+            <h2 className="font-display text-3xl tracking-tight sm:text-4xl">
+              Start with a sample.
+            </h2>
+            <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-surface/75">
+              Open a completed example, or upload your own report. No account needed.
+            </p>
+            <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+              <Link to="/upload">
+                <Button variant="contrast" size="lg" className="w-full sm:w-auto">
+                  Upload a report
+                </Button>
+              </Link>
+              <Link to="/analysis/MR-001">
+                <Button variant="inverse" size="lg" className="w-full sm:w-auto">
+                  View the sample
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+    </div>
+  );
+}
+
+function ReportPreview() {
+  return (
+    <div className="relative mx-auto max-w-md">
+      <div
+        aria-hidden="true"
+        className="absolute -inset-x-3 -bottom-3 top-3 rounded-md border border-line bg-paper-deep/70"
+      />
+
+      <div className="relative rounded-md border border-line bg-surface p-5 shadow-[0_28px_70px_-50px_rgba(28,27,24,0.6)]">
+        <div className="flex items-start justify-between border-b border-line pb-4">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-muted">
+              Complete blood count
+            </p>
+            <p className="mt-1 font-display text-lg tracking-tight text-ink">
+              Sample report
+            </p>
+          </div>
+          <span className="font-mono text-[11px] text-muted">MR-001</span>
+        </div>
+
+        <div className="mt-4 space-y-4">
+          <PreviewRow
+            name="Hemoglobin"
+            value="9.2"
+            unit="g/dL"
+            range="12.0–15.5"
+            position={34}
+            status="low"
+            note="Below the printed range. Hemoglobin carries oxygen through the blood."
+          />
+          <PreviewRow
+            name="White blood cells"
+            value="6.8"
+            unit="×10³/µL"
+            range="4.0–11.0"
+            position={62}
+            status="normal"
+            note="Inside the reference range. Part of the immune response."
+          />
+          <PreviewRow
+            name="Platelets"
+            value="248"
+            unit="×10³/µL"
+            range="150–400"
+            position={54}
+            status="normal"
+          />
+        </div>
+
+        <div className="mt-5 flex items-center justify-between border-t border-line pt-3 text-[11px] text-muted">
+          <span>2 of 3 values in range</span>
+          <Link
+            to="/analysis/MR-001"
+            className="inline-flex items-center gap-1 font-medium text-accent transition-colors hover:text-accent-deep"
+          >
+            Open this report
+            <ArrowRight className="h-3 w-3" />
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PreviewRow({ name, value, unit, range, position, status, note }) {
+  const isLow = status === 'low';
+
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="flex items-center gap-2 text-[13px] font-medium text-ink">
+          {name}
+          {isLow && (
+            <span className="rounded-sm bg-attention-soft px-1.5 py-0.5 text-[10px] font-medium text-attention">
+              Low
+            </span>
+          )}
+        </span>
+        <span className="font-mono text-[13px] text-ink">
+          <span className="text-base">{value}</span>{' '}
+          <span className="text-muted">{unit}</span>
+        </span>
+      </div>
+
+      <div className="mt-2 flex items-center gap-2">
+        <div className="relative h-1 flex-1 overflow-hidden rounded-full bg-line-soft">
+          <div className="absolute inset-y-0 left-[30%] right-[30%] bg-accent/15" />
+          <div
+            className={`absolute top-1/2 h-2.5 w-1 -translate-y-1/2 rounded-full ${
+              isLow ? 'bg-attention' : 'bg-accent'
+            }`}
+            style={{ left: `${position}%` }}
+          />
+        </div>
+        <span className="font-mono text-[10px] text-muted">{range}</span>
+      </div>
+
+      {note && <p className="mt-1.5 text-[11px] leading-relaxed text-muted">{note}</p>}
     </div>
   );
 }

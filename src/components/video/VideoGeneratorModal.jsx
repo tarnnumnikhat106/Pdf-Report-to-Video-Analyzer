@@ -1,24 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Check, 
-  Loader2, 
-  Sparkles, 
-  Film, 
-  Mic, 
-  FileText, 
-  Layers, 
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  Check,
+  Loader2,
+  Sparkles,
+  Film,
+  Mic,
+  FileText,
+  Layers,
   Video,
-  ArrowRight
+  ArrowRight,
+  AlertCircle,
+  RotateCcw,
+  Languages,
 } from 'lucide-react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
+import { generateVideo, getVideoStatus } from '../../services/api';
 
 const VIDEO_GENERATION_STAGES = [
-  { id: 'script', label: 'Preparing script', desc: 'Translating clinical terminology into patient-friendly dialogue', icon: FileText },
-  { id: 'explanation', label: 'Creating explanation', desc: 'Synthesizing anatomical context and discussion questions', icon: Sparkles },
-  { id: 'voice', label: 'Generating voice', desc: 'Synthesizing natural, empathetic audio narration', icon: Mic },
-  { id: 'visuals', label: 'Building visuals', desc: 'Rendering interactive parameter charts and gauge overlays', icon: Layers },
-  { id: 'finalize', label: 'Finalizing video', desc: 'Encoding 1080p video stream and chapter markers', icon: Film }
+  { id: 'script', label: 'Preparing script', desc: 'Turns the measured values into plain-language narration', icon: FileText },
+  { id: 'explanation', label: 'Structuring explanation', desc: 'Orders the cover, findings, and doctor questions', icon: Sparkles },
+  { id: 'voice', label: 'Generating voice', desc: 'Synthesizes narration with a natural neural voice', icon: Mic },
+  { id: 'visuals', label: 'Rendering slides', desc: 'Draws one clear slide per idea, in native resolution', icon: Layers },
+  { id: 'finalize', label: 'Finalizing video', desc: 'Joins the slides into a lightweight MP4', icon: Film },
+];
+
+const POLL_INTERVAL_MS = 1800;
+
+const NARRATION_LANGUAGES = [
+  { id: 'en', label: 'English', hint: 'Warm, conversational voice' },
+  { id: 'hi', label: 'Hinglish', hint: 'हिन्दी + everyday English' },
 ];
 
 export default function VideoGeneratorModal({
@@ -31,166 +42,324 @@ export default function VideoGeneratorModal({
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDone, setIsDone] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [statusMessage, setStatusMessage] = useState('');
+  const [error, setError] = useState('');
+  const [narrationLanguage, setNarrationLanguage] = useState('en');
+  const stoppedRef = useRef(false);
+  const pollTimerRef = useRef(null);
+
+  const clearPollTimer = () => {
+    if (pollTimerRef.current) {
+      clearTimeout(pollTimerRef.current);
+      pollTimerRef.current = null;
+    }
+  };
 
   useEffect(() => {
-    let timer = null;
-    if (isOpen && !isDone && isGenerating) {
-      if (currentStageIndex < VIDEO_GENERATION_STAGES.length - 1) {
-        timer = setTimeout(() => {
-          setCurrentStageIndex(prev => prev + 1);
-        }, 1100);
-      } else {
-        timer = setTimeout(() => {
-          setIsDone(true);
-          setIsGenerating(false);
-        }, 900);
+    return () => {
+      stoppedRef.current = true;
+      clearPollTimer();
+    };
+  }, []);
+
+  const resetState = () => {
+    stoppedRef.current = true;
+    clearPollTimer();
+    setIsGenerating(false);
+    setIsDone(false);
+    setProgress(0);
+    setCurrentStageIndex(0);
+    setStatusMessage('');
+    setError('');
+  };
+
+  const handleClose = () => {
+    resetState();
+    onClose();
+  };
+
+  const completeGeneration = (message = 'Your video is ready.') => {
+    if (stoppedRef.current) return;
+    clearPollTimer();
+    setProgress(100);
+    setCurrentStageIndex(VIDEO_GENERATION_STAGES.length - 1);
+    setStatusMessage(message);
+    setIsGenerating(false);
+    setIsDone(true);
+  };
+
+  const pollGeneration = async () => {
+    if (stoppedRef.current) return;
+
+    try {
+      const status = await getVideoStatus(reportId);
+      if (stoppedRef.current) return;
+
+      if (status?.status === 'completed') {
+        completeGeneration(status.message || 'Your video is ready.');
+        return;
+      }
+
+      if (status?.status === 'failed' || status?.status === 'error') {
+        setError(status.message || 'Video generation failed. Please try again.');
+        setIsGenerating(false);
+        return;
+      }
+
+      if (typeof status?.progress === 'number') {
+        setProgress(Math.max(0, Math.min(99, status.progress)));
+      }
+      if (typeof status?.stage_index === 'number') {
+        setCurrentStageIndex(Math.max(0, Math.min(VIDEO_GENERATION_STAGES.length - 1, status.stage_index)));
+      }
+      if (status?.message) {
+        setStatusMessage(status.message);
+      }
+
+      pollTimerRef.current = setTimeout(pollGeneration, POLL_INTERVAL_MS);
+    } catch (err) {
+      console.warn('Video status poll failed; retrying.', err);
+      if (!stoppedRef.current) {
+        pollTimerRef.current = setTimeout(pollGeneration, POLL_INTERVAL_MS);
       }
     }
-    return () => clearTimeout(timer);
-  }, [isOpen, isGenerating, currentStageIndex, isDone]);
+  };
 
-  const handleStartGeneration = () => {
-    setIsGenerating(true);
+  const handleStartGeneration = async () => {
+    if (!reportId) {
+      setError('This report is missing an ID, so the video cannot be generated.');
+      return;
+    }
+
+    stoppedRef.current = false;
+    clearPollTimer();
+    setError('');
+    setStatusMessage('Submitting the report...');
+    setProgress(2);
     setCurrentStageIndex(0);
     setIsDone(false);
+    setIsGenerating(true);
+
+    try {
+      const started = await generateVideo(reportId, {
+        quality: 'low',
+        language: narrationLanguage === 'hi' ? 'Hinglish' : 'English',
+        narrationLanguage,
+        detailLevel: 'standard',
+      });
+
+      if (stoppedRef.current) return;
+
+      if (started?.status === 'completed') {
+        completeGeneration('Your video is ready.');
+        return;
+      }
+
+      setStatusMessage(started?.message || 'Preparing the narration script...');
+      setProgress(6);
+      pollTimerRef.current = setTimeout(pollGeneration, POLL_INTERVAL_MS);
+    } catch (err) {
+      console.error('Video generation could not be started:', err);
+      setError('Could not start video generation. Check that the backend is running and try again.');
+      setIsGenerating(false);
+    }
   };
 
   const handleViewVideo = () => {
-    onClose();
+    handleClose();
     if (onCompleted) {
       onCompleted();
     }
   };
 
+  const displayedProgress = isDone ? 100 : progress;
+
   return (
     <Modal
       isOpen={isOpen}
-      onClose={isGenerating ? () => {} : onClose}
-      title="AI Educational Video Generator"
-      subtitle={`Synthesizing personalized video explainer for ${reportName || 'Medical Report'}`}
+      onClose={isGenerating ? () => {} : handleClose}
+      title="Educational video"
+      subtitle={`A narrated walkthrough for ${reportName || 'this report'}`}
       maxWidth="max-w-xl"
       showClose={!isGenerating}
     >
       <div className="space-y-6">
-        {!isGenerating && !isDone ? (
-          <div className="text-center py-6 space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mx-auto shadow-sm">
-              <Video className="w-8 h-8" />
+        {!isGenerating && !isDone && !error ? (
+          <div className="space-y-5 py-2">
+            <div className="flex items-start gap-3 rounded-lg border border-line bg-paper/60 p-4">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-line bg-surface text-accent-deep">
+                <Video className="h-5 w-5" />
+              </span>
+              <div className="space-y-1">
+                <h3 className="text-sm font-semibold text-ink">Low-power narrated slideshow</h3>
+                <p className="text-sm leading-relaxed text-muted">
+                  Static slides, natural neural narration, and a lightweight MP4. No heavy animation or cloud video rendering.
+                </p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <h3 className="text-lg font-bold text-slate-900">
-                Generate Educational Video
-              </h3>
-              <p className="text-sm text-slate-600 max-w-sm mx-auto leading-relaxed">
-                Transform your complex report into an animated, spoken walkthrough tailored for you to review before your physician visit.
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-3">
+                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+                  <Languages className="h-3.5 w-3.5" />
+                  Narration language
+                </p>
+                <span className="text-[11px] text-muted">Natural neural voice</span>
+              </div>
+              <div role="group" aria-label="Narration language" className="grid grid-cols-2 gap-2">
+                {NARRATION_LANGUAGES.map((option) => {
+                  const selected = narrationLanguage === option.id;
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      aria-pressed={selected}
+                      onClick={() => setNarrationLanguage(option.id)}
+                      className={`rounded-lg border p-3 text-left transition-colors ${
+                        selected
+                          ? 'border-accent/40 bg-accent-soft/70 text-ink'
+                          : 'border-line bg-surface text-ink-soft hover:border-ink/20'
+                      }`}
+                    >
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-semibold">{option.label}</span>
+                        {selected && (
+                          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-accent text-surface">
+                            <Check className="h-2.5 w-2.5 stroke-[3]" />
+                          </span>
+                        )}
+                      </span>
+                      <span className="mt-0.5 block text-[11px] leading-relaxed text-muted">{option.hint}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="text-[11px] leading-relaxed text-muted">
+                The voice speaks directly to you, using "you" and "your". Hinglish uses Swara and mixes everyday English into Hindi, the way people normally talk.
               </p>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-left text-xs text-slate-600 space-y-2">
-              <div className="font-semibold text-slate-800">What will be generated:</div>
-              <ul className="list-disc pl-4 space-y-1 text-slate-500">
-                <li>Chaptered breakdown of abnormal vs normal findings</li>
-                <li>Clear explanations of laboratory reference ranges</li>
-                <li>Actionable questions tailored for your doctor</li>
-              </ul>
-            </div>
+            <ul className="space-y-2 text-sm text-muted">
+              <li className="flex items-start gap-2">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                <span>One idea per slide, with your value and its reference range.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                <span>Direct, second-person narration that speaks to you, plus a full transcript.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                <span>Questions to bring to your doctor, ready to replay.</span>
+              </li>
+            </ul>
 
-            <div className="pt-2">
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={handleStartGeneration}
-                icon={Sparkles}
-                className="w-full sm:w-auto"
-              >
-                Start Video Generation
-              </Button>
-            </div>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={handleStartGeneration}
+              icon={Sparkles}
+              className="w-full justify-center"
+            >
+              Generate video
+            </Button>
           </div>
         ) : (
           <div className="space-y-6">
-            {/* Generation Progress Bar */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs font-semibold text-slate-700">
-                <span>
-                  {isDone
-                    ? 'Video Generation Complete'
-                    : `Step ${currentStageIndex + 1} of ${VIDEO_GENERATION_STAGES.length}: ${VIDEO_GENERATION_STAGES[currentStageIndex]?.label}`}
-                </span>
-                <span>
-                  {isDone ? '100%' : `${Math.round(((currentStageIndex + 1) / VIDEO_GENERATION_STAGES.length) * 100)}%`}
-                </span>
-              </div>
-              <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                <div
-                  className="h-full bg-blue-600 transition-all duration-500 rounded-full"
-                  style={{
-                    width: isDone ? '100%' : `${((currentStageIndex + 1) / VIDEO_GENERATION_STAGES.length) * 100}%`
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Stages Checklist */}
-            <div className="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
-              {VIDEO_GENERATION_STAGES.map((stage, idx) => {
-                const isPassed = isDone || idx < currentStageIndex;
-                const isCurrent = !isDone && idx === currentStageIndex;
-                const Icon = stage.icon;
-
-                return (
-                  <div
-                    key={stage.id}
-                    className={`flex items-start gap-3 p-2.5 rounded-lg transition-all ${
-                      isCurrent
-                        ? 'bg-blue-50/90 border border-blue-200'
-                        : isPassed
-                        ? 'bg-white/80 border border-slate-100'
-                        : 'opacity-40'
-                    }`}
-                  >
-                    <div className="mt-0.5">
-                      {isPassed ? (
-                        <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
-                          <Check className="w-3 h-3 stroke-[3]" />
-                        </div>
-                      ) : isCurrent ? (
-                        <div className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center animate-spin">
-                          <Loader2 className="w-3 h-3" />
-                        </div>
-                      ) : (
-                        <div className="w-5 h-5 rounded-full border border-slate-300 bg-white" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs font-bold ${isCurrent ? 'text-blue-900' : isPassed ? 'text-slate-900' : 'text-slate-500'}`}>
-                          {stage.label}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-slate-500">
-                        {stage.desc}
-                      </p>
-                    </div>
+            {error ? (
+              <div className="space-y-4 rounded-lg border border-danger/20 bg-danger-soft/60 p-4">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-danger" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-semibold text-ink">Video generation stopped</p>
+                    <p className="text-sm leading-relaxed text-muted">{error}</p>
                   </div>
-                );
-              })}
-            </div>
-
-            {/* Completion CTA */}
-            {isDone && (
-              <div className="pt-2 animate-in fade-in slide-in-from-bottom-2">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  onClick={handleViewVideo}
-                  icon={ArrowRight}
-                  iconPosition="right"
-                  className="w-full justify-center"
-                >
-                  Watch Video Explanation
-                </Button>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button variant="primary" size="sm" onClick={handleStartGeneration} icon={RotateCcw}>
+                    Try again
+                  </Button>
+                  <Button variant="secondary" size="sm" onClick={handleClose}>
+                    Close
+                  </Button>
+                </div>
               </div>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-4 text-xs font-medium text-ink-soft">
+                    <span>
+                      {isDone
+                        ? 'Video ready'
+                        : `Step ${currentStageIndex + 1} of ${VIDEO_GENERATION_STAGES.length}: ${VIDEO_GENERATION_STAGES[currentStageIndex]?.label}`}
+                    </span>
+                    <span className="font-mono text-muted">{displayedProgress}%</span>
+                  </div>
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-line/60">
+                    <div
+                      className="h-full rounded-full bg-accent transition-all duration-700"
+                      style={{ width: `${displayedProgress}%` }}
+                    />
+                  </div>
+                  <p className="text-xs leading-relaxed text-muted" aria-live="polite">
+                    {isDone ? statusMessage || 'Your video is ready.' : statusMessage || VIDEO_GENERATION_STAGES[currentStageIndex]?.desc}
+                  </p>
+                </div>
+
+                <div className="space-y-2 rounded-lg border border-line bg-paper/60 p-3">
+                  {VIDEO_GENERATION_STAGES.map((stage, idx) => {
+                    const isPassed = isDone || idx < currentStageIndex;
+                    const isCurrent = !isDone && idx === currentStageIndex;
+
+                    return (
+                      <div
+                        key={stage.id}
+                        className={`flex items-start gap-3 rounded-md p-2.5 transition-colors ${
+                          isCurrent
+                            ? 'bg-surface border border-line'
+                            : isPassed
+                            ? 'bg-transparent'
+                            : 'opacity-40'
+                        }`}
+                      >
+                        <div className="mt-0.5">
+                          {isPassed ? (
+                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-surface">
+                              <Check className="h-3 w-3 stroke-[3]" />
+                            </span>
+                          ) : isCurrent ? (
+                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent-soft text-accent-deep">
+                              <Loader2 className="h-3 w-3 animate-spin" />
+                            </span>
+                          ) : (
+                            <span className="block h-5 w-5 rounded-full border border-line bg-surface" />
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className={`text-xs font-semibold ${isCurrent ? 'text-ink' : 'text-ink-soft'}`}>
+                            {stage.label}
+                          </p>
+                          <p className="text-[11px] leading-relaxed text-muted">{stage.desc}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {isDone && (
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={handleViewVideo}
+                    icon={ArrowRight}
+                    iconPosition="right"
+                    className="w-full justify-center"
+                  >
+                    Watch video
+                  </Button>
+                )}
+              </>
             )}
           </div>
         )}

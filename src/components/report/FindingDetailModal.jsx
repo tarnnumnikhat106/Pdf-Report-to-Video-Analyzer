@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  FileSearch, 
-  BookOpen, 
-  HelpCircle, 
-  MessageSquare, 
-  ChevronDown, 
-  ChevronUp, 
-  Stethoscope, 
-  Share2, 
-  Copy, 
-  CheckCircle,
-  ExternalLink
+import {
+  FileSearch,
+  BookOpen,
+  HelpCircle,
+  MessageSquare,
+  ChevronDown,
+  ChevronUp,
+  Stethoscope,
+  Copy
 } from 'lucide-react';
 import Modal from '../common/Modal';
 import SeverityBadge from '../common/SeverityBadge';
@@ -22,7 +19,6 @@ export default function FindingDetailModal({
   isOpen,
   onClose,
   finding,
-  reportName,
 }) {
   const { addToast } = useToast();
   const [openSections, setOpenSections] = useState({

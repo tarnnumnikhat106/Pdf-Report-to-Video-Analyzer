@@ -103,7 +103,7 @@ export async function analyzeReport(reportId) {
   try {
     const response = await apiClient.post(`/reports/${reportId}/analyze`);
     return response.data;
-  } catch (err) {
+  } catch {
     console.info(`[MedVision API] Mock analyzing report: ${reportId}`);
     // Simulate small computational delay
     await new Promise(r => setTimeout(r, 600));
@@ -121,7 +121,7 @@ export async function getReport(reportId) {
   try {
     const response = await apiClient.get(`/reports/${reportId}`);
     return response.data;
-  } catch (err) {
+  } catch {
     console.info(`[MedVision API] Mock fetching report ${reportId}`);
     const found = runtimeReports.find(r => r.reportId === reportId);
     if (!found) {
@@ -140,7 +140,7 @@ export async function getReports() {
   try {
     const response = await apiClient.get('/reports');
     return response.data;
-  } catch (err) {
+  } catch {
     console.info('[MedVision API] Mock fetching report history');
     return runtimeHistory;
   }
@@ -156,7 +156,7 @@ export async function generateVideo(reportId, options = { language: 'English', d
   try {
     const response = await apiClient.post(`/reports/${reportId}/video`, options);
     return response.data;
-  } catch (err) {
+  } catch {
     console.info(`[MedVision API] Mock triggering video generation for report: ${reportId}`);
     const report = runtimeReports.find(r => r.reportId === reportId) || runtimeReports[0];
     
@@ -183,7 +183,7 @@ export async function getVideoStatus(reportId) {
   try {
     const response = await apiClient.get(`/reports/${reportId}/video/status`);
     return response.data;
-  } catch (err) {
+  } catch {
     const report = runtimeReports.find(r => r.reportId === reportId) || runtimeReports[0];
     return {
       status: 'completed',
@@ -196,6 +196,34 @@ export async function getVideoStatus(reportId) {
 }
 
 /**
+ * Fetch masked external LLM provider status and provider presets
+ * @returns {Promise<object>}
+ */
+export async function getLLMConfig() {
+  const response = await apiClient.get('/llm/config', { timeout: 25000 });
+  return response.data;
+}
+
+/**
+ * Validate and save an API key for this backend session only
+ * @param {{provider: string, api_key: string, model: string, base_url: string, verify?: boolean}} config
+ * @returns {Promise<object>}
+ */
+export async function saveLLMConfig(config) {
+  const response = await apiClient.post('/llm/config', config, { timeout: 60000 });
+  return response.data;
+}
+
+/**
+ * Remove the in-memory API key; environment keys are unaffected
+ * @returns {Promise<object>}
+ */
+export async function clearLLMConfig() {
+  const response = await apiClient.delete('/llm/config', { timeout: 20000 });
+  return response.data;
+}
+
+/**
  * Check ML models status and Ollama Llama 3.2 connectivity
  * @returns {Promise<object>}
  */
@@ -203,11 +231,11 @@ export async function getMLStatus() {
   try {
     const response = await apiClient.get('/ml/status');
     return response.data;
-  } catch (err) {
+  } catch {
     return {
-      ollama_online: true,
-      llama_ready: true,
-      models_loaded: { cbc: true, lft: true, kft: true }
+      status: 'offline',
+      ollama: { available: false, has_model: false },
+      models: { cbc: true, lft: true, kft: true }
     };
   }
 }

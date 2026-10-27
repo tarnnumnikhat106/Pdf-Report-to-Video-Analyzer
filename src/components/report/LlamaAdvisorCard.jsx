@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
-import { 
-  Sparkles, 
-  AlertTriangle, 
-  ShieldAlert, 
-  Stethoscope, 
-  Apple, 
-  Ban, 
-  Droplet, 
-  Pill, 
-  ChevronDown, 
-  ChevronUp, 
-  Copy, 
-  Check, 
+import {
+  Sparkles,
+  ShieldAlert,
+  Stethoscope,
+  Apple,
+  Ban,
+  Droplet,
+  Pill,
+  Check,
   ArrowRight,
-  ExternalLink,
   HelpCircle,
   FileCode
 } from 'lucide-react';
@@ -23,7 +18,6 @@ import MLOutputVisualizer from './MLOutputVisualizer';
 
 export default function LlamaAdvisorCard({ llamaAnalysis, mlAnalysis, className = '' }) {
   const [showJson, setShowJson] = useState(false);
-  const [copiedJson, setCopiedJson] = useState(false);
   const [checkedQuestions, setCheckedQuestions] = useState({});
 
   if (!llamaAnalysis) {
@@ -42,11 +36,11 @@ export default function LlamaAdvisorCard({ llamaAnalysis, mlAnalysis, className 
     model_used = 'Meta Llama 3.2 (via Ollama)'
   } = llamaAnalysis;
 
-  const isHighRisk = connect_to_doctor || risk_level.toLowerCase().includes('high');
+  const isHighRisk = connect_to_doctor || String(risk_level).toLowerCase().includes('high');
 
   // Extract or assemble the exact ML JSON that was fed into Llama 3.2
-  const mlJsonPayload = llamaAnalysis.ml_input_processed || 
-                        mlAnalysis?.ml_payload || 
+  const mlJsonPayload = llamaAnalysis.ml_input_processed ||
+                        mlAnalysis?.ml_payload ||
                         {
                           test_type: "CBC",
                           prediction: isHighRisk ? 1 : 0,
@@ -55,17 +49,13 @@ export default function LlamaAdvisorCard({ llamaAnalysis, mlAnalysis, className 
                           input_features: mlAnalysis?.probabilities || {}
                         };
 
-  const handleCopyJson = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(JSON.stringify(mlJsonPayload, null, 2));
-      setCopiedJson(true);
-      setTimeout(() => setCopiedJson(false), 2000);
-    }
-  };
-
   const toggleQuestion = (idx) => {
     setCheckedQuestions(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
+
+  const doctorNote = String(doctor_message || "The machine learning model placed this report in the high risk category. Please speak with your physician or the suggested specialist for confirmation and next steps.")
+    .replace(/^[^\p{L}\p{N}]+/u, '')
+    .replace(/^high risk detected[:\s-]*/i, '');
 
   const recommendedFoods = diet_guidance.recommended_foods || [];
   const foodsToAvoid = diet_guidance.foods_to_avoid || [];
@@ -74,236 +64,205 @@ export default function LlamaAdvisorCard({ llamaAnalysis, mlAnalysis, className 
 
   return (
     <div className={`space-y-6 ${className}`}>
-      
-      {/* 1. HIGH RISK URGENT DOCTOR ESCALATION BANNER (Shows when High Risk is detected) */}
+
+      {/* High risk escalation */}
       {isHighRisk && (
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 p-1 shadow-lg shadow-red-500/20 animate-in fade-in duration-300">
-          <div className="rounded-[14px] bg-slate-950/95 p-6 sm:p-8 backdrop-blur-xl text-white space-y-6">
-            
-            {/* Header with emergency beacon */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
-              <div className="flex items-start sm:items-center gap-3.5">
-                <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-500/20 border border-red-400/40 text-red-400">
-                  <Stethoscope className="w-6 h-6 animate-pulse" />
-                  <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-500"></span>
-                  </span>
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-black uppercase tracking-widest text-red-400">
-                      Medical Consultation Required
-                    </span>
-                    <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-red-500/20 text-red-300 border border-red-500/30 uppercase">
-                      {doctor_urgency} Urgency
-                    </span>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-0.5">
-                    ⚠️ High Risk Detected — Connect to a Doctor
-                  </h3>
-                </div>
-              </div>
-
-              {/* Recommended Specialty Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/10 border border-white/15 text-xs font-medium text-slate-200">
-                <span className="text-slate-400">Recommended Specialist:</span>
-                <span className="font-bold text-amber-300">{recommended_doctor_specialty}</span>
+        <section className="overflow-hidden rounded-lg border border-danger/25 bg-danger-soft/60">
+          <div className="flex flex-col gap-4 border-b border-danger/15 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-4">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-danger/20 bg-surface text-danger">
+                <Stethoscope className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-danger">
+                  Medical consultation advised
+                  <span className="ml-2 font-normal text-danger/70">{doctor_urgency} urgency</span>
+                </p>
+                <h2 className="mt-1 font-display text-2xl leading-tight text-ink">
+                  High risk detected. Talk to a doctor.
+                </h2>
               </div>
             </div>
 
-            {/* Doctor Warning Message */}
-            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-sm sm:text-base text-red-100 leading-relaxed">
-              <p className="font-medium">
-                {doctor_message || "The Machine Learning model classified this report in the High Risk category. Please connect with your physician or designated specialist for prompt diagnostic confirmation and therapeutic care."}
-              </p>
+            <div className="shrink-0 rounded-md border border-danger/15 bg-surface/70 px-3 py-2">
+              <span className="block text-[10px] uppercase tracking-[0.14em] text-muted">
+                Suggested specialty
+              </span>
+              <span className="mt-0.5 block text-sm font-semibold text-ink">
+                {recommended_doctor_specialty}
+              </span>
             </div>
+          </div>
 
-            {/* Questions to bring to the Doctor */}
+          <div className="space-y-5 px-6 py-5">
+            <p className="max-w-3xl text-sm leading-relaxed text-ink-soft">
+              {doctorNote}
+            </p>
+
             {questions_for_doctor.length > 0 && (
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-                    <HelpCircle className="w-4 h-4 text-amber-400" />
-                    Recommended Questions to Ask Your Doctor
-                  </h4>
-                  <span className="text-[11px] text-slate-400">
-                    Check off during your appointment
-                  </span>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
+                    <HelpCircle className="h-3.5 w-3.5" />
+                    Questions to ask your doctor
+                  </h3>
+                  <span className="text-[11px] text-muted">Check off as you go</span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                   {questions_for_doctor.map((question, idx) => {
                     const isChecked = checkedQuestions[idx];
                     return (
-                      <div
+                      <button
                         key={idx}
+                        type="button"
                         onClick={() => toggleQuestion(idx)}
-                        className={`flex items-start gap-3 p-3 rounded-xl border text-xs sm:text-sm cursor-pointer transition-all ${
-                          isChecked 
-                            ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-200 line-through' 
-                            : 'bg-white/5 border-white/10 text-slate-200 hover:bg-white/10'
+                        aria-pressed={!!isChecked}
+                        className={`flex items-start gap-3 rounded-md border px-3.5 py-3 text-left text-xs leading-snug transition-colors sm:text-sm ${
+                          isChecked
+                            ? 'border-accent/25 bg-accent-soft/60 text-muted line-through'
+                            : 'border-line bg-surface text-ink-soft hover:border-line/80 hover:bg-paper/60'
                         }`}
                       >
-                        <div className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center shrink-0 ${
-                          isChecked ? 'bg-emerald-500 border-emerald-400 text-white' : 'border-slate-400'
+                        <span className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border ${
+                          isChecked ? 'border-accent bg-accent text-surface' : 'border-line bg-surface'
                         }`}>
-                          {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
-                        </div>
-                        <span className="leading-snug">{question}</span>
-                      </div>
+                          {isChecked && <Check className="h-3 w-3 stroke-[3]" />}
+                        </span>
+                        <span>{question}</span>
+                      </button>
                     );
                   })}
                 </div>
               </div>
             )}
 
-            {/* Escalation CTA */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-white/10 text-xs text-slate-400">
-              <span className="flex items-center gap-1.5">
-                <ShieldAlert className="w-4 h-4 text-red-400" />
-                Do not begin unprescribed pharmacological therapies without direct medical supervision.
+            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-danger/15 pt-4 text-xs text-muted">
+              <span className="flex items-start gap-2">
+                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-danger" />
+                Do not begin prescription medication without direct medical supervision.
               </span>
-              <a
-                href="#doctor-discussion"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.print();
-                }}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 hover:text-amber-200 underline underline-offset-4"
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-1.5 font-semibold text-danger underline decoration-danger/30 underline-offset-4 hover:decoration-danger"
               >
-                Print Questions for Doctor Visit <ArrowRight className="w-3.5 h-3.5" />
-              </a>
+                Print questions for your visit
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
             </div>
-
           </div>
-        </div>
+        </section>
       )}
 
-      {/* 2. MAIN LLAMA 3.2 CLINICAL & DIETARY INTELLIGENCE CARD */}
-      <Card padding="p-6 sm:p-8" className="border-slate-200 shadow-md space-y-6">
-        
-        {/* Header with Llama 3.2 Model Metadata */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-sm shadow-blue-500/20">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold tracking-wide text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md">
-                  {model_used}
-                </span>
-                <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
-                  isHighRisk ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                }`}>
-                  ML Risk Status: {risk_level}
-                </span>
-              </div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5">
-                Clinical Overview & Dietary Guidance
-              </h2>
-            </div>
+      {/* Clinical overview and dietary guidance */}
+      <Card padding="p-6 sm:p-8" className="space-y-6">
+        <div className="flex flex-col gap-4 border-b border-line-soft pb-6 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-muted">{model_used}</p>
+            <h2 className="mt-1 font-display text-2xl leading-tight text-ink sm:text-3xl">
+              Clinical overview & dietary guidance
+            </h2>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
+              A plain-language reading of your results, with food and habit notes to discuss with your clinician.
+            </p>
           </div>
 
-          {/* ML JSON Classification Visualizer Toggle Button */}
-          <Button
-            variant="outline"
-            size="sm"
-            icon={FileCode}
-            onClick={() => setShowJson(!showJson)}
-            className="text-xs"
-          >
-            {showJson ? 'Hide ML Output' : 'View ML Output (Visual / JSON)'}
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-semibold ${
+              isHighRisk
+                ? 'border-danger/25 bg-danger-soft text-danger'
+                : 'border-accent/20 bg-accent-soft text-accent-deep'
+            }`}>
+              <Sparkles className="h-3.5 w-3.5" />
+              Risk status: {risk_level}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              icon={FileCode}
+              onClick={() => setShowJson(!showJson)}
+              className="text-xs"
+            >
+              {showJson ? 'Hide ML output' : 'View ML output'}
+            </Button>
+          </div>
         </div>
 
-        {/* Expandable ML Visual Output & JSON Section */}
         {showJson && (
           <div className="animate-in fade-in duration-200">
             <MLOutputVisualizer
               mlOutput={mlJsonPayload}
-              title="Machine Learning Diagnostic Classification (JSON Output)"
-              subtitle="Standardized model output from ML directory fed into Meta Llama 3.2"
+              title="Machine learning classification"
+              subtitle="The standardized model output fed into Meta Llama 3.2"
             />
           </div>
         )}
 
-        {/* Overview Narrative */}
         {overview && (
-          <div className="p-4 sm:p-5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Diagnostic Synthesis
+          <div className="rounded-md border border-line bg-paper/60 p-5">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
+              Diagnostic synthesis
             </h3>
-            <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
+            <p className="mt-2 text-sm leading-relaxed text-ink-soft sm:text-base">
               {overview}
             </p>
           </div>
         )}
 
-        {/* DIETARY GUIDANCE SECTION */}
-        <div className="space-y-4 pt-2">
-          <div className="flex items-center gap-2">
-            <Apple className="w-5 h-5 text-emerald-600" />
-            <h3 className="text-lg font-bold text-slate-900 tracking-tight">
-              Personalized Dietary & Nutritional Guidance
+        <div className="space-y-4 pt-1">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent-soft text-accent-deep">
+              <Apple className="h-4 w-4" />
+            </span>
+            <h3 className="font-display text-xl text-ink">
+              Personalized dietary guidance
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            
-            {/* Foods to Eat */}
-            <div className="p-5 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 space-y-3">
-              <div className="flex items-center gap-2 text-emerald-800 font-bold text-sm">
-                <div className="w-6 h-6 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700">
-                  <Check className="w-4 h-4 stroke-[3]" />
-                </div>
-                <span>Recommended Foods to Eat</span>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="space-y-3 rounded-md border border-line bg-surface p-5">
+              <div className="flex items-center gap-2 text-sm font-semibold text-accent-deep">
+                <Check className="h-4 w-4 stroke-[2.5]" />
+                Foods to include
               </div>
-              <ul className="space-y-2 text-xs sm:text-sm text-emerald-950">
+              <ul className="space-y-2 text-xs leading-relaxed text-ink-soft sm:text-sm">
                 {recommendedFoods.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2 leading-relaxed">
-                    <span className="text-emerald-500 font-bold mt-0.5">•</span>
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="mt-0.5 text-accent">·</span>
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Foods to Avoid */}
-            <div className="p-5 rounded-2xl bg-rose-50/70 border border-rose-200/80 space-y-3">
-              <div className="flex items-center gap-2 text-rose-800 font-bold text-sm">
-                <div className="w-6 h-6 rounded-lg bg-rose-100 flex items-center justify-center text-rose-700">
-                  <Ban className="w-4 h-4 stroke-[2.5]" />
-                </div>
-                <span>Foods & Substances to Limit or Avoid</span>
+            <div className="space-y-3 rounded-md border border-danger/20 bg-danger-soft/40 p-5">
+              <div className="flex items-center gap-2 text-sm font-semibold text-danger">
+                <Ban className="h-4 w-4" />
+                Foods and substances to limit
               </div>
-              <ul className="space-y-2 text-xs sm:text-sm text-rose-950">
+              <ul className="space-y-2 text-xs leading-relaxed text-ink-soft sm:text-sm">
                 {foodsToAvoid.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2 leading-relaxed">
-                    <span className="text-rose-500 font-bold mt-0.5">•</span>
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="mt-0.5 text-danger/70">·</span>
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
-
           </div>
 
-          {/* Hydration & Key Nutrients Sub-Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-            
-            {/* Hydration & Lifestyle Habits */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {hydrationHabits.length > 0 && (
-              <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-200/70 space-y-2">
-                <div className="flex items-center gap-2 text-blue-900 font-bold text-xs uppercase tracking-wide">
-                  <Droplet className="w-4 h-4 text-blue-600" />
-                  <span>Hydration & Daily Lifestyle Habits</span>
+              <div className="space-y-2 rounded-md border border-line bg-paper-deep/50 p-4">
+                <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+                  <Droplet className="h-3.5 w-3.5 text-accent" />
+                  Hydration and daily habits
                 </div>
-                <ul className="space-y-1.5 text-xs text-blue-950">
+                <ul className="space-y-1.5 text-xs leading-relaxed text-ink-soft">
                   {hydrationHabits.map((h, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <span className="text-blue-500">•</span>
+                      <span className="text-accent">·</span>
                       <span>{h}</span>
                     </li>
                   ))}
@@ -311,18 +270,17 @@ export default function LlamaAdvisorCard({ llamaAnalysis, mlAnalysis, className 
               </div>
             )}
 
-            {/* Key Nutrients to Focus On */}
             {keyNutrients.length > 0 && (
-              <div className="p-4 rounded-xl bg-indigo-50/60 border border-indigo-200/70 space-y-2">
-                <div className="flex items-center gap-2 text-indigo-900 font-bold text-xs uppercase tracking-wide">
-                  <Pill className="w-4 h-4 text-indigo-600" />
-                  <span>Key Nutrients & Cellular Builders</span>
+              <div className="space-y-2 rounded-md border border-line bg-paper-deep/50 p-4">
+                <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+                  <Pill className="h-3.5 w-3.5 text-accent" />
+                  Nutrients to focus on
                 </div>
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {keyNutrients.map((n, i) => (
-                    <span 
+                    <span
                       key={i}
-                      className="px-2.5 py-1 rounded-lg bg-white border border-indigo-200 text-indigo-900 text-xs font-semibold shadow-2xs"
+                      className="rounded border border-line bg-surface px-2.5 py-1 text-xs font-medium text-ink-soft"
                     >
                       {n}
                     </span>
@@ -330,11 +288,8 @@ export default function LlamaAdvisorCard({ llamaAnalysis, mlAnalysis, className 
                 </div>
               </div>
             )}
-
           </div>
-
         </div>
-
       </Card>
     </div>
   );

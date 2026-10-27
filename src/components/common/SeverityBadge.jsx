@@ -6,22 +6,22 @@ export default function SeverityBadge({ status = 'normal', size = 'md', showIcon
 
   const configs = {
     normal: {
-      label: 'Normal',
-      bg: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
+      label: 'In range',
+      bg: 'bg-accent-soft text-accent-deep border-accent/20',
       icon: CheckCircle2,
-      dot: 'bg-emerald-500',
+      dot: 'bg-accent',
     },
     attention: {
-      label: 'Attention',
-      bg: 'bg-amber-50 text-amber-800 border-amber-200/90',
+      label: 'Review',
+      bg: 'bg-attention-soft text-attention border-attention/25',
       icon: AlertTriangle,
-      dot: 'bg-amber-500',
+      dot: 'bg-attention',
     },
     important: {
-      label: 'Important',
-      bg: 'bg-rose-50 text-rose-800 border-rose-200/90',
+      label: 'Discuss',
+      bg: 'bg-danger-soft text-danger border-danger/25',
       icon: AlertCircle,
-      dot: 'bg-rose-500',
+      dot: 'bg-danger',
     },
   };
 
@@ -29,9 +29,9 @@ export default function SeverityBadge({ status = 'normal', size = 'md', showIcon
   const Icon = current.icon;
 
   const sizeClasses = {
-    sm: 'text-xs px-2 py-0.5 gap-1 font-medium',
-    md: 'text-xs px-2.5 py-1 gap-1.5 font-semibold tracking-wide uppercase',
-    lg: 'text-sm px-3.5 py-1.5 gap-2 font-semibold',
+    sm: 'text-[11px] px-2 py-0.5 gap-1 font-medium',
+    md: 'text-xs px-2.5 py-1 gap-1.5 font-medium',
+    lg: 'text-sm px-3 py-1.5 gap-2 font-medium',
   };
 
   const iconSizes = {
@@ -42,7 +42,9 @@ export default function SeverityBadge({ status = 'normal', size = 'md', showIcon
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border ${current.bg} ${sizeClasses[size] || sizeClasses.md} ${className}`}
+      className={`inline-flex items-center rounded-md border ${current.bg} ${
+        sizeClasses[size] || sizeClasses.md
+      } ${className}`}
     >
       {showIcon ? (
         <Icon className={`${iconSizes[size] || iconSizes.md} shrink-0`} />

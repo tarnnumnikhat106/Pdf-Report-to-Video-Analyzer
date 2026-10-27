@@ -1,15 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  MessageSquare, 
-  Send, 
-  Sparkles, 
-  Bot, 
-  User, 
-  RotateCcw, 
-  Apple, 
-  HelpCircle, 
+import {
+  Send,
+  Bot,
+  User,
+  RotateCcw,
+  Apple,
   AlertCircle,
-  CheckCircle2,
   Coffee,
   Calendar,
   ShieldCheck,
@@ -23,19 +19,22 @@ import Card from '../common/Card';
 import Button from '../common/Button';
 import { sendDietChatMessage } from '../../services/api';
 
+const formatMessageTime = () =>
+  new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
 export default function DietChatSection({ reportContext = {}, className = '', defaultFullScreen = false }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `Hello! I am your Clinical Dietary Advisor powered by **Meta Llama 3.2**. 
+      content: `Hi. Ask me about food and daily habits that may support the results in this report.
 
-I have reviewed your medical findings and lab parameters. You can ask me anything about your diet, such as:
-- Whether specific foods or drinks (like spinach, coffee, eggs, or milk) are good for your results
-- Foods you should avoid or limit to prevent health risks
-- Personalized 1-day meal or snack ideas tailored to your biomarkers
+For example:
+- Whether spinach, coffee, eggs, or dairy fit your panel
+- Foods or drinks worth limiting
+- A simple meal or snack idea
 
-What questions or food preferences would you like to discuss today?`,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+I can explain the general nutrition context. For treatment or supplement decisions, talk with your clinician.`,
+      timestamp: formatMessageTime()
     }
   ]);
 
@@ -44,6 +43,7 @@ What questions or food preferences would you like to discuss today?`,
   const [isFullScreen, setIsFullScreen] = useState(defaultFullScreen);
   const [isPinned, setIsPinned] = useState(false); // Fixed floating on screen while scrolling
   const messagesEndRef = useRef(null);
+  const threadRef = useRef(null);
 
   const conditionName = reportContext.condition || reportContext.reportType || "Lab Diagnostics";
   const riskStatus = reportContext.risk_level || reportContext.status || "Normal";
@@ -56,7 +56,9 @@ What questions or food preferences would you like to discuss today?`,
   ];
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const thread = threadRef.current;
+    if (!thread) return;
+    thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -91,7 +93,7 @@ What questions or food preferences would you like to discuss today?`,
     const userMsg = {
       role: 'user',
       content: text,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      timestamp: formatMessageTime()
     };
 
     const newHistory = [...messages, userMsg];
@@ -107,7 +109,7 @@ What questions or food preferences would you like to discuss today?`,
         role: 'assistant',
         content: response.reply,
         model_used: response.model_used,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        timestamp: formatMessageTime()
       };
       setMessages([...newHistory, aiMsg]);
     } catch (err) {
@@ -115,7 +117,7 @@ What questions or food preferences would you like to discuss today?`,
       const errorMsg = {
         role: 'assistant',
         content: "I apologize, but I encountered a momentary connection issue. Please feel free to ask again.",
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        timestamp: formatMessageTime()
       };
       setMessages([...newHistory, errorMsg]);
     } finally {
@@ -134,8 +136,8 @@ What questions or food preferences would you like to discuss today?`,
     setMessages([
       {
         role: 'assistant',
-        content: "Chat cleared! What other foods, doubts, or nutrition questions can I help you with?",
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        content: "Chat cleared. Ask another question about food, habits, or how to read these results.",
+        timestamp: formatMessageTime()
       }
     ]);
   };
@@ -145,26 +147,25 @@ What questions or food preferences would you like to discuss today?`,
     <div className="flex flex-col h-full w-full bg-white">
       
       {/* Chat Header */}
-      <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white flex items-center justify-between border-b border-white/10 shrink-0">
+      <div className="flex shrink-0 items-center justify-between border-b border-paper/10 bg-ink p-4 text-paper sm:p-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/20 shrink-0">
-            <Bot className="w-5 h-5" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-paper/15 bg-paper/10 text-paper">
+            <Bot className="h-5 w-5" />
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
-                Clinical Dietary & Nutrition Advisor
+              <h3 className="font-display text-lg tracking-tight text-paper">
+                Dietary questions
               </h3>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-bold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Llama 3.2 Online
+              <span className="rounded border border-paper/15 bg-paper/5 px-2 py-0.5 text-[10px] font-medium text-paper/60">
+                Llama 3.2
               </span>
-              <span className="hidden md:inline-flex px-2 py-0.5 rounded-md bg-white/10 text-slate-300 text-[10px] font-medium border border-white/10">
-                Context: {conditionName} ({riskStatus})
+              <span className="hidden rounded border border-paper/15 bg-paper/5 px-2 py-0.5 text-[10px] font-medium text-paper/60 md:inline-flex">
+                {conditionName} Â· {riskStatus}
               </span>
             </div>
-            <p className="text-xs text-slate-300">
-              Ask about what to eat, foods to avoid, meal plans, or any doubts about specific ingredients.
+            <p className="mt-0.5 text-xs text-paper/55">
+              Ask about foods to include, ingredients to limit, or a simple meal idea.
             </p>
           </div>
         </div>
@@ -176,15 +177,15 @@ What questions or food preferences would you like to discuss today?`,
             <button
               type="button"
               onClick={() => setIsPinned(!isPinned)}
-              className={`p-2 rounded-lg transition-colors flex items-center gap-1 text-xs ${
-                isPinned 
-                  ? 'bg-blue-600 text-white font-bold' 
-                  : 'text-slate-300 hover:text-white bg-white/5 hover:bg-white/10'
+              className={`flex items-center gap-1 rounded p-2 text-xs transition-colors ${
+                isPinned
+                  ? 'bg-accent text-surface'
+                  : 'bg-paper/5 text-paper/60 hover:bg-paper/10 hover:text-paper'
               }`}
               title={isPinned ? "Unpin from screen (return to document flow)" : "Fix to screen while scrolling"}
             >
               {isPinned ? <PinOff className="w-3.5 h-3.5" /> : <Pin className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline">{isPinned ? "Unpin" : "Pin Fixed"}</span>
+              <span className="hidden sm:inline">{isPinned ? "Unpin" : "Pin"}</span>
             </button>
           )}
 
@@ -195,18 +196,18 @@ What questions or food preferences would you like to discuss today?`,
               setIsFullScreen(!isFullScreen);
               if (!isFullScreen) setIsPinned(false);
             }}
-            className="p-2 rounded-lg text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 transition-colors flex items-center gap-1 text-xs"
+            className="flex items-center gap-1 rounded bg-paper/5 p-2 text-xs text-paper/60 transition-colors hover:bg-paper/10 hover:text-paper"
             title={isFullScreen ? "Exit Full Screen (Esc)" : "Expand to Full Screen"}
           >
             {isFullScreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
-            <span className="hidden sm:inline">{isFullScreen ? "Exit Fullscreen" : "Full Screen"}</span>
+            <span className="hidden sm:inline">{isFullScreen ? "Exit" : "Full screen"}</span>
           </button>
 
           {/* Reset Conversation */}
           <button
             type="button"
             onClick={handleResetChat}
-            className="text-xs text-slate-300 hover:text-white p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors flex items-center gap-1"
+            className="flex items-center gap-1 rounded bg-paper/5 p-2 text-xs text-paper/60 transition-colors hover:bg-paper/10 hover:text-paper"
             title="Reset conversation"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -221,7 +222,7 @@ What questions or food preferences would you like to discuss today?`,
                 setIsFullScreen(false);
                 setIsPinned(false);
               }}
-              className="p-2 rounded-lg text-slate-300 hover:text-white bg-white/5 hover:bg-rose-500/30 transition-colors ml-1"
+              className="ml-1 rounded bg-paper/5 p-2 text-paper/60 transition-colors hover:bg-danger/30 hover:text-paper"
               title="Close overlay"
             >
               <X className="w-4 h-4" />
@@ -231,9 +232,9 @@ What questions or food preferences would you like to discuss today?`,
       </div>
 
       {/* Suggested Quick Prompts */}
-      <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center gap-2 overflow-x-auto shrink-0">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 shrink-0">
-          Suggested:
+      <div className="flex shrink-0 items-center gap-2 overflow-x-auto border-b border-line bg-paper/70 px-4 py-2.5">
+        <span className="shrink-0 text-[11px] font-medium uppercase tracking-[0.14em] text-muted">
+          Try
         </span>
         <div className="flex items-center gap-2 shrink-0">
           {quickPrompts.map((p, idx) => {
@@ -244,9 +245,9 @@ What questions or food preferences would you like to discuss today?`,
                 type="button"
                 onClick={() => handleSendMessage(p.text)}
                 disabled={isLoading}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50 text-slate-700 hover:text-blue-700 text-xs font-medium transition-all shadow-2xs shrink-0 disabled:opacity-50"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink-soft transition-colors hover:border-accent/40 hover:text-accent-deep disabled:opacity-50"
               >
-                <Icon className="w-3.5 h-3.5 text-blue-600" />
+                <Icon className="h-3.5 w-3.5 text-accent" />
                 <span>{p.label}</span>
               </button>
             );
@@ -255,7 +256,7 @@ What questions or food preferences would you like to discuss today?`,
       </div>
 
       {/* Messages Thread Container */}
-      <div className={`p-4 sm:p-6 space-y-4 overflow-y-auto bg-slate-50/40 flex-1 ${
+      <div ref={threadRef} className={`flex-1 space-y-4 overflow-y-auto bg-paper/40 p-4 sm:p-6 ${
         isFullScreen ? 'min-h-[400px]' : isPinned ? 'min-h-[280px]' : 'max-h-[460px] min-h-[320px]'
       }`}>
         {messages.map((msg, index) => {
@@ -267,21 +268,19 @@ What questions or food preferences would you like to discuss today?`,
             >
               {/* Avatar */}
               <div
-                className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-xs font-bold shadow-2xs ${
-                  isUser
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gradient-to-tr from-slate-900 to-indigo-900 text-white'
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-xs font-semibold ${
+                  isUser ? 'bg-accent text-surface' : 'bg-ink text-paper'
                 }`}
               >
-                {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4 text-blue-300" />}
+                {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
               </div>
 
               {/* Message Bubble */}
               <div
-                className={`max-w-[85%] sm:max-w-[75%] rounded-2xl p-4 text-xs sm:text-sm leading-relaxed shadow-xs ${
+                className={`max-w-[85%] rounded-lg p-4 text-xs leading-relaxed sm:max-w-[75%] sm:text-sm ${
                   isUser
-                    ? 'bg-blue-600 text-white rounded-tr-none'
-                    : 'bg-white text-slate-800 border border-slate-200/90 rounded-tl-none'
+                    ? 'bg-accent text-surface'
+                    : 'border border-line bg-surface text-ink-soft'
                 }`}
               >
                 <div className="whitespace-pre-line space-y-1.5">
@@ -289,11 +288,11 @@ What questions or food preferences would you like to discuss today?`,
                 </div>
 
                 <div
-                  className={`mt-2 pt-1 text-[10px] flex items-center justify-between border-t ${
-                    isUser ? 'border-blue-500 text-blue-100' : 'border-slate-100 text-slate-400'
+                  className={`mt-2 flex items-center justify-between border-t pt-1 text-[10px] ${
+                    isUser ? 'border-paper/20 text-paper/60' : 'border-line-soft text-muted'
                   }`}
                 >
-                  <span>{isUser ? 'You' : (msg.model_used || 'Meta Llama 3.2 AI')}</span>
+                  <span>{isUser ? 'You' : (msg.model_used || 'Llama 3.2')}</span>
                   <span>{msg.timestamp}</span>
                 </div>
               </div>
@@ -304,15 +303,15 @@ What questions or food preferences would you like to discuss today?`,
         {/* Loading Indicator */}
         {isLoading && (
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-slate-900 to-indigo-900 text-white flex items-center justify-center shrink-0 shadow-2xs">
-              <Bot className="w-4 h-4 text-blue-300 animate-spin" />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-ink text-paper">
+              <Bot className="h-4 w-4 animate-spin" />
             </div>
-            <div className="bg-white rounded-2xl rounded-tl-none border border-slate-200 p-4 shadow-xs">
+            <div className="rounded-lg border border-line bg-surface p-4">
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '300ms' }} />
-                <span className="text-xs text-slate-400 ml-2">Llama 3.2 is analyzing your food question...</span>
+                <span className="h-2 w-2 animate-bounce rounded-full bg-accent" style={{ animationDelay: '0ms' }} />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-accent" style={{ animationDelay: '150ms' }} />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-accent" style={{ animationDelay: '300ms' }} />
+                <span className="ml-2 text-xs text-muted">Reading your question...</span>
               </div>
             </div>
           </div>
@@ -322,7 +321,7 @@ What questions or food preferences would you like to discuss today?`,
       </div>
 
       {/* Input Bar */}
-      <div className="p-3 sm:p-4 bg-white border-t border-slate-200 space-y-2 shrink-0">
+      <div className="shrink-0 space-y-2 border-t border-line bg-surface p-3 sm:p-4">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -335,9 +334,9 @@ What questions or food preferences would you like to discuss today?`,
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about foods to eat, ingredients to avoid, or nutritional doubts..."
+            placeholder="Ask about foods to include, ingredients to limit, or meal ideas..."
             disabled={isLoading}
-            className="flex-1 px-4 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+            className="flex-1 rounded-md border border-line bg-paper/60 px-4 py-2.5 text-xs transition-colors focus:border-accent focus:bg-surface focus:outline-none focus:ring-1 focus:ring-accent/25 sm:text-sm"
           />
 
           <Button
@@ -346,19 +345,19 @@ What questions or food preferences would you like to discuss today?`,
             size="md"
             icon={Send}
             disabled={!inputMessage.trim() || isLoading}
-            className="rounded-xl px-4 py-2.5 shadow-sm"
+            className="rounded-md px-4 py-2.5"
           >
-            <span className="hidden sm:inline">Ask Question</span>
+            <span className="hidden sm:inline">Send</span>
           </Button>
         </form>
 
-        <p className="text-[11px] text-slate-400 flex items-center justify-between px-1">
-          <span className="flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            Contextual nutrition support tailored to your laboratory findings.
+        <p className="flex items-center justify-between px-1 text-[11px] text-muted">
+          <span className="flex items-center gap-1.5">
+            <ShieldCheck className="h-3.5 w-3.5 text-accent" />
+            General nutrition guidance, not a prescription.
           </span>
           <span className="hidden sm:inline">
-            {isFullScreen ? "Press Esc or click Minimize to exit full screen" : "Press Enter to send"}
+            {isFullScreen ? "Esc to exit full screen" : "Enter to send"}
           </span>
         </p>
       </div>
@@ -382,22 +381,22 @@ What questions or food preferences would you like to discuss today?`,
     return (
       <>
         {/* Placeholder in regular flow so layout doesn't shift */}
-        <div className="p-4 rounded-xl border border-dashed border-slate-300 bg-slate-50/80 text-xs text-slate-500 flex items-center justify-between">
+        <div className="flex items-center justify-between rounded-md border border-dashed border-line bg-paper/60 p-4 text-xs text-muted">
           <span className="flex items-center gap-2">
-            <Pin className="w-4 h-4 text-blue-600" />
-            AI Dietary Chat is pinned & fixed on screen.
+            <Pin className="h-4 w-4 text-accent" />
+            Dietary chat is pinned on screen.
           </span>
           <button
             type="button"
             onClick={() => setIsPinned(false)}
-            className="text-blue-600 hover:text-blue-800 font-bold underline"
+            className="font-semibold text-accent-deep underline underline-offset-4"
           >
-            Unpin to here
+            Unpin
           </button>
         </div>
 
         {/* Fixed floating chat window */}
-        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 w-[95vw] sm:w-[480px] h-[580px] max-h-[85vh] shadow-2xl rounded-2xl overflow-hidden border border-slate-300 bg-white flex flex-col animate-in slide-in-from-bottom-5 duration-200">
+        <div className="fixed bottom-4 right-4 z-40 flex h-[580px] max-h-[85vh] w-[95vw] flex-col overflow-hidden rounded-lg border border-line bg-surface shadow-2xl animate-in slide-in-from-bottom-5 duration-200 sm:bottom-6 sm:right-6 sm:w-[480px]">
           {chatContent}
         </div>
       </>
@@ -407,24 +406,20 @@ What questions or food preferences would you like to discuss today?`,
   // 3. STANDARD INLINE MODE (With 1-click Full Screen and Pin buttons)
   return (
     <>
-      <Card padding="p-0" className={`border-slate-200 shadow-md overflow-hidden flex flex-col ${className}`}>
+      <Card padding="p-0" className={`flex flex-col overflow-hidden ${className}`}>
         {chatContent}
       </Card>
 
-      {/* Floating launcher shortcut button (stays fixed at bottom-right so user can open Fullscreen AI Chat anytime while scrolling) */}
+      {/* Floating shortcut to the full screen chat */}
       <button
         type="button"
         onClick={() => setIsFullScreen(true)}
-        className="fixed bottom-6 right-6 z-30 flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white shadow-xl shadow-blue-500/30 hover:shadow-2xl hover:scale-105 active:scale-95 transition-all text-xs sm:text-sm font-bold border border-white/20 group"
-        title="Open Full Screen AI Food Chat"
+        className="fixed bottom-6 right-6 z-30 flex items-center gap-2 rounded-md border border-paper/15 bg-ink px-4 py-3 text-xs font-semibold text-paper shadow-xl transition-colors hover:bg-ink-soft sm:text-sm"
+        title="Open the dietary chat full screen"
       >
-        <div className="relative">
-          <Bot className="w-5 h-5 text-blue-200 group-hover:rotate-12 transition-transform" />
-          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400" />
-        </div>
-        <span>Dietary & Nutrition Consultation</span>
-        <Maximize2 className="w-3.5 h-3.5 opacity-80" />
+        <Bot className="h-4 w-4 text-paper/70" />
+        <span>Ask about food</span>
+        <Maximize2 className="h-3.5 w-3.5 opacity-60" />
       </button>
     </>
   );

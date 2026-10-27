@@ -1,16 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  Activity, 
-  Cpu, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Copy, 
-  Check, 
-  Layers, 
-  Code2, 
-  LayoutGrid, 
-  ArrowRight,
-  Sparkles,
+import {
+  Cpu,
+  Copy,
+  Check,
+  Code2,
+  LayoutGrid,
   Sliders,
   TrendingUp,
   ShieldCheck,
@@ -70,7 +64,7 @@ export default function MLOutputVisualizer({
 
   if (!mlOutput) return null;
 
-  const status = mlOutput.status || (mlOutput.prediction === 1 ? 'High Risk' : 'Normal');
+  const status = String(mlOutput.status ?? (mlOutput.prediction === 1 ? 'High Risk' : 'Normal'));
   const isHighRisk = status.toLowerCase().includes('high') || mlOutput.prediction === 1;
   const testType = mlOutput.test_type || mlOutput.model_type || 'Diagnostic Panel';
   const riskPctStr = mlOutput.risk_percentage || (mlOutput.probability_score ? `${Math.round(mlOutput.probability_score * 100)}%` : null);
@@ -315,7 +309,7 @@ export default function MLOutputVisualizer({
           <div className="p-3 rounded-xl bg-blue-50/70 border border-blue-200/80 flex items-center justify-between text-xs text-blue-900">
             <span className="flex items-center gap-1.5 font-medium">
               <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
-              <span><b>Diagnostic Flow:</b> Laboratory Report $\rightarrow$ Random Forest Model $\rightarrow$ Parameter Extraction $\rightarrow$ Meta Llama 3.2</span>
+              <span><b>Diagnostic Flow:</b> Laboratory Report -&gt; Random Forest Model -&gt; Parameter Extraction -&gt; Meta Llama 3.2</span>
             </span>
             <button
               type="button"
@@ -346,7 +340,7 @@ export default function MLOutputVisualizer({
               onClick={() => setViewMode('visual')}
               className="text-indigo-400 hover:text-indigo-300 font-semibold"
             >
-              $\leftarrow$ Back to Visual Cards
+              &lt;- Back to Visual Cards
             </button>
           </div>
         </div>

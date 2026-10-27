@@ -4,14 +4,16 @@ MedVision AI - Full-Stack Clinical Blood Report Analysis & Video Engine
 FastAPI backend that receives patient blood test PDFs, extracts biomarkers via OCR/PDF parsing,
 analyzes clinical indicators using a trained Machine Learning model, produces plain-English
 medical insights via LLMs (Gemini / Clinical Knowledge Engine), and renders automated
-educational video explanations using Neural TTS (edge-tts) and MoviePy.
+educational video explanations using Neural TTS (edge-tts) and FFmpeg.
 """
 
 import os
 import re
 import json
 import uuid
+import shutil
 import asyncio
+import subprocess
 from datetime import datetime
 from typing import List, Optional, Dict, Any
 
@@ -26,7 +28,15 @@ import pandas as pd
 import pypdf
 
 # Llama 3.2 Medical Advisor Engine
-from llama_service import query_llama_medical_advisor, check_ollama_status, chat_with_diet_advisor
+from llama_service import query_llama_medical_advisor, check_ollama_status, chat_with_diet_advisor, generate_video_script
+from llm_provider import (
+    LLMProviderError,
+    clear_provider as clear_llm_provider,
+    configure_provider as configure_llm_provider,
+    get_provider_presets,
+    get_status as get_llm_status,
+    is_configured as is_llm_configured,
+)
 
 # Optional dependencies for video and audio
 try:
@@ -42,14 +52,10 @@ except ImportError:
     HAS_PYTTSX3 = False
 
 try:
-    from moviepy.editor import ImageClip, AudioFileClip, concatenate_videoclips
-    import matplotlib
-    matplotlib.use('Agg')
-    import matplotlib.pyplot as plt
     from PIL import Image, ImageDraw, ImageFont
-    HAS_MOVIEPY = True
+    HAS_PIL = True
 except ImportError:
-    HAS_MOVIEPY = False
+    HAS_PIL = False
 
 # ---------------------------------------------------------------------------
 # Directories & Setup
@@ -65,6 +71,124 @@ REPORTS_DB_FILE = os.path.join(DATA_DIR, "reports.json")
 
 for d in [DATA_DIR, UPLOADS_DIR, MEDIA_DIR, VIDEOS_DIR, MODELS_DIR]:
     os.makedirs(d, exist_ok=True)
+
+# Low-power video defaults: static slides, low frame rate, fast software encode.
+FFMPEG_BIN = os.environ.get("FFMPEG_BIN") or shutil.which("ffmpeg")
+FFPROBE_BIN = os.environ.get("FFPROBE_BIN") or shutil.which("ffprobe")
+VIDEO_WIDTH = int(os.environ.get("VIDEO_WIDTH", "1920"))
+VIDEO_HEIGHT = int(os.environ.get("VIDEO_HEIGHT", "1080"))
+VIDEO_FPS = int(os.environ.get("VIDEO_FPS", "10"))
+VIDEO_CRF = int(os.environ.get("VIDEO_CRF", "23"))
+VIDEO_PRESET = os.environ.get("VIDEO_PRESET", "ultrafast")
+PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL", "http://localhost:8000").rstrip("/")
+
+# Warm conversational narration; override with TTS_VOICE for a different presenter.
+TTS_VOICE = os.environ.get("TTS_VOICE", "en-US-AvaMultilingualNeural")
+TTS_FALLBACK_VOICE = os.environ.get("TTS_FALLBACK_VOICE", "en-US-EmmaMultilingualNeural")
+TTS_RATE = os.environ.get("TTS_RATE", "-4%")
+TTS_PITCH = os.environ.get("TTS_PITCH", "+0Hz")
+TTS_VOLUME = os.environ.get("TTS_VOLUME", "+0%")
+
+TTS_VOICE_HINDI = os.environ.get("TTS_VOICE_HINDI", "hi-IN-SwaraNeural")
+TTS_FALLBACK_VOICE_HINDI = os.environ.get("TTS_FALLBACK_VOICE_HINDI", "hi-IN-MadhurNeural")
+TTS_RATE_HINDI = os.environ.get("TTS_RATE_HINDI", "-5%")
+TTS_PITCH_HINDI = os.environ.get("TTS_PITCH_HINDI", "+0Hz")
+TTS_VOLUME_HINDI = os.environ.get("TTS_VOLUME_HINDI", "+0%")
+
+VIDEO_LANGUAGES = {
+    "en": "en",
+    "english": "en",
+    "hi": "hi",
+    "hindi": "hi",
+    "hinglish": "hi",
+    "हिन्दी": "hi",
+    "हिंदी": "hi",
+}
+LANGUAGE_LABELS = {"en": "English", "hi": "Hinglish"}
+
+HINDI_TERM_MAP = (
+    ("mean corpuscular hemoglobin", "एमसीएच"),
+    ("mean corpuscular volume", "एमसीवी"),
+    ("red blood cell", "आरबीसी काउंट"),
+    ("red cell distribution", "आरडीडब्ल्यू"),
+    ("white blood cell", "डब्ल्यूबीसी काउंट"),
+    ("packed cell", "पैक्ड सेल वॉल्यूम"),
+    ("specific gravity", "यूरिन स्पेसिफिक ग्रेविटी"),
+    ("alkaline phosphatase", "एल्कलाइन फॉस्फेटेज़"),
+    ("total protein", "टोटल प्रोटीन"),
+    ("platelet", "प्लेटलेट्स"),
+    ("hematocrit", "हीमेटोक्रिट"),
+    ("hemoglobin", "हीमोग्लोबिन"),
+    ("ferritin", "फेरिटिन"),
+    ("creatinine", "क्रिएटिनिन"),
+    ("bilirubin", "बिलीरुबिन"),
+    ("albumin", "एल्ब्युमिन"),
+    ("glucose", "ब्लड शुगर"),
+    ("sodium", "सोडियम"),
+    ("potassium", "पोटैशियम"),
+    ("urea", "ब्लड यूरिया"),
+    ("mcv", "एमसीवी"),
+    ("mch", "एमसीएच"),
+    ("rdw", "आरडीडब्ल्यू"),
+    ("wbc", "डब्ल्यूबीसी काउंट"),
+    ("rbc", "आरबीसी काउंट"),
+    ("alt", "एएलटी"),
+    ("ast", "एएसटी"),
+)
+
+HINDI_DEFAULT_QUESTIONS = [
+    "क्या इनमें से कोई भी रिज़ल्ट दोबारा टेस्ट करने की ज़रूरत रखता है?",
+    "क्या मेरी लाइफस्टाइल या डाइट में कोई बदलाव मदद कर सकता है?",
+    "कौन से सिम्प्टम्स दिखने पर मुझे जल्दी डॉक्टर से मिलना चाहिए?",
+]
+
+SPEECH_PAREN_ABBREVIATIONS = (
+    r"(?:Hb|Hgb|RBCs?|WBCs?|MCV|MCH|MCHC|RDW|PCV|Hct|SG|BU|SC|Sod|Pot|BGR|ALT|AST|ALP)"
+)
+
+SPEECH_REPLACEMENTS = (
+    (r"\bx10\^6/[µμ]L\b", "million per microliter"),
+    (r"\bx10\^3/[µμ]L\b", "thousand per microliter"),
+    (r"\bcells/[µμ]L\b", "cells per microliter"),
+    (r"\bg/dL\b", "grams per deciliter"),
+    (r"\bmg/dL\b", "milligrams per deciliter"),
+    (r"\bmEq/L\b", "milliequivalents per liter"),
+    (r"\bmmol/L\b", "millimoles per liter"),
+    (r"\bng/mL\b", "nanograms per milliliter"),
+    (r"\bpg/mL\b", "picograms per milliliter"),
+    (r"\bIU/L\b", "international units per liter"),
+    (r"\bfL\b", "femtoliters"),
+    (r"\bpg\b", "picograms"),
+    (r"\bHb\b", "hemoglobin"),
+    (r"\bRBC\b", "red blood cell count"),
+    (r"\bWBC\b", "white blood cell count"),
+    (r"\bMCV\b", "M C V"),
+    (r"\bMCH\b", "M C H"),
+    (r"\bRDW\b", "R D W"),
+    (r"%", " percent"),
+)
+
+SPEECH_REPLACEMENTS_HINDI = (
+    (r"\bx10\^6/[µμ]L\b", "मिलियन प्रति माइक्रोलीटर"),
+    (r"\bx10\^3/[µμ]L\b", "हज़ार प्रति माइक्रोलीटर"),
+    (r"\bcells/[µμ]L\b", "सेल्स प्रति माइक्रोलीटर"),
+    (r"\bg/dL\b", "ग्राम प्रति डेसीलीटर"),
+    (r"\bmg/dL\b", "मिलीग्राम प्रति डेसीलीटर"),
+    (r"\bmEq/L\b", "मिलीइक्विवेलेंट प्रति लीटर"),
+    (r"\bmmol/L\b", "मिलीमोल प्रति लीटर"),
+    (r"\bng/mL\b", "नैनोग्राम प्रति मिलीलीटर"),
+    (r"\bpg/mL\b", "पिकोग्राम प्रति मिलीलीटर"),
+    (r"\bIU/L\b", "इंटरनेशनल यूनिट प्रति लीटर"),
+    (r"\bfL\b", "फेम्टोलीटर"),
+    (r"\bpg\b", "पिकोग्राम"),
+    (r"\bHb\b", "हीमोग्लोबिन"),
+    (r"\bRBC\b", "आरबीसी"),
+    (r"\bWBC\b", "डब्ल्यूबीसी"),
+    (r"\bMCV\b", "एमसीवी"),
+    (r"\bMCH\b", "एमसीएच"),
+    (r"\bRDW\b", "आरडीडब्ल्यू"),
+    (r"%", " प्रतिशत"),
+)
 
 # ---------------------------------------------------------------------------
 # FastAPI Initialization & CORS
@@ -306,6 +430,13 @@ class GenericDiagnosticRequest(BaseModel):
     test_type: str = "CBC"
     data: Dict[str, Any]
     include_llama_advice: bool = True
+
+class LLMConfigInput(BaseModel):
+    provider: str
+    api_key: str = ""
+    model: str = ""
+    base_url: str = ""
+    verify: bool = True
 
 # ---------------------------------------------------------------------------
 # In-Memory Database & Initial Seeds (Matching Frontend mockData.js)
@@ -812,195 +943,998 @@ def generate_clinical_explanation(
     }
 
 # ---------------------------------------------------------------------------
-# Automated Educational Video Generator (MoviePy + TTS)
+# Automated Educational Video Generator (FFmpeg + TTS)
 # ---------------------------------------------------------------------------
-async def generate_speech_audio(script_text: str, output_path: str):
-    """Generates clear narration audio via edge-tts or pyttsx3."""
-    if HAS_EDGE_TTS:
-        try:
-            communicate = edge_tts.Communicate(script_text, "en-US-JennyNeural")
-            await communicate.save(output_path)
-            return True
-        except Exception as e:
-            print(f"edge-tts failed ({e}), attempting pyttsx3 fallback...")
+def _normalize_video_language(value: Any) -> str:
+    return VIDEO_LANGUAGES.get(str(value or "").strip().lower(), "en")
 
-    if HAS_PYTTSX3:
+
+def _hindi_finding_name(name: Any) -> str:
+    text = str(name or "").strip()
+    lowered = text.lower()
+    for english, hindi in HINDI_TERM_MAP:
+        if english in lowered:
+            return hindi
+    return "यह मान"
+
+
+def _spoken_finding_name(name: Any) -> str:
+    text = re.sub(r"\s*\([^)]*\)", "", str(name or "")).strip()
+    return text or "value"
+
+
+def _speech_friendly_text(script_text: str, language: str = "en") -> str:
+    text = re.sub(r"\s+", " ", str(script_text or "")).strip()
+    text = re.sub(rf"\s*\({SPEECH_PAREN_ABBREVIATIONS}\)", "", text, flags=re.IGNORECASE)
+    replacements = SPEECH_REPLACEMENTS_HINDI if language == "hi" else SPEECH_REPLACEMENTS
+    for pattern, replacement in replacements:
+        text = re.sub(pattern, replacement, text)
+    range_joiner = " से " if language == "hi" else " to "
+    text = re.sub(r"(\d)\s*[-–—]\s*(\d)", rf"\1{range_joiner}\2", text)
+    text = re.sub(r"\s+", " ", text)
+    return re.sub(r"\s+([,.;:!?])", r"\1", text)
+
+
+async def generate_speech_audio(script_text: str, output_path: str, language: str = "en"):
+    """Generates warm, conversational narration via edge-tts or pyttsx3."""
+    language = _normalize_video_language(language)
+    narration = _speech_friendly_text(script_text, language)
+    if not narration:
+        return False
+
+    if HAS_EDGE_TTS:
+        if language == "hi":
+            primary_voice = TTS_VOICE_HINDI
+            fallback_voice = TTS_FALLBACK_VOICE_HINDI
+            rate = TTS_RATE_HINDI
+            pitch = TTS_PITCH_HINDI
+            volume = TTS_VOLUME_HINDI
+        else:
+            primary_voice = TTS_VOICE
+            fallback_voice = TTS_FALLBACK_VOICE
+            rate = TTS_RATE
+            pitch = TTS_PITCH
+            volume = TTS_VOLUME
+
+        voices = [primary_voice]
+        if fallback_voice and fallback_voice != primary_voice:
+            voices.append(fallback_voice)
+        for voice in voices:
+            for attempt in range(2):
+                try:
+                    communicate = edge_tts.Communicate(
+                        narration,
+                        voice,
+                        rate=rate,
+                        pitch=pitch,
+                        volume=volume,
+                    )
+                    await communicate.save(output_path)
+                    if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+                        return True
+                except Exception as e:
+                    print(f"edge-tts ({voice}) attempt {attempt + 1} failed: {e}")
+                if os.path.exists(output_path):
+                    try:
+                        os.remove(output_path)
+                    except OSError:
+                        pass
+                await asyncio.sleep(0.8 * (attempt + 1))
+        print("edge-tts unavailable; attempting the offline Windows voice...")
+
+    if HAS_PYTTSX3 and language == "en":
         try:
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
+
             def run_pyttsx3():
                 engine = pyttsx3.init()
-                engine.setProperty('rate', 155)
-                engine.save_to_file(script_text, output_path)
+                preferred = ("zira", "aria", "female", "samantha")
+                for voice in engine.getProperty("voices"):
+                    haystack = f"{voice.name} {voice.id}".lower()
+                    if any(name in haystack for name in preferred):
+                        engine.setProperty("voice", voice.id)
+                        break
+                engine.setProperty("rate", 165)
+                engine.setProperty("volume", 0.95)
+                engine.save_to_file(narration, output_path)
                 engine.runAndWait()
+                engine.stop()
+
             await loop.run_in_executor(None, run_pyttsx3)
-            return True
+            if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+                return True
         except Exception as e:
             print(f"pyttsx3 error: {e}")
     return False
 
-def render_slide_image(title: str, subtitle: str, bullets: List[str], filename: str):
-    """Renders a clean, high-resolution 1920x1080 medical infographic slide."""
-    width, height = 1280, 720
-    img = Image.new("RGB", (width, height), color=(15, 23, 42)) # Deep slate
+# ---------------------------------------------------------------------------
+# Low-power narrated-slide video renderer (FFmpeg, static frames only)
+# ---------------------------------------------------------------------------
+PALETTE = {
+    "paper": (246, 243, 236),
+    "surface": (255, 253, 248),
+    "ink": (28, 27, 24),
+    "muted": (115, 109, 96),
+    "line": (217, 211, 196),
+    "accent": (15, 90, 74),
+    "accent_soft": (219, 234, 227),
+    "danger": (156, 53, 41),
+    "danger_soft": (245, 226, 221),
+    "attention": (154, 84, 17),
+    "attention_soft": (247, 235, 211),
+}
+
+FONT_CANDIDATES = {
+    "serif": [
+        r"C:\Windows\Fonts\georgia.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
+        "/System/Library/Fonts/Supplemental/Georgia.ttf",
+    ],
+    "sans": [
+        r"C:\Windows\Fonts\segoeui.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/System/Library/Fonts/Supplemental/Arial.ttf",
+    ],
+    "sans-bold": [
+        r"C:\Windows\Fonts\seguisb.ttf",
+        r"C:\Windows\Fonts\segoeuib.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+    ],
+}
+
+VIDEO_FALLBACK_URL = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+
+
+def _scale(value: float) -> int:
+    return max(1, int(round(value * (VIDEO_WIDTH / 1920.0))))
+
+
+def _font(kind: str, size: int):
+    for path in FONT_CANDIDATES.get(kind, []):
+        try:
+            if os.path.exists(path):
+                return ImageFont.truetype(path, size)
+        except Exception:
+            continue
+    try:
+        return ImageFont.load_default(size=size)
+    except TypeError:
+        return ImageFont.load_default()
+
+
+def _text_width(draw, text: str, font) -> float:
+    try:
+        return draw.textlength(text, font=font)
+    except Exception:
+        return draw.textsize(text, font=font)[0]
+
+
+def _wrap_text(draw, text: str, font, max_width: int, max_lines: int = 4) -> List[str]:
+    words = str(text or "").split()
+    if not words:
+        return []
+
+    lines: List[str] = []
+    current = ""
+    for word in words:
+        trial = f"{current} {word}".strip()
+        if _text_width(draw, trial, font) <= max_width or not current:
+            current = trial
+        else:
+            lines.append(current)
+            current = word
+            if len(lines) >= max_lines:
+                break
+
+    if current and len(lines) < max_lines:
+        lines.append(current)
+
+    if len(lines) == max_lines:
+        remainder = " ".join(words[sum(len(line.split()) for line in lines):])
+        if remainder:
+            last = lines[-1]
+            while last and _text_width(draw, last + "…", font) > max_width:
+                last = last[:-1].rstrip()
+            lines[-1] = last + "…"
+    return lines
+
+
+def _draw_lines(draw, lines: List[str], x: int, y: int, font, fill, line_height: int) -> int:
+    for line in lines:
+        draw.text((x, y), line, font=font, fill=fill)
+        y += line_height
+    return y
+
+
+def _slide_base():
+    img = Image.new("RGB", (VIDEO_WIDTH, VIDEO_HEIGHT), PALETTE["paper"])
     draw = ImageDraw.Draw(img)
+    margin = _scale(120)
 
-    # Accent top border
-    draw.rectangle([0, 0, width, 8], fill=(59, 130, 246))
+    draw.rectangle([0, 0, VIDEO_WIDTH, _scale(10)], fill=PALETTE["accent"])
+    brand = _font("sans-bold", _scale(27))
+    draw.text((margin, _scale(55)), "MEDVISION", font=brand, fill=PALETTE["accent"])
+    draw.text(
+        (margin + _scale(190), _scale(57)),
+        "LAB REPORT WALKTHROUGH",
+        font=_font("sans", _scale(22)),
+        fill=PALETTE["muted"],
+    )
+    draw.text(
+        (VIDEO_WIDTH - margin - _scale(230), _scale(57)),
+        "EDUCATIONAL · NOT A DIAGNOSIS",
+        font=_font("sans-bold", _scale(19)),
+        fill=PALETTE["muted"],
+    )
+    draw.line([(margin, _scale(120)), (VIDEO_WIDTH - margin, _scale(120))], fill=PALETTE["line"], width=_scale(1))
+    return img, draw
 
-    # MedVision AI Logo Tag
-    draw.text((60, 45), "MEDVISION AI • CLINICAL VIDEO EXPLAINER", fill=(147, 197, 253))
 
-    # Main Title & Subtitle
-    draw.text((60, 85), title, fill=(255, 255, 255))
-    draw.text((60, 135), subtitle, fill=(148, 163, 184))
+def _slide_footer(draw):
+    margin = _scale(120)
+    draw.line(
+        [(margin, VIDEO_HEIGHT - _scale(92)), (VIDEO_WIDTH - margin, VIDEO_HEIGHT - _scale(92))],
+        fill=PALETTE["line"],
+        width=_scale(1),
+    )
+    draw.text(
+        (margin, VIDEO_HEIGHT - _scale(70)),
+        "Educational use only. Discuss these results with a licensed clinician.",
+        font=_font("sans", _scale(22)),
+        fill=PALETTE["muted"],
+    )
 
-    # Divider
-    draw.line([(60, 175), (width - 60, 175)], fill=(51, 65, 85), width=2)
 
-    # Bullet points
-    y = 230
-    for bullet in bullets:
-        draw.ellipse([65, y+6, 75, y+16], fill=(59, 130, 246))
-        draw.text((95, y), bullet, fill=(226, 232, 240))
-        y += 85
+def _draw_gauge(draw, x: int, y: int, width: int, height: int, finding: Dict[str, Any]):
+    try:
+        min_ref = float(finding.get("minRef", 0))
+        max_ref = float(finding.get("maxRef", 1))
+        value = float(finding.get("value", min_ref))
+    except (TypeError, ValueError):
+        return
 
-    # Footer Disclaimer
-    draw.text((60, height - 55), "Educational visualization only. Not a medical prescription. Discuss results with your physician.", fill=(100, 116, 139))
+    span = max_ref - min_ref
+    if span <= 0:
+        span = max(abs(max_ref), 1.0) * 0.2
 
+    low = min_ref - span * 0.28
+    high = max_ref + span * 0.28
+    if high <= low:
+        high = low + 1
+
+    def pos(v: float) -> int:
+        ratio = max(0.0, min(1.0, (v - low) / (high - low)))
+        return x + int(ratio * width)
+
+    draw.rounded_rectangle([x, y, x + width, y + height], radius=height // 2, fill=PALETTE["line"])
+    draw.rounded_rectangle(
+        [pos(min_ref), y, pos(max_ref), y + height],
+        radius=height // 2,
+        fill=PALETTE["accent_soft"],
+    )
+
+    marker_color = PALETTE["danger"] if value > max_ref else PALETTE["attention"]
+    marker_x = pos(value)
+    draw.rounded_rectangle(
+        [marker_x - _scale(5), y - _scale(14), marker_x + _scale(5), y + height + _scale(14)],
+        radius=_scale(5),
+        fill=marker_color,
+    )
+
+    label_font = _font("sans", _scale(21))
+    draw.text((x, y + height + _scale(16)), f"{min_ref:g}", font=label_font, fill=PALETTE["muted"])
+    draw.text(
+        (x + width - _text_width(draw, f"{max_ref:g}", label_font), y + height + _scale(16)),
+        f"{max_ref:g}",
+        font=label_font,
+        fill=PALETTE["muted"],
+    )
+    value_label = f"{value:g}"
+    draw.text(
+        (marker_x - _text_width(draw, value_label, label_font) / 2, y - _scale(42)),
+        value_label,
+        font=_font("sans-bold", _scale(23)),
+        fill=marker_color,
+    )
+
+
+def _draw_cover(report_name: str, report_id: str, attention_count: int, normal_count: int, filename: str):
+    img, draw = _slide_base()
+    margin = _scale(120)
+
+    draw.text(
+        (margin, _scale(190)),
+        "LAB REPORT EXPLAINED",
+        font=_font("sans-bold", _scale(26)),
+        fill=PALETTE["accent"],
+    )
+    title_font = _font("serif", _scale(96))
+    draw.text((margin, _scale(240)), "Your report,", font=title_font, fill=PALETTE["ink"])
+    draw.text((margin, _scale(345)), "explained.", font=title_font, fill=PALETTE["ink"])
+
+    name_font = _font("sans", _scale(38))
+    name_lines = _wrap_text(draw, _pretty_report_name(report_name), name_font, _scale(1180), max_lines=2)
+    name_y = _draw_lines(draw, name_lines, margin, _scale(500), name_font, PALETTE["muted"], _scale(48))
+
+    stat_y = max(_scale(630), name_y + _scale(50))
+    if attention_count > 0:
+        number_color = PALETTE["attention"]
+        number_text = str(attention_count)
+        label_text = "value needs review" if attention_count == 1 else "values need review"
+    else:
+        number_color = PALETTE["accent"]
+        number_text = str(normal_count)
+        label_text = "values in range"
+
+    draw.text((margin, stat_y), number_text, font=_font("serif", _scale(180)), fill=number_color)
+    draw.text(
+        (margin + _scale(220), stat_y + _scale(55)),
+        label_text,
+        font=_font("sans-bold", _scale(38)),
+        fill=PALETTE["ink"],
+    )
+    draw.text(
+        (margin + _scale(220), stat_y + _scale(110)),
+        f"{normal_count} measured values inside the printed range",
+        font=_font("sans", _scale(27)),
+        fill=PALETTE["muted"],
+    )
+    draw.text(
+        (VIDEO_WIDTH - margin - _scale(330), stat_y + _scale(150)),
+        f"REPORT {report_id}",
+        font=_font("sans", _scale(24)),
+        fill=PALETTE["muted"],
+    )
+
+    _slide_footer(draw)
     img.save(filename)
 
-async def build_video_for_report(report_id: str, report_data: Dict[str, Any]):
-    """Background task to synthesize speech and compile the final MP4 video."""
-    video_tasks_status[report_id] = {"status": "processing", "progress": 15}
 
-    video_filename = f"{report_id}_explanation.mp4"
-    final_video_path = os.path.join(VIDEOS_DIR, video_filename)
-    audio_path = os.path.join(VIDEOS_DIR, f"{report_id}_narration.mp3")
-    slides_dir = os.path.join(VIDEOS_DIR, f"{report_id}_slides")
-    os.makedirs(slides_dir, exist_ok=True)
+def _draw_finding(finding: Dict[str, Any], index: int, total: int, filename: str):
+    img, draw = _slide_base()
+    margin = _scale(120)
+    value = finding.get("value", "—")
+    unit = finding.get("unit", "")
+    name = finding.get("name", "Measured value")
+    is_low = False
+    try:
+        is_low = float(value) < float(finding.get("minRef", 0))
+    except (TypeError, ValueError):
+        pass
+    accent = PALETTE["attention"] if is_low else PALETTE["danger"]
 
-    # Narration script
-    findings = report_data.get("findings", [])
-    attention_findings = [f for f in findings if f.get("status") == "attention"]
-    first_att_name = attention_findings[0]["name"] if attention_findings else "Biomarkers"
-    first_att_val = f"{attention_findings[0]['value']} {attention_findings[0]['unit']}" if attention_findings else "Normal"
-
-    transcript = (
-        f"Welcome to your MedVision AI educational report overview. "
-        f"We have analyzed your complete blood count results. "
-        f"Our machine learning model identified notable indicators, especially in {first_att_name} at {first_att_val}. "
-        f"Your immune and clotting markers remain stable. "
-        f"Please schedule a consultation with your physician to discuss these findings."
+    draw.text(
+        (margin, _scale(180)),
+        f"VALUE {index} OF {total}  ·  OUTSIDE THE REFERENCE RANGE",
+        font=_font("sans-bold", _scale(25)),
+        fill=accent,
     )
 
-    # Generate Audio
-    video_tasks_status[report_id]["progress"] = 35
-    audio_success = await generate_speech_audio(transcript, audio_path)
+    title_font = _font("serif", _scale(62))
+    title_lines = _wrap_text(draw, name, title_font, _scale(1400), max_lines=2)
+    _draw_lines(draw, title_lines, margin, _scale(230), title_font, PALETTE["ink"], _scale(72))
 
-    # Generate Slides
-    slide1 = os.path.join(slides_dir, "slide_01.png")
-    render_slide_image(
-        title="Comprehensive Blood Analysis Overview",
-        subtitle=f"Report ID: {report_id} • AI Diagnostic Evaluation",
-        bullets=[
-            "Automated PDF extraction verified 10 core clinical biomarkers.",
-            "ML diagnostic classifier evaluated cellular and metabolic indices.",
-            "Normal immune system baseline observed across key cellular lines."
-        ],
-        filename=slide1
+    value_text = f"{value:g}" if isinstance(value, (int, float)) else str(value)
+    draw.text((margin, _scale(385)), value_text, font=_font("serif", _scale(132)), fill=accent)
+    value_w = _text_width(draw, value_text, _font("serif", _scale(132)))
+    draw.text(
+        (margin + value_w + _scale(20), _scale(450)),
+        unit,
+        font=_font("sans", _scale(36)),
+        fill=PALETTE["muted"],
+    )
+    draw.text(
+        (margin, _scale(555)),
+        f"Reference range: {finding.get('referenceRange', '—')}",
+        font=_font("sans", _scale(30)),
+        fill=PALETTE["muted"],
     )
 
-    slide2 = os.path.join(slides_dir, "slide_02.png")
-    render_slide_image(
-        title="Key Biomarkers Requiring Attention",
-        subtitle="Detailed Analysis of Out-of-Range Indicators",
-        bullets=[
-            f"{first_att_name}: Recorded at {first_att_val}.",
-            "Indicates potential iron store depletion or altered oxygen capacity.",
-            "Safe intervention: Discuss iron intake and dietary sources with doctor."
-        ],
-        filename=slide2
+    _draw_gauge(draw, margin, _scale(680), _scale(1680), _scale(22), finding)
+
+    draw.text(
+        (margin, _scale(790)),
+        "WHAT THIS MEANS",
+        font=_font("sans-bold", _scale(24)),
+        fill=PALETTE["muted"],
+    )
+    body_font = _font("sans", _scale(34))
+    explanation = str(finding.get("simpleExplanation") or "").strip()
+    why = str(finding.get("whyItMatters") or "").strip()
+    body = explanation
+    if why and why not in explanation:
+      body = f"{explanation} {why}".strip()
+    body_lines = _wrap_text(draw, body, body_font, _scale(1540), max_lines=3)
+    _draw_lines(draw, body_lines, margin, _scale(835), body_font, PALETTE["ink"], _scale(46))
+
+    _slide_footer(draw)
+    img.save(filename)
+
+
+def _draw_normal(normal_findings: List[Dict[str, Any]], filename: str):
+    img, draw = _slide_base()
+    margin = _scale(120)
+
+    draw.text(
+        (margin, _scale(190)),
+        "RESULT",
+        font=_font("sans-bold", _scale(26)),
+        fill=PALETTE["accent"],
+    )
+    title_font = _font("serif", _scale(76))
+    draw.text((margin, _scale(245)), "Everything measured", font=title_font, fill=PALETTE["ink"])
+    draw.text((margin, _scale(335)), "is in range.", font=title_font, fill=PALETTE["ink"])
+
+    body_font = _font("sans", _scale(32))
+    body = "These values sit inside the reference interval printed on the report. Keep the report as a baseline for future comparisons."
+    body_lines = _wrap_text(draw, body, body_font, _scale(1380), max_lines=3)
+    _draw_lines(draw, body_lines, margin, _scale(470), body_font, PALETTE["muted"], _scale(44))
+
+    y = _scale(640)
+    for finding in normal_findings[:5]:
+        draw.ellipse(
+            [margin, y + _scale(8), margin + _scale(12), y + _scale(20)],
+            fill=PALETTE["accent"],
+        )
+        draw.text(
+            (margin + _scale(32), y),
+            f"{finding.get('name', 'Value')}  ·  {finding.get('value', '—')} {finding.get('unit', '')}",
+            font=_font("sans", _scale(30)),
+            fill=PALETTE["ink"],
+        )
+        y += _scale(58)
+
+    _slide_footer(draw)
+    img.save(filename)
+
+
+def _draw_next(questions: List[str], filename: str):
+    img, draw = _slide_base()
+    margin = _scale(120)
+
+    draw.text(
+        (margin, _scale(180)),
+        "NEXT STEP",
+        font=_font("sans-bold", _scale(26)),
+        fill=PALETTE["accent"],
+    )
+    draw.text(
+        (margin, _scale(235)),
+        "Questions for your doctor",
+        font=_font("serif", _scale(74)),
+        fill=PALETTE["ink"],
+    )
+    draw.text(
+        (margin, _scale(330)),
+        "Bring these to your appointment. You do not need to memorize them.",
+        font=_font("sans", _scale(28)),
+        fill=PALETTE["muted"],
     )
 
-    slide3 = os.path.join(slides_dir, "slide_03.png")
-    render_slide_image(
-        title="Next Steps & Physician Consultation",
-        subtitle="Empowering Informed Clinical Conversations",
-        bullets=[
-            "Schedule a routine follow-up with your healthcare provider.",
-            "Ask about dietary iron fortification or supplementary panels.",
-            "Monitor ongoing energy levels and repeat test in 3 to 6 months."
-        ],
-        filename=slide3
-    )
+    y = _scale(430)
+    question_font = _font("sans", _scale(34))
+    for i, question in enumerate(questions[:3], start=1):
+        draw.text(
+            (margin, y),
+            f"{i:02d}",
+            font=_font("sans-bold", _scale(24)),
+            fill=PALETTE["accent"],
+        )
+        lines = _wrap_text(draw, question, question_font, _scale(1460), max_lines=2)
+        _draw_lines(draw, lines, margin + _scale(70), y - _scale(4), question_font, PALETTE["ink"], _scale(44))
+        y += _scale(150)
 
-    video_tasks_status[report_id]["progress"] = 65
+    _slide_footer(draw)
+    img.save(filename)
 
-    # Assemble Video with MoviePy if available
-    video_duration_seconds = 45
-    video_url = f"http://localhost:8000/media/videos/{video_filename}"
 
-    if HAS_MOVIEPY and os.path.exists(slide1):
+def _pretty_report_name(name: str) -> str:
+    base = os.path.splitext(str(name or "Lab report"))[0]
+    return base.replace("_", " ").replace("-", " ").strip()
+
+
+def _format_clock(seconds: float) -> str:
+    total = max(0, int(round(seconds)))
+    return f"{total // 60}:{total % 60:02d}"
+
+
+def _estimate_duration(text: str) -> float:
+    words = len(str(text or "").split())
+    return max(4.0, min(24.0, words / 2.5 + 0.8))
+
+
+def _probe_duration(audio_path: Optional[str]) -> Optional[float]:
+    if not audio_path or not os.path.exists(audio_path) or not FFPROBE_BIN:
+        return None
+    try:
+        result = subprocess.run(
+            [
+                FFPROBE_BIN,
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "default=noprint_wrappers=1:nokey=1",
+                audio_path,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        if result.returncode == 0:
+            return float(result.stdout.strip())
+    except Exception as exc:
+        print(f"ffprobe duration note: {exc}")
+    return None
+
+
+def _run_command(cmd: List[str], cwd: Optional[str] = None) -> bool:
+    try:
+        result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=300)
+        if result.returncode != 0:
+            print("FFmpeg command failed:")
+            print(" ".join(cmd))
+            print(result.stderr[-1600:])
+            return False
+        return True
+    except Exception as exc:
+        print(f"FFmpeg execution error: {exc}")
+        return False
+
+
+def _set_video_status(report_id: str, progress: int, stage: str, stage_index: int, message: str):
+    video_tasks_status[report_id] = {
+        "status": "processing",
+        "progress": max(0, min(99, progress)),
+        "stage": stage,
+        "stage_index": stage_index,
+        "message": message,
+    }
+
+
+def _build_video_scenes(
+    report_id: str,
+    report_data: Dict[str, Any],
+    video_script: Optional[Dict[str, Any]] = None,
+    language: str = "en",
+) -> List[Dict[str, Any]]:
+    video_script = video_script or {}
+    language = _normalize_video_language(language)
+    is_hindi = language == "hi"
+    findings = report_data.get("findings") or []
+    attention = [f for f in findings if f.get("status") == "attention"]
+    normal = [f for f in findings if f.get("status") == "normal"]
+    report_name = _pretty_report_name(report_data.get("reportName", "Lab report"))
+    attention_count = len(attention)
+    normal_count = len(normal)
+
+    if is_hindi:
+        if attention_count:
+            cover_voice = (
+                "नमस्ते! चलिए आपकी लैब रिपोर्ट को साथ में समझते हैं। "
+                f"आपकी रिपोर्ट में {attention_count} वैल्यूज़ नॉर्मल रेंज से बाहर आई हैं। "
+                "मैं आसान भाषा में बताऊँगा कि इनका आपके लिए क्या मतलब है।"
+            )
+        else:
+            cover_voice = (
+                "नमस्ते! चलिए आपकी लैब रिपोर्ट को साथ में समझते हैं। "
+                "आपकी रिपोर्ट में सभी वैल्यूज़ नॉर्मल रेंज के अंदर हैं। "
+                "फिर भी मैं आपको दिखाऊँगा कि हमने क्या देखा और डॉक्टर से क्या पूछना चाहिए।"
+            )
+    elif attention_count:
+        cover_voice = (
+            "Hi. Let's go through your lab report together. "
+            f"{attention_count} of your values came back outside the typical range, "
+            "and I'll explain what each one means for you, in plain language."
+        )
+    else:
+        cover_voice = (
+            "Hi. Let's go through your lab report together. "
+            "All of your measured values are within the typical range. "
+            "I'll still show you what we looked at, and what's worth asking your clinician."
+        )
+    if video_script.get("cover_narration"):
+        cover_voice = str(video_script["cover_narration"]).strip()
+
+    scripted_findings: Dict[str, str] = {}
+    for item in video_script.get("finding_narrations") or []:
+        if isinstance(item, dict) and item.get("name") and item.get("narration"):
+            scripted_findings[str(item["name"]).strip().lower()] = str(item["narration"]).strip()
+
+    scenes: List[Dict[str, Any]] = [
+        {
+            "kind": "cover",
+            "label": "Report overview",
+            "report_name": report_name,
+            "report_id": report_id,
+            "attention_count": attention_count,
+            "normal_count": normal_count,
+            "narration": cover_voice,
+        }
+    ]
+
+    for idx, finding in enumerate(attention[:3], start=1):
         try:
-            loop = asyncio.get_event_loop()
-            def render_mp4():
-                clips = [
-                    ImageClip(slide1).set_duration(8),
-                    ImageClip(slide2).set_duration(12),
-                    ImageClip(slide3).set_duration(10)
-                ]
-                final_clip = concatenate_videoclips(clips, method="compose")
-                if audio_success and os.path.exists(audio_path):
-                    try:
-                        audio = AudioFileClip(audio_path)
-                        final_clip = final_clip.set_audio(audio)
-                        final_clip = final_clip.set_duration(audio.duration)
-                    except Exception as ae:
-                        print(f"Audio attachment note: {ae}")
+            is_low = float(finding.get("value", 0)) < float(finding.get("minRef", 0))
+            direction = "below" if is_low else "above"
+        except (TypeError, ValueError):
+            is_low = False
+            direction = "outside"
+        reference_range = finding.get("referenceRange", "not stated")
+        if is_hindi:
+            direction_hi = "कम" if is_low else "ज़्यादा"
+            narration = (
+                f"आपकी रिपोर्ट में {_hindi_finding_name(finding.get('name'))} "
+                f"{finding.get('value')} {finding.get('unit', '')} है, "
+                f"जो नॉर्मल रेंज {reference_range} से {direction_hi} है। "
+                "इसका मतलब है कि यह वैल्यू नॉर्मल से थोड़ी अलग है। "
+                "यह अकेले किसी बीमारी को कन्फर्म नहीं करता, इसलिए अपने डॉक्टर के साथ इसे ज़रूर डिस्कस करें।"
+            ).strip()
+        else:
+            context = finding.get("detailedDescription") or finding.get("simpleExplanation", "")
+            narration = (
+                f"Your {_spoken_finding_name(finding.get('name'))} came back at "
+                f"{finding.get('value')} {finding.get('unit', '')}. "
+                f"That's {direction} the typical range of {reference_range}. "
+                f"Here's why that matters for you. {context} {finding.get('whyItMatters', '')}"
+            ).strip()
+        scripted = scripted_findings.get(str(finding.get("name", "")).strip().lower())
+        if scripted:
+            narration = scripted
+        scenes.append(
+            {
+                "kind": "finding",
+                "label": finding.get("name", "Value to review"),
+                "finding": finding,
+                "index": idx,
+                "total": min(3, attention_count),
+                "narration": narration,
+            }
+        )
 
-                final_clip.write_videofile(
-                    final_video_path,
-                    fps=24,
-                    codec="libx264",
-                    audio_codec="aac" if audio_success else None,
-                    logger=None
-                )
-                return int(final_clip.duration)
+    if not attention and normal:
+        if is_hindi:
+            names = ", ".join(_hindi_finding_name(f.get("name")) for f in normal[:4])
+            normal_narration = (
+                f"गुड न्यूज़ — आपकी रिपोर्ट में {names} जैसी वैल्यूज़ नॉर्मल रेंज के अंदर हैं। "
+                "इन्हें फ्यूचर कम्पैरिज़न के लिए संभालकर रखें।"
+            )
+        else:
+            names = ", ".join(_spoken_finding_name(f.get("name")) for f in normal[:4])
+            normal_narration = (
+                f"Good news. Your measured values, including {names}, are all inside the typical range. "
+                "Keep this report as a baseline for next time."
+            )
+        scenes.append(
+            {
+                "kind": "normal",
+                "label": "Values in range",
+                "normal": normal,
+                "narration": normal_narration,
+            }
+        )
 
-            dur = await loop.run_in_executor(None, render_mp4)
-            video_duration_seconds = dur or 45
-        except Exception as me:
-            print(f"MoviePy rendering error: {me}")
-            # Fallback to standard web sample video URL if local video render fails
-            video_url = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+    llama = report_data.get("llamaAnalysis") or {}
+    questions = list(llama.get("questions_for_doctor") or [])
+    if not questions:
+        for finding in attention[:3]:
+            questions.extend(finding.get("doctorDiscussionPoints") or [])
+    if not questions:
+        questions = HINDI_DEFAULT_QUESTIONS if is_hindi else [
+            "Do any of these results need to be repeated or monitored?",
+            "Are there lifestyle changes that would be safe to try first?",
+            "What symptoms would make this more urgent?",
+        ]
 
-    # Update Report Data
+    scripted_questions = [str(q).strip() for q in (video_script.get("questions") or []) if str(q).strip()]
+    if scripted_questions:
+        spoken_questions = scripted_questions
+    elif is_hindi:
+        spoken_questions = HINDI_DEFAULT_QUESTIONS
+    else:
+        spoken_questions = questions
+
+    if is_hindi:
+        next_narration = video_script.get("next_narration") or (
+            "डॉक्टर से मिलने से पहले, ये सवाल साथ रखें। " + " ".join(spoken_questions[:3])
+        )
+    else:
+        next_narration = video_script.get("next_narration") or (
+            "Before your appointment, consider asking: " + " ".join(spoken_questions[:3])
+        )
+
+    display_questions = questions[:3]
+    if scripted_questions and not is_hindi:
+        display_questions = scripted_questions[:3]
+    scenes.append(
+        {
+            "kind": "next",
+            "label": "Questions for your doctor",
+            "questions": display_questions,
+            "narration": str(next_narration).strip(),
+        }
+    )
+
+    return scenes
+
+
+def _render_video_scene(scene: Dict[str, Any], filename: str):
+    kind = scene.get("kind")
+    if kind == "cover":
+        _draw_cover(
+            scene.get("report_name", "Lab report"),
+            scene.get("report_id", "Report"),
+            int(scene.get("attention_count", 0)),
+            int(scene.get("normal_count", 0)),
+            filename,
+        )
+    elif kind == "finding":
+        _draw_finding(scene["finding"], int(scene["index"]), int(scene["total"]), filename)
+    elif kind == "normal":
+        _draw_normal(scene.get("normal", []), filename)
+    else:
+        _draw_next(scene.get("questions", []), filename)
+
+
+def _update_video_report(report_id: str, report_data: Dict[str, Any], video_data: Dict[str, Any]):
+    target = reports_db.get(report_id)
+    if target is not None:
+        target["videoData"] = video_data
+    else:
+        report_data["videoData"] = video_data
+    save_database()
+
+
+def _complete_with_fallback(report_id: str, report_data: Dict[str, Any], reason: str, language: str = "en"):
     video_data = {
-        "title": f"Educational Analysis - {report_data.get('reportName', 'Blood Report')}",
-        "duration": f"{video_duration_seconds // 60}m {video_duration_seconds % 60}s",
-        "durationSeconds": video_duration_seconds,
-        "language": "English",
-        "resolution": "1080p Full HD",
-        "videoUrl": video_url,
+        "title": f"Educational Analysis - {_pretty_report_name(report_data.get('reportName', 'Lab report'))}",
+        "duration": "0m 45s",
+        "durationSeconds": 45,
+        "language": LANGUAGE_LABELS.get(language, "English"),
+        "narrationLanguage": language,
+        "resolution": "1080p",
+        "fps": VIDEO_FPS,
+        "mode": "fallback",
+        "videoUrl": VIDEO_FALLBACK_URL,
         "chapters": [
             {"time": "0:00", "title": "Introduction & Overview", "timestamp": 0},
             {"time": "0:10", "title": "Key Biomarker Walkthrough", "timestamp": 10},
-            {"time": "0:25", "title": "Physician Discussion Points", "timestamp": 25}
+            {"time": "0:25", "title": "Physician Discussion Points", "timestamp": 25},
         ],
-        "transcript": transcript
+        "transcript": "A sample walkthrough is shown because local video rendering is unavailable.",
     }
-
-    if report_id in reports_db:
-        reports_db[report_id]["videoData"] = video_data
-        save_database()
-
+    _update_video_report(report_id, report_data, video_data)
     video_tasks_status[report_id] = {
         "status": "completed",
         "progress": 100,
-        "video_url": video_url,
+        "stage": "finalize",
+        "stage_index": 4,
+        "message": reason,
+        "mode": "fallback",
+        "video_url": video_data["videoUrl"],
         "duration": video_data["duration"],
-        "title": video_data["title"]
+        "title": video_data["title"],
     }
+    print(f"[MedVision video] fallback for {report_id}: {reason}")
+
+
+async def build_video_for_report(report_id: str, report_data: Dict[str, Any], options: Optional[Dict[str, Any]] = None):
+    """Render a low-power narrated slideshow: static PNGs + TTS + FFmpeg."""
+    options = options or {}
+    report_data = report_data or {}
+    language = _normalize_video_language(
+        options.get("language") or options.get("narrationLanguage") or options.get("narration_language")
+    )
+    video_filename = f"{report_id}_explanation.mp4"
+    final_video_path = os.path.join(VIDEOS_DIR, video_filename)
+    slides_dir = os.path.join(VIDEOS_DIR, f"{report_id}_slides")
+    os.makedirs(slides_dir, exist_ok=True)
+
+    if not HAS_PIL:
+        _complete_with_fallback(report_id, report_data, "Pillow is not installed; showing the sample video.", language)
+        return
+    if not FFMPEG_BIN:
+        _complete_with_fallback(report_id, report_data, "FFmpeg is not installed; showing the sample video.", language)
+        return
+
+    _set_video_status(report_id, 6, "script", 0, "Preparing the narration script...")
+
+    video_script = None
+    if is_llm_configured():
+        _set_video_status(report_id, 8, "script", 0, "Writing the narration with your API provider...")
+        try:
+            loop = asyncio.get_running_loop()
+            video_script = await asyncio.wait_for(
+                loop.run_in_executor(None, generate_video_script, report_data, language),
+                timeout=75,
+            )
+        except Exception as exc:
+            print(f"Video script provider note: {type(exc).__name__}; using the built-in narration.")
+
+    try:
+        scenes = _build_video_scenes(report_id, report_data, video_script, language)
+    except Exception as exc:
+        print(f"Scene preparation error: {exc}")
+        _complete_with_fallback(report_id, report_data, "The report could not be prepared for video.", language)
+        return
+
+    _set_video_status(report_id, 16, "explanation", 1, "Structuring the explanation...")
+
+    clip_paths: List[str] = []
+    scene_durations: List[float] = []
+    transcript_parts: List[str] = []
+
+    try:
+        audio_paths: List[Optional[str]] = []
+        for index, scene in enumerate(scenes):
+            _set_video_status(
+                report_id,
+                20 + int((index / max(len(scenes), 1)) * 28),
+                "voice",
+                2,
+                f"Generating narration {index + 1} of {len(scenes)}...",
+            )
+            audio_path = os.path.join(slides_dir, f"scene_{index + 1:02d}.mp3")
+            audio_ok = await generate_speech_audio(scene.get("narration", ""), audio_path, language)
+            audio_path_used = audio_path if audio_ok and os.path.exists(audio_path) else None
+            audio_paths.append(audio_path_used)
+
+            audio_duration = _probe_duration(audio_path_used)
+            duration = (audio_duration + 0.7) if audio_duration else _estimate_duration(scene.get("narration", ""))
+            scene_durations.append(max(3.5, min(duration, 26.0)))
+            transcript_parts.append(scene.get("narration", ""))
+
+        for index, scene in enumerate(scenes):
+            _set_video_status(
+                report_id,
+                50 + int((index / max(len(scenes), 1)) * 16),
+                "visuals",
+                3,
+                f"Rendering slide {index + 1} of {len(scenes)}...",
+            )
+            slide_path = os.path.join(slides_dir, f"scene_{index + 1:02d}.png")
+            _render_video_scene(scene, slide_path)
+
+        for index, scene in enumerate(scenes):
+            _set_video_status(
+                report_id,
+                68 + int((index / max(len(scenes), 1)) * 22),
+                "finalize",
+                4,
+                f"Encoding slide {index + 1} of {len(scenes)}...",
+            )
+            slide_path = os.path.join(slides_dir, f"scene_{index + 1:02d}.png")
+            audio_path_used = audio_paths[index] if index < len(audio_paths) else None
+            clip_path = os.path.join(slides_dir, f"scene_{index + 1:02d}.mp4")
+            duration = scene_durations[index]
+
+            cmd = [
+                FFMPEG_BIN,
+                "-y",
+                "-hide_banner",
+                "-loglevel",
+                "error",
+                "-loop",
+                "1",
+                "-i",
+                slide_path,
+            ]
+            if audio_path_used:
+                cmd += ["-i", audio_path_used]
+            cmd += [
+                "-t",
+                f"{duration:.2f}",
+                "-r",
+                str(VIDEO_FPS),
+                "-c:v",
+                "libx264",
+                "-preset",
+                VIDEO_PRESET,
+                "-tune",
+                "stillimage",
+                "-crf",
+                str(VIDEO_CRF),
+                "-pix_fmt",
+                "yuv420p",
+            ]
+            if audio_path_used:
+                cmd += ["-c:a", "aac", "-b:a", "96k", "-ac", "1"]
+            else:
+                cmd += ["-an"]
+            cmd += [clip_path]
+
+            if not _run_command(cmd):
+                raise RuntimeError(f"Could not encode scene {index + 1}")
+            clip_paths.append(clip_path)
+
+        _set_video_status(report_id, 94, "finalize", 4, "Joining the slides into one video...")
+
+        concat_path = os.path.join(slides_dir, "scenes.txt")
+        with open(concat_path, "w", encoding="utf-8") as handle:
+            for name in [os.path.basename(path) for path in clip_paths]:
+                handle.write(f"file '{name}'\n")
+
+        if not _run_command(
+            [
+                FFMPEG_BIN,
+                "-y",
+                "-hide_banner",
+                "-loglevel",
+                "error",
+                "-f",
+                "concat",
+                "-safe",
+                "0",
+                "-i",
+                concat_path,
+                "-c",
+                "copy",
+                "-movflags",
+                "+faststart",
+                final_video_path,
+            ],
+            cwd=slides_dir,
+        ):
+            raise RuntimeError("Could not join the rendered scenes")
+
+        total_seconds = sum(scene_durations)
+        chapters = []
+        cursor = 0.0
+        for scene, duration in zip(scenes, scene_durations):
+            chapters.append(
+                {
+                    "time": _format_clock(cursor),
+                    "title": scene.get("label", "Chapter"),
+                    "timestamp": int(round(cursor)),
+                    "caption": scene.get("narration", ""),
+                }
+            )
+            cursor += duration
+
+        video_data = {
+            "title": f"Educational Analysis - {_pretty_report_name(report_data.get('reportName', 'Lab report'))}",
+            "duration": _format_clock(total_seconds),
+            "durationSeconds": int(round(total_seconds)),
+            "language": LANGUAGE_LABELS[language],
+            "narrationLanguage": language,
+            "resolution": f"{VIDEO_HEIGHT}p",
+            "fps": VIDEO_FPS,
+            "mode": "low_power",
+            "narrationMode": "api" if video_script else "built_in",
+            "scriptModel": (video_script or {}).get("_model_used"),
+            "videoUrl": f"{PUBLIC_BASE_URL}/media/videos/{video_filename}?v={int(datetime.now().timestamp())}",
+            "chapters": chapters,
+            "transcript": " ".join(part for part in transcript_parts if part).strip(),
+        }
+
+        _update_video_report(report_id, report_data, video_data)
+        video_tasks_status[report_id] = {
+            "status": "completed",
+            "progress": 100,
+            "stage": "finalize",
+            "stage_index": 4,
+            "message": "Your video is ready.",
+            "mode": "low_power",
+            "video_url": video_data["videoUrl"],
+            "duration": video_data["duration"],
+            "title": video_data["title"],
+        }
+
+        for path in clip_paths:
+            try:
+                os.remove(path)
+            except OSError:
+                pass
+        try:
+            os.remove(concat_path)
+        except OSError:
+            pass
+    except Exception as exc:
+        print(f"Low-power video generation error for {report_id}: {exc}")
+        _complete_with_fallback(report_id, report_data, "Local rendering failed; showing the sample video.", language)
+
 
 # ---------------------------------------------------------------------------
 # API Routes Matching React Frontend (src/services/api.js)
@@ -1182,7 +2116,7 @@ async def request_video_generation(
             raise HTTPException(status_code=404, detail="Report not found")
 
     # Start generation in background
-    background_tasks.add_task(build_video_for_report, report_id, report)
+    background_tasks.add_task(build_video_for_report, report_id, report, options or {})
 
     return {
         "status": "processing",
@@ -1203,6 +2137,10 @@ async def get_video_status(report_id: str):
         return {
             "status": "completed",
             "progress": 100,
+            "stage": "finalize",
+            "stage_index": 4,
+            "message": "Your video is ready.",
+            "mode": vd.get("mode", "low_power"),
             "video_url": vd.get("videoUrl"),
             "duration": vd.get("duration"),
             "title": vd.get("title")
@@ -1224,12 +2162,63 @@ def get_ml_status():
     return {
         "status": "ready",
         "ollama": ollama_info,
+        "llm": get_llm_status(),
         "models": {
             "cbc": ml_cbc_model is not None,
             "lft": ml_lft_model is not None,
             "kft": ml_kft_model is not None
         }
     }
+
+
+@app.get("/api/llm/providers")
+def list_llm_providers():
+    """Returns the supported API providers and the official key pages."""
+    return {"providers": get_provider_presets()}
+
+
+@app.get("/api/llm/config")
+def read_llm_config():
+    """Returns masked provider status only; the API key never leaves the backend."""
+    return {
+        "success": True,
+        "status": get_llm_status(),
+        "providers": get_provider_presets(),
+        "ollama": check_ollama_status(),
+    }
+
+
+@app.post("/api/llm/config")
+def save_llm_config(config: LLMConfigInput):
+    """Validates the key with the provider, then keeps it in process memory only."""
+    try:
+        status = configure_llm_provider(
+            provider=config.provider,
+            api_key=config.api_key,
+            model=config.model,
+            base_url=config.base_url,
+            verify=config.verify,
+        )
+    except (ValueError, LLMProviderError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+    return {
+        "success": True,
+        "message": "Provider connected. The key stays in memory until the backend restarts.",
+        "status": status,
+    }
+
+
+@app.delete("/api/llm/config")
+def remove_llm_config():
+    """Clears the session key. Environment-provided keys remain active."""
+    clear_llm_provider()
+    status = get_llm_status()
+    if status.get("configured"):
+        message = "Session key cleared. An environment-provided key is still active."
+    else:
+        message = "API key cleared. Ollama and the built-in fallback will be used."
+    return {"success": True, "message": message, "status": status}
 
 @app.post("/api/ml/predict-cbc")
 def api_predict_cbc(data: CBCInput, advise: bool = False):
@@ -1369,5 +2358,18 @@ if __name__ == "__main__":
     if current_dir not in sys.path:
         sys.path.insert(0, current_dir)
     print("\nStarting MedVision AI Backend Server on http://localhost:8000 ...")
-    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True, app_dir=current_dir)
+    reload_enabled = os.environ.get("BACKEND_RELOAD", "0").lower() in {"1", "true", "yes"}
+    uvicorn.run(
+        "app:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=reload_enabled,
+        reload_excludes=[
+            "uploads/*",
+            "data/*",
+            "media/*",
+            "__pycache__/*",
+        ] if reload_enabled else None,
+        app_dir=current_dir,
+    )
 

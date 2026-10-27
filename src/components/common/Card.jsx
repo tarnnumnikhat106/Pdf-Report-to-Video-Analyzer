@@ -11,8 +11,10 @@ export default function Card({
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-xl border border-slate-200/90 shadow-xs ${
-        hoverEffect ? 'hover:border-slate-300 hover:shadow-md transition-all duration-200 cursor-pointer' : ''
+      className={`bg-surface rounded-lg border border-line ${
+        hoverEffect
+          ? 'transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-muted/60 hover:shadow-[0_18px_40px_-30px_rgba(28,27,24,0.45)]'
+          : ''
       } ${padding} ${className}`}
       {...props}
     >
